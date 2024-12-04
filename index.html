@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Portfolio</title>
+
+  <!-- favicon -->
+  <link rel="shortcut icon" href="logo.ico" type="image/x-icon">
+
+  <!-- custom css link -->
+  <link rel="stylesheet" href="index.css">
+
+  <!-- google font link -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- #MAIN -->
+  <main>
+
+    <!-- #SIDEBAR -->
+    <aside class="sidebar" data-sidebar>
+
+      <div class="sidebar-info">
+
+        <figure class="avatar-box">
+          <img src="me.png" alt="Aryan Mishra" width="80">
+        </figure>
+
+        <div class="info-content">
+          <h1 class="name" title="Aryan Mishra">Aryan Mishra</h1>
+          <p class="title">AI & ML Enthusiast</p>
+        </div>
+
+        <button class="info_more-btn" data-sidebar-btn>
+          <span>Show Contacts</span>
+          <ion-icon name="chevron-down"></ion-icon>
+        </button>
+
+      </div>
+
+      <div class="sidebar-info_more">
+
+        <div class="separator"></div>
+
+        <ul class="contacts-list">
+
+          <li class="contact-item">
+            <div class="icon-box">
+              <ion-icon name="mail-outline"></ion-icon>
+            </div>
+            <div class="contact-info">
+              <p class="contact-title">Email</p>
+              <a href="mailto:aryanofficial0854@gmail.com" class="contact-link" target="_blank">aryanofficial0854@gmail.com</a>
+            </div>
+          </li>
+
+          <li class="contact-item">
+            <div class="icon-box" onclick="copyPhoneNumber()">
+              <ion-icon name="phone-portrait-outline"></ion-icon>
+            </div>
+            <div class="contact-info">
+              <p class="contact-title">Phone</p>
+              <a href="tel:+919650087025" class="contact-link" target="_blank">+91 9650087025</a>
+            </div>
+          </li>
+          
+          <script>
+            function copyPhoneNumber() {
+              const phoneNumber = "+919650087025";
+              navigator.clipboard.writeText(phoneNumber).then(() => {
+                alert("Phone number copied to clipboard!");
+              }).catch(err => {
+                console.error("Failed to copy: ", err);
+              });
+            }
+          </script>
+          
+
+          <li class="contact-item">
+            <div class="icon-box">
+              <ion-icon name="location-outline"></ion-icon>
+            </div>
+            <div class="footer-address">
+              <a href="https://maps.app.goo.gl/2kX7jMXPpdVLuaXG7" target="blank">
+                  <p>Shriram Sahana, Yelahanka New Town</p>
+              <p>Bengaluru, India 560064</p>
+              </a>
+          </div>
+          </li>
+
+        </ul>
+
+        <div class="separator"></div>
+
+        <ul class="social-list">
+          <li class="social-item">
+            <a href="https://www.linkedin.com/in/aryan0854/" class="social-link" target="_blank">
+              <ion-icon name="logo-linkedin"></ion-icon>
+            </a>
+          </li>
+          <li class="social-item">
+            <a href="https://github.com/Aryan0854" class="social-link" target="_blank">
+              <ion-icon name="logo-github"></ion-icon>
+            </a>
+          </li>
+          <li class="social-item">
+            <a href="https://www.instagram.com/aryan_0854?igsh=bjNubG52MHF1OHRp" class="social-link" target="_blank">
+              <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- #main-content -->
+    <div class="main-content">
+
+      <!-- #NAVBAR -->
+      <nav class="navbar">
+        <ul class="navbar-list">
+          <li class="navbar-item">
+            <a id="about-section1" href="index.html" target="_self" style="color: #fbcb66;">About</a>
+        </li>
+        <li class="navbar-item">
+            <a id="resume-section" href="resume.html" target="_self">Resume</a>
+        </li>
+        <li class="navbar-item">
+          <a id="resume-section" href="certification.html" target="_self">Certifications</a>
+      </li>
+        <li class="navbar-item">
+          <a id="resume-section" href="Project.html" target="_self">Project</a>
+      </li>
+        </ul>
+      </nav>
+
+      <!-- #ABOUT -->
+      <article class="about active" data-page="about">
+        <header>
+          <h2 class="h2 article-title">About me</h2>
+        </header>
+
+        <section class="about-text">
+          <p>
+            I am a B.Tech student specializing in Artificial Intelligence and Machine Learning. I have a strong passion for applying my knowledge to real-world applications, and I'm always eager to contribute to innovative solutions. I have a solid foundation in programming languages like Python, Java, and JS, and I've worked on impactful projects such as face recognition and emotion analysis.
+          </p>
+          <p>
+            My projects have been recognized for their societal impact, and I am excited to expand my skills further through new challenges in the field of AI and ML.
+          </p>
+          <p>I’ve got a live website up at <a href="https://url-to-file-download.netlify.app/" target="_blank" style="color: white;">🔗 1. URL to file Download</a></p>
+          <p><a href="https://smallcalci.netlify.app/" target="_blank" style="color: white;">🔗 2. Small Calci</a></p>
+          <p><a href="https://aryan-sudoku.netlify.app/" target="_blank" style="color: white;">🔗 3. Sudoku Game</a></p>
+
+        </section>
+      </article>
+
+      <!-- #RESUME -->
+      <article class="resume" data-page="resume">
+        <header>
+          <h2 class="h2 article-title">Resume</h2>
+          
+        </header>
+
+        <!-- Education Section -->
+        <section class="timeline">
+          <div class="title-wrapper">
+            <div class="icon-box">
+              <ion-icon name="book-outline"></ion-icon>
+            </div>
+            <h3 class="h3">Education</h3>
+          </div>
+
+          <ol class="timeline-list">
+            <li class="timeline-item">
+              <h4 class="h4 timeline-item-title">B.Tech in Computer Science and Technology (Specialization in AI & ML)</h4>
+              <span>2022 — 2026</span>
+              <p class="timeline-text">
+                Currently pursuing B.Tech from Presidency University, Bengaluru with a focus on Artificial Intelligence and Machine Learning.
+              </p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="timeline">
+          <div class="title-wrapper">
+            <div class="icon-box">
+              <ion-icon name="book-outline"></ion-icon>
+            </div>
+            <h3 class="h3">Experience</h3>
+          </div>
+
+          <ol class="timeline-list">
+            <li class="timeline-item">
+              <h4 class="h4 timeline-item-title">Intern at Subhansh Sewa Trust</h4>
+              <span>May 2024 — June 2024</span>
+              <p class="timeline-text">
+                Successfully raised Rs 2,350 through initiatives, positively impacting numerous lives. This internship provided valuable experience in social entrepreneurship and community service.
+              </p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skill">
+          <h3 class="h3 skills-title">My skills</h3>
+
+          <ul class="skills-list content-card">
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Python</h5>
+                <data value="90">90%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 90%;"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Machine Learning</h5>
+                <data value="85">85%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 85%;"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Artificial Intelligence</h5>
+                <data value="80">80%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 80%;"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Java</h5>
+                <data value="75">75%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 75%;"></div>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </article>
+
+  <!-- custom js link -->
+  <script src="index.js"></script>
+
+  <!-- ionicon link -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
+
+</body>
+
+</html>
