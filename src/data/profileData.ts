@@ -4,7 +4,7 @@ export const profileData: ProfileData = {
   name: "ARYAN MISHRA",
   title: "B.Tech Student AI & ML Full Stack Developer",
   bio: "Innovative and results-driven B.Tech student specializing in AI and Machine Learning, passionate about developing intelligent solutions with real-world impact. Proficient in full-stack development, database management, and AI-driven applications. A proactive problem-solver with strong analytical skills, excelling in fast-paced environments while managing multiple projects efficiently. Eager to contribute fresh perspectives, enhance technological solutions, and expand expertise in cutting-edge AI/ML methodologies.",
-  avatar: "/img/ME-1.png",
+  avatar: "public/img/ME-1.png",
   contact: {
     email: "aryanofficial0854@gmail.com",
     emailLink: "mailto:aryanofficial0854@gmail.com",
