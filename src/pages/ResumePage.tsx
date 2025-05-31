@@ -9,7 +9,7 @@ const ResumePage: React.FC = () => {
   
   const downloadResume = () => {
     const link = document.createElement('a');
-    link.href = import.meta.env.BASE_URL + 'CV.pdf';
+    link.href = import.meta.env.BASE_URL + "CV.pdf";
     link.download = 'Aryan_Mishra_Resume.pdf';
     document.body.appendChild(link);
     link.click();
