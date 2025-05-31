@@ -9,7 +9,7 @@ const ResumePage: React.FC = () => {
   
   const downloadResume = () => {
     const link = document.createElement('a');
-    link.href = "https://raw.githubusercontent.com/Aryan0854/Portfolio/6595e9426498911590f9bd606d3f12a99063ebcb/CV.pdf";
+    link.href = "/CV.pdf";
     link.download = 'Aryan_Mishra_Resume.pdf';
     document.body.appendChild(link);
     link.click();
