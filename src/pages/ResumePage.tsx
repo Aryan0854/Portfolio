@@ -7,14 +7,15 @@ import SkillBar from '../components/UI/SkillBar';
 const ResumePage: React.FC = () => {
   const { name, title, bio, contact, skills, experiences, education } = profileData;
   
-  const downloadResume = () => {
-    const link = document.createElement('a');
-    link.href = import.meta.env.BASE_URL + 'CV.pdf'; // Use BASE_URL to reference local file
-    link.download = 'Aryan_Mishra_Resume.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+const downloadResume = () => {
+  const link = document.createElement('a');
+  link.href = '/CV.pdf';
+  link.download = 'Aryan_Mishra_Resume.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
   
   return (
     <Layout hideParticles>
