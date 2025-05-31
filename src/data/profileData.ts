@@ -4,7 +4,7 @@ export const profileData: ProfileData = {
   name: "ARYAN MISHRA",
   title: "B.Tech Student AI & ML Full Stack Developer",
   bio: "Innovative and results-driven B.Tech student specializing in AI and Machine Learning, passionate about developing intelligent solutions with real-world impact. Proficient in full-stack development, database management, and AI-driven applications. A proactive problem-solver with strong analytical skills, excelling in fast-paced environments while managing multiple projects efficiently. Eager to contribute fresh perspectives, enhance technological solutions, and expand expertise in cutting-edge AI/ML methodologies.",
-  avatar: "public/img/ME-1.png",
+  avatar: "public/Certificates/linux.png",
   contact: {
     email: "aryanofficial0854@gmail.com",
     emailLink: "mailto:aryanofficial0854@gmail.com",
@@ -57,7 +57,7 @@ export const profileData: ProfileData = {
       title: "LOR for Social Entrepreneurship Internship",
       issuer: "Subhansh Sewa Trust",
       date: "June 2024",
-      image: "public/img/ME-1.png",
+      image: "public/img/lor.png",
       link: "https://www.linkedin.com/in/aryan0854/details/certifications/1718223810106/single-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
     },
     {
