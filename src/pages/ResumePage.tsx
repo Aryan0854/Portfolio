@@ -9,7 +9,7 @@ const ResumePage: React.FC = () => {
   
 const downloadResume = () => {
   const link = document.createElement('a');
-  link.href = 'https://drive.google.com/uc?export=download&id=1r9iFw_Etacs3krqK80Qg0ypN1s1e3VWV';
+  link.href = 'https://drive.google.com/file/d/1r9iFw_Etacs3krqK80Qg0ypN1s1e3VWV/view?usp=sharing';
   link.download = 'Aryan_Mishra_Resume.pdf';
   link.click();
 };
