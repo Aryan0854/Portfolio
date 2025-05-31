@@ -9,12 +9,14 @@ const ResumePage: React.FC = () => {
   
 const downloadResume = () => {
   const link = document.createElement('a');
-  link.href = 'https://www.dropbox.com/scl/fi/gp7bfgqxf0kznu0lsteg0/CV.pdf?rlkey=37hx7kct2hj5vdp6o5eyuqd58&st=4zd8uaiq&dl=1';
-  link.download = 'Aryan_Mishra_Resume.pdf';
+  link.href = 'https://www.dropbox.com/scl/fi/gp7bfgqxf0kznu0lsteg0/CV.pdf?rlkey=37hx7kct2hj5vdp6o5eyuqd58&dl=1';
+  link.setAttribute('download', 'Aryan_Mishra_Resume.pdf');
+  link.setAttribute('target', '_blank');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 };
+
   
   return (
     <Layout hideParticles>
