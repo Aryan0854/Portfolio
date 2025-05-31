@@ -57,7 +57,7 @@ export const profileData: ProfileData = {
       title: "LOR for Social Entrepreneurship Internship",
       issuer: "Subhansh Sewa Trust",
       date: "June 2024",
-      image: "https://github.com/Aryan0854/Portfolio/blob/74cb7bc4e2e06ddaadf3a09a59572403f63d46a9/public/Certificates/offer%20letter.png",
+      image: "public/img/ME-1.png",
       link: "https://www.linkedin.com/in/aryan0854/details/certifications/1718223810106/single-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
     },
     {
