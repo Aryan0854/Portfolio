@@ -105,7 +105,7 @@ export const profileData: ProfileData = {
       title: "Artificial Intelligence",
       issuer: "Professional Certification",
       date: "2023",
-      image: "public/Certificates/ai.png",
+      image: "Certificates/ai.png",
       link: "https://certificates.simplicdn.net/share/4597348_1698067408.pdf"
     },
     {
