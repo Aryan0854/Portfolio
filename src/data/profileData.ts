@@ -4,7 +4,7 @@ export const profileData: ProfileData = {
   name: "ARYAN MISHRA",
   title: "B.Tech Student AI & ML Full Stack Developer",
   bio: "Innovative and results-driven B.Tech student specializing in AI and Machine Learning, passionate about developing intelligent solutions with real-world impact. Proficient in full-stack development, database management, and AI-driven applications. A proactive problem-solver with strong analytical skills, excelling in fast-paced environments while managing multiple projects efficiently. Eager to contribute fresh perspectives, enhance technological solutions, and expand expertise in cutting-edge AI/ML methodologies.",
-  avatar: "public/Certificates/linux.png",
+  avatar: import.meta.env.BASE_URL + "public/Certificates/linux.png",
   contact: {
     email: "aryanofficial0854@gmail.com",
     emailLink: "mailto:aryanofficial0854@gmail.com",
@@ -57,7 +57,7 @@ export const profileData: ProfileData = {
       title: "LOR for Social Entrepreneurship Internship",
       issuer: "Subhansh Sewa Trust",
       date: "June 2024",
-      image: "public/img/lor.png",
+      image: import.meta.env.BASE_URL + "img/lor.png",
       link: "https://www.linkedin.com/in/aryan0854/details/certifications/1718223810106/single-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
     },
     {
@@ -65,7 +65,7 @@ export const profileData: ProfileData = {
       title: "Linux Kernel Development",
       issuer: "Professional Certification",
       date: "2023",
-      image: "public/Certificates/linux.png",
+      image: import.meta.env.BASE_URL + "public/Certificates/linux.png",
       link: "https://ti-user-certificates.s3.amazonaws.com/e0df7fbf-a057-42af-8a1f-590912be5460/ae91f9f0-145a-4736-9cd3-122b0e8c7ad7-aryan-mishra-67425f85-6e99-4f1c-a07a-02c976718ac9-certificate.pdf"
     },
     {
