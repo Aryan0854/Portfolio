@@ -7,26 +7,14 @@ import SkillBar from '../components/UI/SkillBar';
 const ResumePage: React.FC = () => {
   const { name, title, bio, contact, skills, experiences, education } = profileData;
   
-  const downloadResume = () => {
-    // Create a direct download link to the Dropbox file
-    const fileUrl = 'https://www.dropbox.com/scl/fi/gp7bfgqxf0kznu0lsteg0/CV.pdf?rlkey=37hx7kct2hj5vdp6o5eyuqd58&dl=1';
-    
-    // Create a hidden anchor element for the download
-    const link = document.createElement('a');
-    link.href = fileUrl;
-    link.setAttribute('download', 'Aryan_Mishra_Resume.pdf');
-    link.setAttribute('target', '_blank');
-    link.style.display = 'none';
-    
-    // Add to the DOM, trigger click, and remove
-    document.body.appendChild(link);
-    link.click();
-    
-    // Small timeout to ensure the download starts before removing the element
-    setTimeout(() => {
-      document.body.removeChild(link);
-    }, 100);
-  };
+const downloadResume = () => {
+const link = document.createElement('a');
+link.href = 'https://www.dropbox.com/scl/fi/gp7bfgqxf0kznu0lsteg0/CV.pdf?rlkey=37hx7kct2hj5vdp6o5eyuqd58&st=4zd8uaiq&dl=1';
+link.download = 'Aryan_Mishra_Resume.pdf';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+};
   
   return (
     <Layout hideParticles>
