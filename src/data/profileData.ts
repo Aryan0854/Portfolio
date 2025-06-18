@@ -54,11 +54,19 @@ export const profileData: ProfileData = {
   certificates: [
     {
       id: "lor1",
-      title: "LOR for Social Entrepreneurship Internship",
+      title: "LOR from Social Entrepreneurship Internship",
       issuer: "Subhansh Sewa Trust",
       date: "June 2024",
       image: import.meta.env.BASE_URL + "img/lor.png",
       link: "https://www.linkedin.com/in/aryan0854/details/certifications/1718223810106/single-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
+    },
+    {
+      id: "lor2",
+      title: "LOR from ScanPick",
+      issuer: "ScanPick PVT. LTD",
+      date: "May 2025",
+      image: import.meta.env.BASE_URL + "img/lor1.png",
+      link: "https://www.linkedin.com/in/aryan0854/overlay/experience/2659832846/multiple-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY&treasuryMediaId=1749822936583",
     },
     {
       id: "cert1",
