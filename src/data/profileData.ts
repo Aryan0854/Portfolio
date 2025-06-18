@@ -65,7 +65,7 @@ export const profileData: ProfileData = {
       title: "LOR from ScanPick",
       issuer: "ScanPick PVT. LTD",
       date: "May 2025",
-      image: import.meta.env.BASE_URL + "public/img/Scanpick LOR.png",
+      image: import.meta.env.BASE_URL + "img/Scanpick LOR.png",
       link: "https://www.linkedin.com/in/aryan0854/overlay/experience/2659832846/multiple-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY&treasuryMediaId=1749822936583",
     },
     {
