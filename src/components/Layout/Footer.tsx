@@ -64,6 +64,11 @@ const Footer: React.FC = () => {
               <span className="px-3 py-1 bg-cyan-900/60 rounded-full text-sm">Java</span>
               <span className="px-3 py-1 bg-sky-900/60 rounded-full text-sm">HTML/CSS</span>
               <span className="px-3 py-1 bg-violet-900/60 rounded-full text-sm">C</span>
+              <span className="px-3 py-1 bg-violet-900/60 rounded-full text-sm">React</span>
+              <span className="px-3 py-1 bg-violet-900/60 rounded-full text-sm">TypeScript</span>
+              <span className="px-3 py-1 bg-violet-900/60 rounded-full text-sm">Chart.js</span>
+              <span className="px-3 py-1 bg-violet-900/60 rounded-full text-sm">Vite</span>
+              <span className="px-3 py-1 bg-violet-900/60 rounded-full text-sm">Tailwind CSS</span>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ const ResumePage: React.FC = () => {
   
   const downloadResume = () => {
     const link = document.createElement('a');
-    link.href = import.meta.env.BASE_URL + 'CV.pdf'; // Use BASE_URL instead of absolute path
+    link.href = import.meta.env.BASE_URL + 'CV.pdf'; // Use BASE_URL to reference local file
     link.download = 'Aryan_Mishra_Resume.pdf';
     document.body.appendChild(link);
     link.click();
