@@ -245,7 +245,7 @@ export const profileData: ProfileData = {
   ],
   projects: [
     {
-      id: "proj7",
+      id: "proj9",
       title: "AI-Powered Multi-Model Weather Prediction Platform",
       description: "A dynamic web application that predicts 5-year weather trends by combining real-time weather data with historical analysis using simulated ML models (Random Forest, XGBoost, LSTM, Ensemble). Built with React, TypeScript, Vite, and Chart.js, it offers interactive visualizations and model performance insights. Designed for both researchers and everyday users, it delivers actionable forecasts through an intuitive, responsive UI backed by robust data processing.",
       image: import.meta.env.BASE_URL + "/img/Predictor.png",
@@ -253,6 +253,15 @@ export const profileData: ProfileData = {
       liveLink: "https://forecasterrr.netlify.app/",
       githubLink: "https://github.com/Aryan0854/GAIA-1.git"
     },
+    {
+      id: "proj8",
+      title: "Reptile Interactive Cursor",
+      description: "A fun interactive web project where a centipede-like reptile follows your mouse cursor, animated with physics-based movement and lively legs.",
+      image: import.meta.env.BASE_URL + "/img/Sentipide.png",
+      technologies: ["HTML", "CSS", "JS"],
+      liveLink: "https://aryan0854.github.io/Sentipide/",
+      githubLink: "https://github.com/Aryan0854/Sentipide.git"
+    },    
     {
       id: "proj7",
       title: "Personal Bussiness Website",
