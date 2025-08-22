@@ -277,13 +277,8 @@ export const profileData: ProfileData = {
       description: "A modern, interactive portfolio website built with React, TypeScript, and Three.js. This project showcases various website and portfolio designs across different categories with stunning 3D visualizations and smooth animations. Designed for business use with customer-focused features and services.",
       image: import.meta.env.BASE_URL + "/img/portfolio web.png",
       technologies: ["HTML", "CSS", "JavaScript", "Web Development"],
-<<<<<<< HEAD
-            liveLink: "https://aryan0854.github.io/Business/",
+      liveLink: "https://aryan0854.github.io/Business/",
       githubLink: "https://github.com/Aryan0854/Business.git"
-=======
-      liveLink: "https://aryan0854portfolio.netlify.app/",
-      githubLink: "https://aryan0854.github.io/Business/"
->>>>>>> b441e2a76813fa24d1483b369e8b069e77f60b46
     },
     {
       id: "proj6",
