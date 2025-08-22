@@ -278,7 +278,7 @@ export const profileData: ProfileData = {
       image: import.meta.env.BASE_URL + "/img/portfolio web.png",
       technologies: ["HTML", "CSS", "JavaScript", "Web Development"],
       liveLink: "https://aryan0854portfolio.netlify.app/",
-      githubLink: "https://github.com/Aryan0854/portfolio-old"
+      githubLink: "https://aryan0854.github.io/Business/"
     },
     {
       id: "proj6",
