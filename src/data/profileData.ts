@@ -41,20 +41,20 @@ export const profileData: ProfileData = {
     {
       title: "AI-ML Intern",
       company: "Gaia Smart city, Mumbai",
-      period: "July 2025 - Oct 2025",
-      description: "Developed IoT-based smart city solutions, enhancing technical skills and contributing to live projects. Delivered impactful outcomes while gaining hands-on experience in digital transformation."
+      period: "July 2025 - Current",
+      description: "Selected for a 3-month internship at Gaia Smart Cities in Mumbai, starting July 2025. The role involves skill development in IoT and Digital Transformation, followed by a live project under industry mentorship. Received a monthly stipend and hands-on exposure to ICT solutions in smart city ecosystems."
     },
     {
       title: "Full-Stack Developer",
       company: "ScanPick, Bangalore Karnataka",
       period: "Oct 2024 - May 2025",
-      description: "Built responsive full‑stack applications, enhancing user experience and functionality."
+      description: "Developed and optimized full-stack web applications, enhancing user experience and functionality. Delivered scalable solutions while exceeding expectations through impactful projects."
     },
     {
       title: "Social Entrepreneurship (Social Work) Intern",
       company: "Subhansh Sewa Trust, Bareilly UP",
       period: "May 2024 - June 2024",
-      description: "Coordinated activities to raise funds, creating measurable social impact."
+      description: "Completed a one-month internship as a Social Entrepreneurship Intern. Demonstrated ability to work under pressure and meet deadlines. Contributed remarkably by raising Rs 2,350 and significantly impacted numerous individuals' lives. Recognized as a hard-working and excellent performer throughout the internship."
     }
   ],
   education: [
@@ -66,7 +66,7 @@ export const profileData: ProfileData = {
     }
   ],
   certificates: [
-      {
+    {
       id: "Offer2",
       title: "Offer Letter from Xtelify Limited",
       issuer: "Xtelify Limited",
@@ -191,7 +191,7 @@ export const profileData: ProfileData = {
       title: "TCSION Career Edge-Young Professional",
       issuer: "TCS",
       date: "2023",
-      image: import.meta.env.BASE_URL +"Certificates/tcs.png",
+      image: import.meta.env.BASE_URL + "Certificates/tcs.png",
       link: "https://www.tcsion.com/iDH/India/Dashboard/Products_detail/7446886"
     },
     {
@@ -367,6 +367,6 @@ export const profileData: ProfileData = {
       technologies: ["HTML", "CSS", "JavaScript", "Web Development"],
       liveLink: "https://url-to-file-download.netlify.app/",
       githubLink: "https://github.com/Aryan0854/smart-file-downloader.git"
-    },
+    }
   ]
 };
