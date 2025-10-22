@@ -16,7 +16,8 @@ export const profileData: ProfileData = {
     githubLink: "https://github.com/Aryan0854",
     linkedin: "linkedin.com/in/aryan0854/",
     linkedinLink: "https://linkedin.com/in/aryan0854/",
-    twitter: "" // If you have Twitter, add it here
+    twitter: "https://x.com/Aryan000980805",
+    facebook: "https://www.facebook.com/Aryan0804"
   },
 
   skills: [

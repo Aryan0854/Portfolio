@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../components/Layout/Layout';
 import { profileData } from '../data/profileData';
-import { Download, Briefcase, GraduationCap, Award, User, Mail, Phone, MapPin, Linkedin, Github as GitHub } from 'lucide-react';
+import { Download, Briefcase, GraduationCap, Award, User, Mail, Phone, MapPin, Linkedin, Github as GitHub, Twitter, Facebook } from 'lucide-react';
 import SkillBar from '../components/UI/SkillBar';
 
 const ResumePage: React.FC = () => {
@@ -17,7 +17,7 @@ const ResumePage: React.FC = () => {
   };
   
   return (
-    <Layout hideParticles>
+    <Layout>
       <div className="container mx-auto px-4 py-12 max-w-6xl">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">My Resume</h1>
@@ -111,6 +111,26 @@ const ResumePage: React.FC = () => {
                   {contact.github}
                 </a>
               </div>
+              
+              {contact.twitter && (
+                <div className="flex items-center gap-2 text-gray-300">
+                  <Twitter size={16} className="text-indigo-400" />
+                  <a href={contact.twitter} className="hover:text-indigo-300 transition-colors"
+                  target="_blank">
+                    x.com/Aryan000980805
+                  </a>
+                </div>
+              )}
+              
+              {contact.facebook && (
+                <div className="flex items-center gap-2 text-gray-300">
+                  <Facebook size={16} className="text-indigo-400" />
+                  <a href={contact.facebook} className="hover:text-indigo-300 transition-colors"
+                  target="_blank">
+                    facebook.com/Aryan0804
+                  </a>
+                </div>
+              )}
             </div>
           </div>
           

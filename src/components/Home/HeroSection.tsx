@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Github as GitHub, Linkedin, Mail, PhoneCall } from 'lucide-react';
+import { Github as GitHub, Linkedin, Mail, PhoneCall, Twitter, Facebook } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { profileData } from '../../data/profileData';
 import ImageLoader from '../UI/ImageLoader';
@@ -113,6 +113,28 @@ const HeroSection: React.FC = () => {
             >
               <Linkedin size={24} />
             </a>
+            {contact.twitter && (
+              <a
+                href={contact.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Twitter"
+              >
+                <Twitter size={24} />
+              </a>
+            )}
+            {contact.facebook && (
+              <a
+                href={contact.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook size={24} />
+              </a>
+            )}
             <a
               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
               target="_blank"

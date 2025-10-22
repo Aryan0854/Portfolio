@@ -15,6 +15,7 @@ export interface ProfileData {
     linkedin: string;
     linkedinLink: string;
     twitter?: string;
+    facebook?: string;
   };
   skills: Skill[];
   experiences: Experience[];

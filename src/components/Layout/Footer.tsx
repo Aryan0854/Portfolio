@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github as GitHub, Linkedin, Mail, MapPin } from 'lucide-react';
+import { Github as GitHub, Linkedin, Mail, MapPin, Twitter, Facebook } from 'lucide-react';
 import { profileData } from '../../data/profileData';
 
 const Footer: React.FC = () => {
@@ -51,6 +51,22 @@ const Footer: React.FC = () => {
                   {contact.linkedin}
                 </a>
               </li>
+              {contact.twitter && (
+                <li className="flex items-center gap-2">
+                  <Twitter size={16} className="text-indigo-400" />
+                  <a href={contact.twitter} className="hover:text-white transition duration-300" target="_blank" rel="noopener noreferrer">
+                    x.com/Aryan000980805
+                  </a>
+                </li>
+              )}
+              {contact.facebook && (
+                <li className="flex items-center gap-2">
+                  <Facebook size={16} className="text-indigo-400" />
+                  <a href={contact.facebook} className="hover:text-white transition duration-300" target="_blank" rel="noopener noreferrer">
+                    facebook.com/Aryan0804
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
           
