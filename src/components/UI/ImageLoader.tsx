@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import LoadingSpinner from './LoadingSpinner';
 
 interface ImageLoaderProps {
   src: string;
@@ -42,24 +41,7 @@ const ImageLoader = ({
     img.src = src;
   }, [src, onLoad, onError]);
 
-  if (isLoading) {
-    return (
-      <div className={`relative bg-gray-800 rounded-lg overflow-hidden ${className}`}>
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
-          <div className="text-center">
-            <LoadingSpinner size="lg" color="#4a72f5" />
-            <p className="mt-2 text-sm text-gray-400">Loading...</p>
-          </div>
-        </div>
-        {placeholder && (
-          <div 
-            className="absolute inset-0 bg-cover bg-center opacity-20 blur-sm"
-            style={{ backgroundImage: `url(${placeholder})` }}
-          />
-        )}
-      </div>
-    );
-  }
+
 
   if (hasError) {
     return (
@@ -78,16 +60,27 @@ const ImageLoader = ({
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      <img
-        ref={imgRef}
-        src={imageSrc || src}
-        alt={alt}
-        className="w-full h-full object-cover transition-all duration-500 hover:scale-105"
-        style={{
-          opacity: isLoading ? 0 : 1,
-          transition: 'opacity 0.5s ease-in-out'
-        }}
-      />
+      {imageSrc && (
+        <img
+          ref={imgRef}
+          src={imageSrc}
+          alt={alt}
+          className="w-full h-full object-cover transition-all duration-500 hover:scale-105"
+          style={{
+            opacity: 1,
+            transition: 'opacity 0.5s ease-in-out'
+          }}
+        />
+      )}
+      {!imageSrc && placeholder && (
+        <div 
+          className="w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: `url(${placeholder})` }}
+        />
+      )}
+      {!imageSrc && !placeholder && (
+        <div className="w-full h-full bg-gray-200 dark:bg-gray-700" />
+      )}
     </div>
   );
 };

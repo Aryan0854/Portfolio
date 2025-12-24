@@ -2,8 +2,8 @@ import { ProfileData } from '../types';
 
 export const profileData: ProfileData = {
   name: "ARYAN MISHRA",
-  title: "B.Tech Student AI & ML Full Stack Developer",
-  bio: "Aryan Portfolio - Innovative and results-driven B.Tech student specializing in AI and Machine Learning, passionate about developing intelligent solutions with real-world impact. Aryan Mishra is proficient in full-stack development, database management, and AI-driven applications. A proactive problem-solver with strong analytical skills, excelling in fast-paced environments while managing multiple projects efficiently. Eager to contribute fresh perspectives, enhance technological solutions, and expand expertise in cutting-edge AI/ML methodologies.",
+  title: "AI & ML, Full Stack Developer",
+  bio: "Aryan Portfolio - Engineering candidate specializing in AI, Machine Learning, Full-Stack Development, and Data Analytics with a strong record of building scalable systems, automation pipelines, and intelligent applications. Experienced in delivering high-impact solutions across research, IoT, and product development environments. Recognized for award-winning biometric systems and AI-driven automation frameworks.",
   avatar: import.meta.env.BASE_URL + "img/ME-1.png", // Use BASE_URL instead of absolute path
   contact: {
     email: "aryanofficial0854@gmail.com",
@@ -68,6 +68,62 @@ export const profileData: ProfileData = {
   ],
   certificates: [
       {
+      id: "intern4",
+      title: "Internship Certificate from Xtelify Limited",
+      issuer: "Xtelify Limited",
+      date: "Aug 2025 - Oct 2025",
+      image: import.meta.env.BASE_URL + "Certificates/Airtel Internship Certificate.png",
+      link: "https://www.linkedin.com/posts/aryan0854_internship-datascience-ai-activity-7409630096153559040-zoqc?utm_source=share&utm_medium=member_desktop&rcm=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
+      },
+      {
+      id: "intern3",
+      title: "Internship Certificate from Gaia Smart city",
+      issuer: "Gaia Smart city",
+      date: "July 2025 - Oct 2025",
+      image: import.meta.env.BASE_URL + "Certificates/Gaia Internship Certificate.png",
+      link: "https://www.linkedin.com/posts/aryan0854_internship-letterofrecommendation-smartcities-activity-7409626095055982592-60cb?utm_source=share&utm_medium=member_desktop&rcm=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
+      }, 
+            {
+      id: "intern2",
+      title: "Internship Certificate from ScanPick",
+      issuer: "ScanPick",
+      date: "Oct 2024 - May 2025",
+      image: import.meta.env.BASE_URL + "Certificates/ScanPick Internship Certificate.png",
+      link: "None",
+      },
+            {
+      id: "intern1",
+      title: "Internship Certificate from Subhansh Sewa Trust",
+      issuer: "Subhansh Sewa Trust",
+      date: "Oct 2024 - May 2025",
+      image: import.meta.env.BASE_URL + "Certificates/SST Certificate.png",
+      link: "https://www.linkedin.com/in/aryan0854/details/certifications/1718224512838/single-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
+      },
+      {
+      id: "lor3",
+      title: "LOR form Gaia Smart city",
+      issuer: "Gaia Smart city",
+      date: "July 2025 - Oct 2025",
+      image: import.meta.env.BASE_URL + "Certificates/Gaia Smart city LOR.png",
+      link: "https://www.linkedin.com/posts/aryan0854_internship-letterofrecommendation-smartcities-activity-7409626095055982592-60cb?utm_source=share&utm_medium=member_desktop&rcm=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
+      }, 
+      {
+      id: "lor2",
+      title: "LOR form ScanPick",
+      issuer: "ScanPick",
+      date: "Oct 2024 - May 2025",
+      image: import.meta.env.BASE_URL + "Certificates/Scanpick LOR.png",
+      link: "https://www.linkedin.com/in/aryan0854/overlay/experience/2659832846/multiple-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY&treasuryMediaId=1749822936582",
+      },    
+      {
+      id: "lor1",
+      title: "LOR form Social Entrepreneurship Internship",
+      issuer: "Subhansh Sewa Trust",
+      date: "May 2024 - June 2024",
+      image: import.meta.env.BASE_URL + "Certificates/SST_LOR.png",
+      link: "https://www.linkedin.com/in/aryan0854/details/certifications/1718223810106/single-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
+      },    
+      {
       id: "Offer2",
       title: "Offer Letter from Xtelify Limited",
       issuer: "Xtelify Limited",
@@ -79,25 +135,9 @@ export const profileData: ProfileData = {
       id: "Offer1",
       title: "Offer Letter from Gaia Smart city",
       issuer: "Gaia Smart city",
-      date: "July 2025 - Current",
+      date: "July 2025 - Oct 2025",
       image: import.meta.env.BASE_URL + "Certificates/Gaia-1.png",
       link: "",
-    },
-    {
-      id: "lor2",
-      title: "LOR form ScanPick",
-      issuer: "ScanPick",
-      date: "Oct 2024 - May 2025",
-      image: import.meta.env.BASE_URL + "Certificates/Scanpick LOR.png",
-      link: "https://www.linkedin.com/in/aryan0854/overlay/experience/2659832846/multiple-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY&treasuryMediaId=1749822936582",
-    },    
-    {
-      id: "lor1",
-      title: "LOR form Social Entrepreneurship Internship",
-      issuer: "Subhansh Sewa Trust",
-      date: "May 2024 - June 2024",
-      image: import.meta.env.BASE_URL + "Certificates/SST_LOR.png",
-      link: "https://www.linkedin.com/in/aryan0854/details/certifications/1718223810106/single-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY",
     },
     {
       id: "cert20",
@@ -154,14 +194,6 @@ export const profileData: ProfileData = {
       date: "2024",
       image: import.meta.env.BASE_URL + "Certificates/san certificate.png",
       link: "https://eccommonstorage.blob.core.windows.net/codered/certificates/3c68610a-248a-46dc-87e1-fec8911a8942.png"
-    },
-    {
-      id: "cert13",
-      title: "Internship Certificate",
-      issuer: "Professional Experience",
-      date: "2024",
-      image: import.meta.env.BASE_URL + "Certificates/internship1.png",
-      link: "https://www.linkedin.com/in/aryan0854/details/certifications/1718224512838/single-media-viewer/?profileId=ACoAADg3BIsBIjkNgJn0A4cU6t3IM451FbKRNPY"
     },
     {
       id: "cert12",
