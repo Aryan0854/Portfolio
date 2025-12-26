@@ -64,20 +64,20 @@ const HeroSection: React.FC = () => {
         </div>
       )}
       
-      <div className="container mx-auto grid md:grid-cols-2 gap-8 items-center hero-content">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center hero-content">
         <div className="md:order-1 order-2 text-center md:text-left">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             <span className="block text-white mb-2">Hi, I'm</span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600">
               {nameArray[0]} <span className="block md:inline">{nameArray[1]}</span>
             </span>
           </h1>
           
-          <h2 className="text-xl md:text-2xl text-gray-300 mb-6">{title}</h2>
+          <h2 className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-6">{title}</h2>
           
           <p className="text-gray-400 mb-8 max-w-lg">{bio}</p>
           
-          <div className="flex flex-wrap gap-4 justify-center md:justify-start mb-8">
+          <div className="flex flex-wrap gap-3 sm:gap-4 justify-center md:justify-start mb-8">
             <a
               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
               target="_blank"
@@ -156,7 +156,7 @@ const HeroSection: React.FC = () => {
         </div>
         
         <div className="md:order-2 order-1 flex justify-center relative">
-          <div className="relative w-64 h-64 md:w-80 md:h-80">
+          <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-full animate-pulse-slow blur-xl opacity-30"></div>
             <div className="absolute inset-2 bg-gray-900 rounded-full"></div>
             <ImageLoader

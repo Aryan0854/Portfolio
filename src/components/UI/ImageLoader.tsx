@@ -67,19 +67,35 @@ const ImageLoader = ({
           alt={alt}
           className="w-full h-full object-cover transition-all duration-500 hover:scale-105"
           style={{
-            opacity: 1,
+            opacity: isLoading ? 0 : 1,
             transition: 'opacity 0.5s ease-in-out'
           }}
         />
       )}
       {!imageSrc && placeholder && (
         <div 
-          className="w-full h-full bg-cover bg-center"
+          className="w-full h-full bg-cover bg-center relative"
           style={{ backgroundImage: `url(${placeholder})` }}
-        />
+        >
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+              <div className="flex flex-col items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                <span className="mt-2 text-white text-sm">Loading...</span>
+              </div>
+            </div>
+          )}
+        </div>
       )}
       {!imageSrc && !placeholder && (
-        <div className="w-full h-full bg-gray-200 dark:bg-gray-700" />
+        <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              <span className="mt-2 text-white text-sm">Loading...</span>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

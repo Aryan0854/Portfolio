@@ -9,6 +9,11 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
+      spacing: {
+        '4.5': '1.125rem', // 18px
+        '5.5': '1.375rem', // 22px
+        '18': '4.5rem',    // 72px
+      },
     },
   },
   plugins: [],

@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import ResumePage from './pages/ResumePage';
 import CertificatesPage from './pages/CertificatesPage';
 import ProjectsPage from './pages/ProjectsPage';
+import Chatbot from './components/UI/Chatbot';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
       </Routes>
+      <Chatbot />
     </Router>
   );
 }

@@ -12,7 +12,7 @@ const SkillsSection: React.FC = () => {
           My <span className="text-indigo-500">Skills</span>
         </h2>
         
-        <div className="grid md:grid-cols-2 gap-x-12 gap-y-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-x-8 gap-y-6 max-w-4xl mx-auto">
           {skills.map((skill, index) => (
             <SkillBar key={index} skill={skill} />
           ))}

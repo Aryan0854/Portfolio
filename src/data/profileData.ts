@@ -3,7 +3,7 @@ import { ProfileData } from '../types';
 export const profileData: ProfileData = {
   name: "ARYAN MISHRA",
   title: "AI & ML, Full Stack Developer",
-  bio: "Aryan Portfolio - Engineering candidate specializing in AI, Machine Learning, Full-Stack Development, and Data Analytics with a strong record of building scalable systems, automation pipelines, and intelligent applications. Experienced in delivering high-impact solutions across research, IoT, and product development environments. Recognized for award-winning biometric systems and AI-driven automation frameworks.",
+  bio: "Aryan Portfolio - Engineering candidate specializing in AI, Machine Learning, Full-Stack Development, and Data Analytics with a strong record of building scalable systems, automation pipelines, and intelligent applications. Experienced in delivering high-impact solutions across research, IoT, and product development environments. Recognized for award-winning biometric systems and AI-driven automation frameworks. Currently in final semester of B.Tech in Computer Science with AI/ML specialization. Open to ML, SDE & Full-Stack roles.",
   avatar: import.meta.env.BASE_URL + "img/ME-1.png", // Use BASE_URL instead of absolute path
   contact: {
     email: "aryanofficial0854@gmail.com",
@@ -62,8 +62,14 @@ export const profileData: ProfileData = {
     {
       degree: "Bachelor's degree in Computer Science and Technology, spl in AI & ML",
       institution: "Presidency University, Bengaluru",
-      period: "November 2022 - 2026",
-      description: "Currently pursuing a specialization in Artificial Intelligence and Machine Learning."
+      period: "November 2022 - November 2026",
+      description: "Currently in final semester, specializing in Artificial Intelligence and Machine Learning."
+    },
+    {
+      degree: "Computer Science",
+      institution: "Hiranandani Foundation School Thane",
+      period: "March 2020 - August 2022",
+      description: "Skills acquired include Writing, Problem Solving, HTML, XML, CSS, JavaScript, Web Technologies, and 7+ more."
     }
   ],
   certificates: [

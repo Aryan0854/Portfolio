@@ -51,7 +51,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
       {/* Modal for certificate details */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-xl max-w-3xl w-full p-6 shadow-2xl relative">
+          <div className="bg-gray-800 rounded-xl max-w-full sm:max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative">
             <button 
               onClick={closeModal}
               className="absolute top-4 right-4 text-gray-400 hover:text-white"
@@ -66,8 +66,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
               <ImageLoader 
                 src={certificate.image} 
                 alt={certificate.title} 
-                className="w-full h-auto rounded-lg object-contain max-h-[60vh]"
-              />
+                className="w-full h-auto rounded-lg object-contain max-h-[60vh]" />
             </div>
             
             <div className="flex flex-wrap items-center justify-between gap-4">
