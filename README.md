@@ -43,8 +43,8 @@ A modern, responsive personal portfolio website built with **React**, **TypeScri
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/aryan0854/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/aryan0854/Portfolio.git
+   cd Portfolio
    ```
 
 2. Install dependencies:
