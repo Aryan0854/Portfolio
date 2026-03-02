@@ -73,6 +73,112 @@ export const profileData: ProfileData = {
     }
   ],
   certificates: [
+    // NEW Udemy & Coursera Certificates (2026)
+    {
+      id: "udemy12",
+      title: "Dive Into Ansible - Beginner to Expert in Ansible DevOps",
+      issuer: "Udemy",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Dive Into Ansible - Beginner.pdf",
+      link: "https://www.udemy.com/certificate/UC-7989597b-61ee-4ad3-a927-955cd52f8baa/"
+    },
+    {
+      id: "udemy11",
+      title: "Microsoft SCCM Training",
+      issuer: "Udemy",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Microsoft SCCM Training.pdf",
+      link: "https://www.udemy.com/certificate/UC-c8e57fd0-1a4d-45c1-af80-3c1bd452af8f/"
+    },
+    {
+      id: "udemy10",
+      title: "Azure DevOps Boards for Project Managers/Analysts/Developers",
+      issuer: "Udemy",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Azure DevOps Boards for Project Managers_Analysts_Developers.pdf",
+      link: "https://www.udemy.com/certificate/UC-f33bab1a-ed7e-49f6-94a6-1625bdb58e8a/"
+    },
+    {
+      id: "udemy9",
+      title: "The Project Management Course: Beginner to PROject Manager",
+      issuer: "Udemy",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/The Project Management Course Beginner to PROject Manager.jpg",
+      link: "https://www.udemy.com/certificate/UC-5a04b51e-a3ee-4952-9d75-1dd029c3f4e0/"
+    },
+    {
+      id: "udemy8",
+      title: "Azure DevOps Fundamentals for Beginners",
+      issuer: "Udemy",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Azure DevOps Fundamentals for Beginners.pdf",
+      link: "https://www.udemy.com/certificate/UC-33f0fac7-6580-4639-98ce-ef46b5a18a2c/"
+    },
+    {
+      id: "udemy7",
+      title: "Certified Project Management Associate",
+      issuer: "Udemy",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Project Management.pdf",
+      link: "https://www.udemy.com/certificate/UC-817ce721-fe57-4d9c-8d6a-1c9f5a3a1810/"
+    },
+    {
+      id: "udemy6",
+      title: "Terraform on Azure",
+      issuer: "Udemy",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Terraform on Azure.pdf",
+      link: "https://www.udemy.com/certificate/UC-65e8595d-c86c-4900-adad-21e21e941736/"
+    },
+    {
+      id: "udemy5",
+      title: "Git & GitHub MasterClass",
+      issuer: "Udemy",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Git & GitHub MasterClass.jpg",
+      link: "https://www.udemy.com/certificate/UC-7f4b8e87-ee33-433e-8ddd-59db2788fd33/"
+    },
+    {
+      id: "coursera3",
+      title: "AWS Glue: A Comprehensive Guide for Beginners",
+      issuer: "Coursera",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/AWS Glue.jpg",
+      link: "https://www.coursera.org/account/accomplishments/certificate/UC-dd0ff4d9-2787-4cce-b691-e0c809cc4457"
+    },
+    {
+      id: "databricks1",
+      title: "Knowledge Badge - Data Preparation for Machine Learning",
+      issuer: "Databricks",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Knowledge Badge - Data Preparation for Machine Learning.png",
+      link: "https://www.credly.com/badges/174137859"
+    },
+    {
+      id: "skillup2",
+      title: "Vector Search with NoSQL Databases using MongoDB & Cassandra",
+      issuer: "SkillUp",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Coursera ZDOMT2FRGJN3.pdf",
+      link: ""
+    },
+    {
+      id: "coursera2",
+      title: "Vector Database Essentials: Setup, Configuration and Operations",
+      issuer: "Coursera",
+      date: "Feb 2026",
+      image: import.meta.env.BASE_URL + "Certificates/IBMDesign20260210-31-bsuopi.pdf",
+      link: ""
+    },
+    {
+      id: "forage1",
+      title: "Deloitte Australia - Data Analytics Job Simulation",
+      issuer: "Forage",
+      date: "Oct 2025",
+      image: import.meta.env.BASE_URL + "Certificates/Deloitte-(Data Analysis).png",
+      link: "https://www.theforage.com/simulations/deloitte-au/data-analytics-s5zy"
+    },
+    // Existing Certificates
       {
       id: "intern4",
       title: "Internship Certificate from Xtelify Limited",
@@ -144,22 +250,6 @@ export const profileData: ProfileData = {
       date: "July 2025 - Oct 2025",
       image: import.meta.env.BASE_URL + "Certificates/Gaia-1.png",
       link: "",
-    },
-    {
-      id: "cert2",
-      title: "",
-      issuer: "",
-      date: "2026",
-      image: import.meta.env.BASE_URL + "",
-      link: ""
-    },
-        {
-      id: "cert21",
-      title: "",
-      issuer: "",
-      date: "2026",
-      image: import.meta.env.BASE_URL + "",
-      link: ""
     },
     {
       id: "cert20",
