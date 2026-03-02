@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface ImageLoaderProps {
   src: string;
   alt: string;
   className?: string;
-  placeholder?: string;
   onLoad?: () => void;
   onError?: () => void;
   lazy?: boolean;
@@ -15,7 +14,6 @@ const ImageLoader = ({
   src, 
   alt, 
   className = '', 
-  placeholder,
   onLoad,
   onError,
   lazy = true,
