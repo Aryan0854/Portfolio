@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ master, main ]   # Do NOT trigger on gh-pages or it loops
+    branches: [ main ]   # Only trigger on main branch
 
 permissions:
   contents: write   # IMPORTANT: allows pushing to gh-pages
@@ -35,3 +35,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           cname: aryanportfolio.me
+          force_orphan: true
