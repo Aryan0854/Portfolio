@@ -30,6 +30,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             src={project.image} 
             alt={project.title} 
             className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
+            lazy={false}
+            priority={true}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
           
@@ -102,6 +104,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                 src={project.image} 
                 alt={project.title} 
                 className="w-full h-auto rounded-lg"
+                lazy={true}
+                priority={false}
               />
             </div>
             

@@ -146,6 +146,22 @@ export const profileData: ProfileData = {
       link: "",
     },
     {
+      id: "cert2",
+      title: "",
+      issuer: "",
+      date: "2026",
+      image: import.meta.env.BASE_URL + "",
+      link: ""
+    },
+        {
+      id: "cert21",
+      title: "",
+      issuer: "",
+      date: "2026",
+      image: import.meta.env.BASE_URL + "",
+      link: ""
+    },
+    {
       id: "cert20",
       title: "Data Analyst",
       issuer: "OneRoadMap",

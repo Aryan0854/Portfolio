@@ -2,6 +2,24 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Performance: Hardware acceleration for images */
+img {
+  will-change: transform;
+  content-visibility: auto;
+}
+
+/* Lazy loading placeholder animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-pulse {
+  animation: shimmer 1.5s infinite linear;
+  background: linear-gradient(to right, #1f2937 4%, #374151 25%, #1f2937 36%);
+  background-size: 200% 100%;
+}
+
 /* Enhanced Animations */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }

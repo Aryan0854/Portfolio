@@ -29,6 +29,8 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
             src={certificate.image} 
             alt={certificate.title} 
             className="w-full h-full object-cover object-center"
+            lazy={true}
+            priority={false}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
         </div>
@@ -66,7 +68,10 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
               <ImageLoader 
                 src={certificate.image} 
                 alt={certificate.title} 
-                className="w-full h-auto rounded-lg object-contain max-h-[60vh]" />
+                className="w-full h-auto rounded-lg object-contain max-h-[60vh]"
+                lazy={true}
+                priority={false}
+              />
             </div>
             
             <div className="flex flex-wrap items-center justify-between gap-4">

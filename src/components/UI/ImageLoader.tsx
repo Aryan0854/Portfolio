@@ -7,6 +7,8 @@ interface ImageLoaderProps {
   placeholder?: string;
   onLoad?: () => void;
   onError?: () => void;
+  lazy?: boolean;
+  priority?: boolean;
 }
 
 const ImageLoader = ({ 
@@ -15,14 +17,56 @@ const ImageLoader = ({
   className = '', 
   placeholder,
   onLoad,
-  onError 
+  onError,
+  lazy = true,
+  priority = false
 }: ImageLoaderProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [isInView, setIsInView] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  // Intersection Observer for lazy loading
   useEffect(() => {
+    if (!lazy || priority) {
+      setIsInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            if (containerRef.current) {
+              observer.unobserve(containerRef.current);
+            }
+          }
+        });
+      },
+      {
+        rootMargin: '50px 0px', // Start loading 50px before entering viewport
+        threshold: 0.01
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, [lazy, priority]);
+
+  // Load image when in view
+  useEffect(() => {
+    if (!isInView) return;
+
     const img = new Image();
     
     img.onload = () => {
@@ -39,7 +83,7 @@ const ImageLoader = ({
     };
     
     img.src = src;
-  }, [src, onLoad, onError]);
+  }, [src, isInView, onLoad, onError]);
 
 
 
@@ -59,42 +103,36 @@ const ImageLoader = ({
   }
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
+      {!isInView && !priority && (
+        <div className="absolute inset-0 bg-gray-800 animate-pulse" />
+      )}
       {imageSrc && (
         <img
           ref={imgRef}
           src={imageSrc}
           alt={alt}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchPriority={priority ? 'high' : 'auto'}
           className="w-full h-full object-cover transition-all duration-500 hover:scale-105"
           style={{
             opacity: isLoading ? 0 : 1,
-            transition: 'opacity 0.5s ease-in-out'
+            transition: 'opacity 0.3s ease-in-out'
           }}
         />
       )}
-      {!imageSrc && placeholder && (
-        <div 
-          className="w-full h-full bg-cover bg-center relative"
-          style={{ backgroundImage: `url(${placeholder})` }}
-        >
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-              <div className="flex flex-col items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                <span className="mt-2 text-white text-sm">Loading...</span>
-              </div>
-            </div>
-          )}
-        </div>
+      {!isInView && !imageSrc && (
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900" />
       )}
-      {!imageSrc && !placeholder && (
-        <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-          {isLoading && (
-            <div className="flex flex-col items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-              <span className="mt-2 text-white text-sm">Loading...</span>
-            </div>
-          )}
+      {hasError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+          <div className="text-center text-gray-400">
+            <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <p className="text-sm">Failed to load image</p>
+          </div>
         </div>
       )}
     </div>
