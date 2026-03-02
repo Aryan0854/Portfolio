@@ -37,7 +37,7 @@ export const profileData: ProfileData = {
       title: "Cloud Infrastructure Associate",
       company: "Capgemini",
       period: "Feb 2026 - May 2026",
-      description: "Worked as a Cloud Infrastructure Associate at Capgemini, where I gained hands-on experience in cloud infrastructure management, including design, implementation, and maintenance of cloud environments. Developed a deep understanding of cloud technologies, best practices, and industry trends. Collaborated with cross-functional teams to deliver scalable and secure cloud solutions. Improved operational efficiency through automation and optimization techniques. Developed strong problem-solving and decision-making skills in a fast-paced, dynamic environment."
+      description: "Supported enterprise cloud infrastructure projects at Capgemini, delivering scalable and secure solutions through automation, optimization, and cross-functional collaboration while gaining professional expertise in cloud technologies and industry best practices."
     },    
     {
       title: "Data Science Intern",
@@ -156,7 +156,7 @@ export const profileData: ProfileData = {
       title: "Dive Into Ansible - Beginner to Expert in Ansible DevOps",
       issuer: "Udemy",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/Dive Into Ansible - Beginner.pdf",
+      image: import.meta.env.BASE_URL + "Certificates/Dive Into Ansible - Beginner.png",
       link: "https://www.udemy.com/certificate/UC-7989597b-61ee-4ad3-a927-955cd52f8baa/"
     },
     {
@@ -164,7 +164,7 @@ export const profileData: ProfileData = {
       title: "Microsoft SCCM Training",
       issuer: "Udemy",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/Microsoft SCCM Training.pdf",
+      image: import.meta.env.BASE_URL + "Certificates/Microsoft SCCM Training.png",
       link: "https://www.udemy.com/certificate/UC-c8e57fd0-1a4d-45c1-af80-3c1bd452af8f/"
     },
     {
@@ -172,7 +172,7 @@ export const profileData: ProfileData = {
       title: "Azure DevOps Boards for Project Managers/Analysts/Developers",
       issuer: "Udemy",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/Azure DevOps Boards for Project Managers_Analysts_Developers.pdf",
+      image: import.meta.env.BASE_URL + "Certificates/Azure DevOps Fundamentals for Beginners.png",
       link: "https://www.udemy.com/certificate/UC-f33bab1a-ed7e-49f6-94a6-1625bdb58e8a/"
     },
     {
@@ -180,7 +180,7 @@ export const profileData: ProfileData = {
       title: "The Project Management Course: Beginner to PROject Manager",
       issuer: "Udemy",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/The Project Management Course Beginner to PROject Manager.jpg",
+      image: import.meta.env.BASE_URL + "Certificates/The Project Management Course Beginner to PROject Manager.png",
       link: "https://www.udemy.com/certificate/UC-5a04b51e-a3ee-4952-9d75-1dd029c3f4e0/"
     },
     {
@@ -188,7 +188,7 @@ export const profileData: ProfileData = {
       title: "Azure DevOps Fundamentals for Beginners",
       issuer: "Udemy",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/Azure DevOps Fundamentals for Beginners.pdf",
+      image: import.meta.env.BASE_URL + "Certificates/Azure DevOps Fundamentals for Beginners.png",
       link: "https://www.udemy.com/certificate/UC-33f0fac7-6580-4639-98ce-ef46b5a18a2c/"
     },
     {
@@ -196,7 +196,7 @@ export const profileData: ProfileData = {
       title: "Certified Project Management Associate",
       issuer: "Udemy",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/Project Management.pdf",
+      image: import.meta.env.BASE_URL + "Certificates/Project Management.png",
       link: "https://www.udemy.com/certificate/UC-817ce721-fe57-4d9c-8d6a-1c9f5a3a1810/"
     },
     {
@@ -204,7 +204,7 @@ export const profileData: ProfileData = {
       title: "Terraform on Azure",
       issuer: "Udemy",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/Terraform on Azure.pdf",
+      image: import.meta.env.BASE_URL + "Certificates/Terraform on Azure.png",
       link: "https://www.udemy.com/certificate/UC-65e8595d-c86c-4900-adad-21e21e941736/"
     },
     {
@@ -212,7 +212,7 @@ export const profileData: ProfileData = {
       title: "Git & GitHub MasterClass",
       issuer: "Udemy",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/Git & GitHub MasterClass.jpg",
+      image: import.meta.env.BASE_URL + "Certificates/Git & GitHub MasterClass.png",
       link: "https://www.udemy.com/certificate/UC-7f4b8e87-ee33-433e-8ddd-59db2788fd33/"
     },
     {
@@ -220,7 +220,7 @@ export const profileData: ProfileData = {
       title: "AWS Glue: A Comprehensive Guide for Beginners",
       issuer: "Coursera",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/AWS Glue.jpg",
+      image: import.meta.env.BASE_URL + "Certificates/AWS Glue.png",
       link: "https://www.coursera.org/account/accomplishments/certificate/UC-dd0ff4d9-2787-4cce-b691-e0c809cc4457"
     },
     {
@@ -236,7 +236,7 @@ export const profileData: ProfileData = {
       title: "Vector Search with NoSQL Databases using MongoDB & Cassandra",
       issuer: "SkillUp",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/Coursera ZDOMT2FRGJN3.pdf",
+      image: import.meta.env.BASE_URL + "Certificates/Coursera ZDOMT2FRGJN3.png",
       link: ""
     },
     {
@@ -244,7 +244,7 @@ export const profileData: ProfileData = {
       title: "Vector Database Essentials: Setup, Configuration and Operations",
       issuer: "Coursera",
       date: "Feb 2026",
-      image: import.meta.env.BASE_URL + "Certificates/IBMDesign20260210-31-bsuopi.pdf",
+      image: import.meta.env.BASE_URL + "Certificates/IBMDesign20260210-31-bsuopi.png",
       link: ""
     },
     {
