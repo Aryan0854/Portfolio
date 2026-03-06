@@ -152,6 +152,14 @@ export const profileData: ProfileData = {
       link: "",
     },
     {
+      id: "cert33",
+      title: "Microsoft Power BI Desktop: Advanced DAX for Data Analysis",
+      issuer: "Udemy",
+      date: "Mar 2026",
+      image: import.meta.env.BASE_URL + "Certificates/Microsoft Power BI Desktop.png",
+      link: "https://udemy-certificate.s3.amazonaws.com/pdf/UC-3f550023-4128-4fb6-9524-1ca47e713375.pdf"
+    },
+    {
       id: "cert32",
       title: "Dive Into Ansible - Beginner to Expert in Ansible DevOps",
       issuer: "Udemy",

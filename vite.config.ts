@@ -15,7 +15,7 @@ export default defineConfig({
       svgo: { plugins: [{ removeViewBox: false }] },
     }),
   ],
-  base: '/Portfolio/', // Match your GitHub Pages repository name
+  base: '/', // For custom domain deployment
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
