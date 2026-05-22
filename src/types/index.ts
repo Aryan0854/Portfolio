@@ -21,6 +21,7 @@ export interface ProfileData {
   experiences: Experience[];
   education: Education[];
   certificates: Certificate[];
+  publications: Publication[];
   projects: Project[];
 }
 
@@ -52,6 +53,14 @@ export interface Certificate {
   link: string;
 }
 
+export interface Publication {
+  id: string;
+  title: string;
+  period: string;
+  description: string;
+  link: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -60,4 +69,5 @@ export interface Project {
   technologies: string[];
   liveLink: string;
   githubLink: string;
+  publicationLink?: string;
 }

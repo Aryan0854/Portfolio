@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Project } from '../../types';
-import { ExternalLink, Github as GitHub, X } from 'lucide-react';
+import { ExternalLink, Github as GitHub, X, FileText } from 'lucide-react';
 import ImageLoader from './ImageLoader';
 
 interface ProjectCardProps {
@@ -54,7 +54,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <div className="p-5">
           <p className="text-gray-300 mb-4 line-clamp-3">{project.description}</p>
           
-          <div className="flex justify-between items-center">
+          <div className="flex flex-wrap items-center gap-3">
             {project.liveLink !== '#' ? (
               <a 
                 href={project.liveLink} 
@@ -71,6 +71,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
               >
                 <ExternalLink size={16} /> View Details
               </button>
+            )}
+
+            {project.publicationLink && (
+              <a 
+                href={project.publicationLink} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300 transition-colors"
+              >
+                <FileText size={16} /> Publication
+              </a>
             )}
             
             <a 
@@ -132,14 +143,26 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
               <p className="text-yellow-300 mb-2">Live demo can't be shown</p>
               <p className="text-gray-300 mb-4">To view this project, download the repository and follow the directions from README.</p>
               
-              <a 
-                href={project.githubLink} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition-colors"
-              >
-                <GitHub size={18} /> Download Repository
-              </a>
+              <div className="flex flex-wrap gap-2">
+                <a 
+                  href={project.githubLink} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition-colors"
+                >
+                  <GitHub size={18} /> Download Repository
+                </a>
+                {project.publicationLink && (
+                  <a 
+                    href={project.publicationLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border border-indigo-400 text-indigo-400 hover:bg-indigo-400 hover:text-white py-2 px-4 rounded-lg transition-colors"
+                  >
+                    <FileText size={18} /> View Publication
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>

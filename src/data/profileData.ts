@@ -86,6 +86,14 @@ export const profileData: ProfileData = {
   ],
   certificates: [
       {
+      id: "Pub1",
+      title: "PIB Multilingual Video Platform",
+      issuer: "IEEE",
+      date: "March 2026",
+      image: import.meta.env.BASE_URL + "Certificates/publication.png",
+      link: "https://media.licdn.com/dms/image/v2/D4D2DAQFeUJqlLYT2uw/profile-treasury-image-shrink_1280_1280/B4DZ5Q5NuxJoAY-/0/1779473636555?e=1780081200&v=beta&t=VA65EiOEdsMnzwJZ5ORW0EGHpqCz-b8tpKCYMAXUatI"
+      },
+      {
       id: "intern4",
       title: "Internship Certificate from Xtelify Limited",
       issuer: "Xtelify Limited",
@@ -430,7 +438,8 @@ export const profileData: ProfileData = {
        image: import.meta.env.BASE_URL + "img/MMRAG.png",
       technologies: ["React 18 + Vite", "FastAPI + Uvicorn", "Ollama (Mistral 7B)", "FAISS / ChromaDB", "OpenCLIP (ViT-B-32)", "Faster-Whisper"],
       liveLink: "#",
-      githubLink: "https://github.com/Aryan0854/Offline-Multimodal-RAG-System.git"
+      githubLink: "https://github.com/Aryan0854/Offline-Multimodal-RAG-System.git",
+      publicationLink: "https://www.researchgate.net/"
     },    
     {
       id: "proj12",
@@ -439,7 +448,8 @@ export const profileData: ProfileData = {
       image: import.meta.env.BASE_URL + "img/Capstone.png",
       technologies: ["Next.js 14.2.15", "React 18", "TypeScript", "Tailwind CSS", "Supabase (PostgreSQL, Auth)"],
       liveLink: "#",
-      githubLink: "https://github.com/Aryan0854/pscs_36.git"
+      githubLink: "https://github.com/Aryan0854/pscs_36.git",
+      publicationLink: "https://www.researchgate.net/publication/403865959_PIB_Multilingual_Video_Platform_AI-Driven_Automated_Press_Release_to_Video_Generation_System"
     },
     {
       id: "proj11",
@@ -540,5 +550,28 @@ export const profileData: ProfileData = {
       liveLink: "https://url-to-file-download.netlify.app/",
       githubLink: "https://github.com/Aryan0854/smart-file-downloader.git"
     },
-  ]
+  ],
+  publications: [
+    {
+      id: "pub1",
+      title: "PIB Multilingual Video Platform: AI-Driven Automated Press Release to Video Generation System",
+      period: "2026",
+      description: `- Published research paper focused on AI-driven multilingual press release to video generation systems.
+                    - Designed automation workflows for transforming multilingual text content into scalable video media.
+                    - Worked on intelligent media generation, multilingual AI systems, and automated information delivery.
+                    - Collaborated with Chitrangi Bhatnagar, Suraj Laxman Shanbhag, and Dr. Srabana Pramanik.`,
+      link: "https://www.researchgate.net/publication/403865959_PIB_Multilingual_Video_Platform_AI-Driven_Automated_Press_Release_to_Video_Generation_System",
+    },
+
+    {
+      id: "pub2",
+      title: "Offline Multimodal RAG for Secure Document Intelligence",
+      period: "2026",
+      description: `- Developed a fully offline Multimodal Retrieval-Augmented Generation (MMRAG) system for secure document intelligence in air-gapped and national security environments.
+                    - Designed scalable multimodal AI pipelines integrating text, image, and audio understanding using Ollama (Mistral 7B), OpenCLIP, Faster-Whisper, and vector databases..
+                    - Worked on intelligent media generation, multilingual AI systems, and automated information delivery.
+                    - Collaborated with Chitrangi Bhatnagar, Suraj Laxman Shanbhag, and Dr. Srabana Pramanik.`,
+      link: "https://www.researchgate.net",
+    }
+  ],
 };

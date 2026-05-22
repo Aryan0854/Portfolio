@@ -1,7 +1,373 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings, X, MessageCircle, Bot, Send, Loader2 } from 'lucide-react';
+import { Settings, X, MessageCircle, Bot, Send, Loader2, Trash2 } from 'lucide-react';
 import { profileData } from '../../data/profileData';
 
+// ---------- Fuzzy-match utils ----------
+function levenshtein(a: string, b: string): number {
+  const m = a.length, n = b.length;
+  const dp: number[] = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    let prev = dp[0];
+    dp[0] = i;
+    for (let j = 1; j <= n; j++) {
+      const tmp = dp[j];
+      dp[j] = Math.min(prev + (a[i - 1] === b[j - 1] ? 0 : 1), dp[j] + 1, dp[j - 1] + 1);
+      prev = tmp;
+    }
+  }
+  return dp[n];
+}
+
+function fuzzyIn(text: string, token: string, threshold = 0.75): boolean {
+  const window = token.length;
+  for (let i = 0; i <= text.length - window; i++) {
+    if (levenshtein(text.slice(i, i + window), token) <= Math.floor((1 - threshold) * window)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function matches(query: string, patterns: (RegExp | string)[]): boolean {
+  return patterns.some(p =>
+    typeof p === 'string'
+      ? fuzzyIn(query, p)
+      : p.test(query)
+  );
+}
+
+// ---------- Structured knowledge base ----------
+interface KnowledgeEntry {
+  requires: (RegExp | string)[];
+  answer: string;
+}
+
+function kbEntries(kb: ReadonlyArray<KnowledgeEntry>): (q: string) => string | null {
+  return (q: string) => {
+    for (const entry of kb) {
+      if (matches(q, entry.requires)) return entry.answer;
+    }
+    return null;
+  };
+}
+
+// Derive all answers from profileData so they stay in sync automatically
+const allProjects = profileData.projects;
+const allSkills = profileData.skills;
+const allExperiences = profileData.experiences;
+const allEducation = profileData.education;
+const allCertificates = profileData.certificates;
+const allPublications = profileData.publications;
+const contact = profileData.contact;
+const pibProject = allProjects.find(p => /pib|multilingual|press/i.test(p.title));
+const ragProject = allProjects.find(p => /rag|offline|multimodal|document/i.test(p.title));
+
+const knowledgeBase: ReadonlyArray<KnowledgeEntry> = [
+  // --- Greetings ---
+  {
+    requires: [/\b(hi|hello|hey|greetings|sup|yo|howdy|good\s*morning|good\s*evening|good\s*afternoon)\b/i],
+    answer: "Hey! 👋 Great to see you! What would you like to know about Aryan?",
+  },
+
+  // --- Farewell ---
+  {
+    requires: [/\b(bye|goodbye|see\s*you|later|take\s*care|cya)\b/i],
+    answer: "Thanks for chatting! 👋 Don't forget to check out Aryan's projects!",
+  },
+
+  // --- Thanks ---
+  {
+    requires: [/\b(thanks|thank\s*you|thx|ty|appreciate)\b/i],
+    answer: "You're welcome! 😊 Anything else you'd like to know?",
+  },
+
+  // --- Help ---
+  {
+    requires: [/\b(help|what\s*can\s*you|what\s*do\s*you|capabilit)\b/i],
+    answer: `I can tell you about everything on Aryan's portfolio:\n\n• 🧠 Skills & tech stack (${allSkills.length} skills)\n• 🚀 ${allProjects.length}+ projects\n• 💼 ${allExperiences.length} work experiences\n• 🎓 Education\n• ${allCertificates.length}+ certifications\n• 📄 ${allPublications.length} publications\n• 📬 Contact & social links\n\nJust ask naturally — I handle typos and rephrasing too!`,
+  },
+
+  // --- Jokes ---
+  {
+    requires: [/\b(joke|funny|laugh|humor)\b/i],
+    answer: [
+      "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
+      "How many programmers does it take to change a bulb? None — that's hardware! 💡",
+      "Why do Java devs wear glasses? Because they can't C#! 😎",
+      "A SQL query walks into a bar… Can I JOIN you? 🍺",
+      "Why did the dev go broke? Used up all his cache! 💸",
+      "UX goes to a coffee shop… 'The cup is too big!' 'Actually, it's *micro.' ☕",
+    ][Math.floor(Math.random() * 6)],
+  },
+
+  // --- WHO IS ARYAN / ABOUT ---
+  {
+    requires: [/\b(who\s*is\s*aryan|who\s*are\s*you|what\s*are\s*you|your\s*name|about\s*aryan|tell\s*me\s*about|bio|summary)\b/i],
+    answer: `Aryan Mishra — AI & ML Specialist & Full-Stack Developer 🌟\n\n• ${allSkills.length}+ technical skills (Python 90%, HTML 90%…)\n• ${allProjects.length}+ major projects — from facial recognition to 5G ML simulation\n• ${allExperiences.length} internships / roles\n• ${allCertificates.length}+ professional certifications\n• ${allPublications.length} academic publications\n• Final-semester B.Tech (CS + AI/ML) @ Presidency University\n\nOpen to ML, SDE, and Full-Stack roles. Reach him at ${contact.email}`,
+  },
+
+  // --- ALL SKILLS ---
+  {
+    requires: [/\b(skill|tech\s*stack|programming|language|know|proficien)\b/i],
+    answer: (() => {
+      const sorted = [...allSkills].sort((a, b) => b.level - a.level);
+      const top = sorted.slice(0, 6);
+      return `Top skills (${sorted.length} total):\n\n${top
+        .map(s => `• ${s.name}: ${s.level}%`)
+        .join('\n')}\n\nAsk "does he know <tech>" to check a specific one!`;
+    })(),
+  },
+
+  // --- SPECIFIC SKILL (checking) ---
+  {
+    requires: [/\b(does\s*he\s*know|can\s*he|is\s*he\s*good\s*at|knows\s*)\s*.+/i],
+    answer: (q: string) => {
+      const term = q
+        .replace(/does\s*he\s*know|can\s*he|is\s*he\s*good\s*at|knows\s*/gi, '')
+        .replace(/[?.,!]+$/g, '')
+        .trim();
+      if (!term) return "Which skill are you asking about? Name it and I'll check!";
+      const found = allSkills.filter(s =>
+        fuzzyIn(s.name.toLowerCase(), term.toLowerCase().replace(/s$/, ''), 0.6)
+      );
+      if (found.length === 0) return `I couldn't find anything matching "${term}" in his skill list. Try another spelling?`;
+      return found
+        .map(s => `• ${s.name}: ${s.level}%`)
+        .join('\n');
+    },
+  },
+
+  // --- ALL PROJECTS ---
+  {
+    requires: [/\b(project|built|created|developed|portfolio|app|system|platform)\b/i],
+    answer: (() => {
+      const list = allProjects.slice(0, 6).map(p => `• ${p.title}`).join('\n');
+      return `Aryan has ${allProjects.length}+ projects. Highlights:\n\n${list}\n\nAsk "tell me about [project name]" for full details on any one!`;
+    })(),
+  },
+
+  // --- SPECIFIC PROJECT: PIB ---
+  {
+    requires: [/\b(pib|multilingual|press\s*release|video\s*platform)\b/i],
+    answer: `🎥 PIB Multilingual Video Platform\n\n${
+      pibProject?.description || ''
+    }\n\n🔗 researchgate.net/publication/403865959`,
+  },
+
+  // --- SPECIFIC PROJECT: RAG / OFFLINE ---
+  {
+    requires: [/\b(offline|rag|multimodal|document\s*intelligence|air\s*gapped|secure\s*document)\b/i],
+    answer: `🔐 Offline Multimodal RAG — Document Intelligence\n\n${
+      ragProject?.description || ''
+    }\n\n🔗 github.com/Aryan0854/Offline-Multimodal-RAG-System`,
+  },
+
+  // --- SPECIFIC PROJECT: THALACARE ---
+  {
+    requires: [/\b(thala|thalassemia|healthcare|medical\s*ai|health)\b/i],
+    answer: (`❤️ ThalaCare AI Assistant\n\n${
+      allProjects.find(p => /thala/i.test(p.title))?.description
+    }` ?? "A healthcare-focused AI platform."),
+  },
+
+  // --- SPECIFIC PROJECT: FACE RECOGNITION ---
+  {
+    requires: [/\b(face\s*recognition|missing\s*person|aadhaar|biometric|award\s*winning)\b/i],
+    answer: `🏆 Facial Recognition System\n\n${allProjects.find(p => /face/i.test(p.title))?.description || ''}\n\nAwarded "Best Societal Relevant Project" 🏅`,
+  },
+
+  // --- SPECIFIC PROJECT: 5G ---
+  {
+    requires: [/\b(5g|network\s*simulation|telecom|q.learning|reinforcement)\b/i],
+    answer: `📡 5G Network Simulation Framework\n\n${allProjects.find(p => /5g|simulation/i.test(p.title))?.description || ''}`,
+  },
+
+  // --- SPECIFIC PROJECT: CSV ---
+  {
+    requires: [/\b(csv|data\s*automation|data\s*pipeline|dash)\b/i],
+    answer: `📊 CSV-Automated Dashboard\n\n${allProjects.find(p => /csv/i.test(p.title))?.description || ''}`,
+  },
+
+  // --- SPECIFIC PROJECT: WEATHER ---
+  {
+    requires: [/\b(weather|forecast|climate|prediction\s*platform|xgboost|lstm)\b/i],
+    answer: `🌤️ Weather Prediction Platform\n\n${allProjects.find(p => /weather/i.test(p.title))?.description || ''}`,
+  },
+
+  // --- SPECIFIC PROJECT: SQL DASHBOARD ---
+  {
+    requires: [/\b(sql\s*dashboard|database\s*management|server\s*monitor|heavy\s*process)\b/i],
+    answer: `🗄️ SQL Database Management Dashboard\n\n${allProjects.find(p => /sql\s*database/i.test(p.title))?.description || ''}`,
+  },
+
+  // --- PUBLICATION ---
+  {
+    requires: [/\b(publication|research\s*paper|researchgate|published)\b/i],
+    answer: (() => {
+      const pubs = allPublications.map(p =>
+        `📄 **${p.title}**\n   ${p.period}\n   ${p.link}`
+      ).join('\n\n');
+      return `Aryan has ${allPublications.length} publications:\n\n${pubs}`;
+    })(),
+  },
+
+  // --- EXPERIENCE / INTERNSHIP ---
+  {
+    requires: [/\b(experience|internship|interned|worked|job|company|role|work)\b/i],
+    answer: (q: string) => {
+      // Specific company matches
+      for (const exp of allExperiences) {
+        if (fuzzyIn(q, exp.company.split(',')[0].replace(/[^a-z]/gi, ''), 0.55)) {
+          return `💼 **${exp.title}** at **${exp.company}**\n${exp.period}\n\n${exp.description}`;
+        }
+      }
+      // General list
+      const list = allExperiences.map(e => `• ${e.title} — ${e.company} (${e.period})`).join('\n');
+      return `💼 Work Experience (${allExperiences.length} roles):\n\n${list}\n\nAsk "tell me about [company]" for full details!`;
+    },
+  },
+
+  // --- EDUCATION ---
+  {
+    requires: [/\b(education|university|college|degree|study|school|presidency|hiranandani|b.tech)\b/i],
+    answer: (() => {
+      return allEducation.map(e => `🎓 **${e.degree}**\n   ${e.institution}\n   ${e.period}\n   ${e.description}`).join('\n\n');
+    })(),
+  },
+
+  // --- CERTIFICATIONS ---
+  {
+    requires: [/\b(cert|certific|achievement|coursera|udemy|google\s*cert|oracle|microsoft|ibm|deloitte)\b/i],
+    answer: (q: string) => {
+      const specificProvider = ['google', 'oracle', 'microsoft', 'ibm', 'deloitte', 'linux', 'tcs']
+        .find(p => fuzzyIn(q, p, 0.6));
+      const filtered = specificProvider
+        ? allCertificates.filter(c => fuzzyIn(c.title.toLowerCase(), specificProvider, 0.5))
+        : allCertificates.slice(0, 6);
+      const list = filtered.map(c => `🏆 ${c.title}\n   Issued by: ${c.issuer} (${c.date})`).join('\n');
+      return allCertificates.length >= 6
+        ? `${allCertificates.length}+ certifications — highlights:\n\n${list}\n…and ${allCertificates.length - filtered.length} more!\n\nFilter by provider: "google certs", "microsoft certs", etc.`
+        : `Certifications:\n\n${list}`;
+    },
+  },
+
+  // --- CONTACT ---
+  {
+    requires: [/\b(contact|email|phone|reach|connect|location|where|address)\b/i],
+    answer: `📬 **Contact Aryan:**\n\n📧 ${contact.email}\n📱 ${contact.phone}\n📍 ${contact.location}\n\n💼 LinkedIn: ${contact.linkedinLink}\n💻 GitHub: ${contact.githubLink}\n\nFeel free to reach out! 🚀`,
+  },
+
+  // --- SOCIAL MEDIA ---
+  {
+    requires: [/\b(linkedin|github|social|twitter|facebook|x\.com|insta)\b/i],
+    answer: (q: string) => {
+      if (fuzzyIn(q, 'linkedin', 0.6)) return `💼 LinkedIn: ${contact.linkedinLink}\n\nActive with 743+ followers — check out his recommendations!`;
+      if (fuzzyIn(q, 'github', 0.6)) return `💻 GitHub: ${contact.githubLink}\n\nRepos covering AI/ML, web apps, data science, cybersecurity, and more!`;
+      if (fuzzyIn(q, 'twitter', 0.6) || fuzzyIn(q, 'x.com', 0.6)) return `🐦 X / Twitter: ${contact.twitter}`;
+      if (fuzzyIn(q, 'facebook', 0.6)) return `📘 Facebook: ${contact.facebook}`;
+      return `Here are Aryan's social profiles:\n\n💼 LinkedIn: ${contact.linkedinLink}\n💻 GitHub: ${contact.githubLink}\n🐦 Twitter: ${contact.twitter}\n📘 Facebook: ${contact.facebook}`;
+    },
+  },
+
+  // --- AVAILABILITY / CURRENT STATUS ---
+  {
+    requires: [/\b(current|now|present|doing|available|open|hire|hiring|seeking|looking\s*for)\b/i],
+    answer: `🎯 **Current Status:**\n• Final semester B.Tech (CS + AI/ML) at Presidency University\n• Last completed: Capgemini — Cloud Infrastructure Associate\n• **Actively seeking** ML / SDE / Full-Stack roles\n• Available after graduation (Nov 2026)\n\n📧 ${contact.email}`,
+  },
+
+  // --- ACHIEVEMENTS ---
+  {
+    requires: [/\b(achievement|award|recognition|won|best|honour|accolade)\b/i],
+    answer: `🏆 **Awards & Achievements:**\n\n• "Best Societal Relevant Project" — 400+ submissions\n• Facial Recognition: 92%+ accuracy\n• Raspberry Pi certification\n• 25+ industry certifications\n• LOR from every internship\n• 743+ LinkedIn followers`,
+  },
+
+  // --- HOW MANY ---
+  {
+    requires: [/\bhow\s*many\b/i],
+    answer: (q: string) => {
+      if (fuzzyIn(q, 'project')) return `🚀 ${allProjects.length}+ major projects!`;
+      if (fuzzyIn(q, 'cert', 0.6) || fuzzyIn(q, 'qualification')) return `🏆 ${allCertificates.length}+ certifications!`;
+      if (fuzzyIn(q, 'skill')) return `💻 ${allSkills.length}+ technical skills!`;
+      if (fuzzyIn(q, 'intern') || fuzzyIn(q, 'experience')) return `💼 ${allExperiences.length} internships + roles!`;
+      if (fuzzyIn(q, 'publication') || fuzzyIn(q, 'paper') || fuzzyIn(q, 'research')) return `📄 ${allPublications.length} publications!`;
+      if (fuzzyIn(q, 'year') || fuzzyIn(q, 'age')) return `Aryan was born in 2003, making him ~23 years old. He's in his final semester of B.Tech (2022-2026).`;
+      return `He's accomplished a lot! Try asking "how many projects" or "how many certifications"?`;
+    },
+  },
+
+  // --- RESUMÉ / CV ---
+  {
+    requires: [/\b(resume|cv|download)\b/i],
+    answer: `📄 You can download Aryan's CV from the Resume page on this website! Or email him directly at ${contact.email}`,
+  },
+
+  // --- PORTFOLIO / SITE ---
+  {
+    requires: [/\b(portfolio|website|this\s*site|site)\b/i],
+    answer: `He built this entire portfolio himself! 💻 React + TypeScript + Tailwind CSS. The chatbot is also his creation — running fully offline, no external API needed! 🤖`,
+  },
+
+  // --- HOBBIES / INTERESTS ---
+  {
+    requires: [/\b(hobb|interest|freetime|free\s*time|outside\s*work|passion)\b/i],
+    answer: `🌱 Aryan is passionate about:\n• AI for social good (facial recognition for missing persons)\n• Contributing to open-source projects\n• Exploring cutting-edge AI / ML research\n• IoT & smart cities`,
+  },
+
+  // --- LOCATION ---
+  {
+    requires: [/\b(location|where|live|based|from|city|bengaluru|bangalore)\b/i],
+    answer: `📍 Bengaluru (Bangalore), Karnataka, India — India's Silicon Valley! 🏙️\nOpen to relocating for the right opportunity.`,
+  },
+
+  // --- OPEN TO WORK ---
+  {
+    requires: [/\b(hire|hiring|recruit|opportunity|role|position|job\s*open)\b/i],
+    answer: `🚀 Aryan is open to roles in:\n\n🤖 Machine Learning / AI Engineering\n💻 Software Development Engineering (SDE)\n🌐 Full-Stack Development\n\nEmail: ${contact.email}\nLinkedIn: ${contact.linkedinLink}\n\nHe's available after Nov 2026!`,
+  },
+];
+
+const matcher = kbEntries(knowledgeBase);
+
+// ---------- Fallback: find closest match by question similarity ----------
+function fallbackResponse(query: string): string {
+  // Only compare against entries whose own regex actually matches the query
+  const candidates = knowledgeBase
+    .filter(entry => {
+      try { return (entry.requires as RegExp[]).some(r => r.test(query)); } catch { return true; }
+    })
+    .map(e => ({ entry: e, text: e.answer.toString().replace(/\n/g, ' ').slice(0, 160) }));
+
+  if (candidates.length === 0) {
+    return `Hmm, I'm not totally sure what you're asking 🧐\n\nBut here's what I know about Aryan — pick a topic:\n\n• Skills & tech\n• Projects\n• Work experience\n• Education\n• Certifications\n• Publications\n• Contact info\n\nType "help" for more info!`;
+  }
+
+  const qWords = query.toLowerCase().split(/\s+/).filter(Boolean);
+  let bestIdx = 0;
+  let bestScore = Infinity;
+  for (let i = 0; i < candidates.length; i++) {
+    const cWords = candidates[i].text.toLowerCase().split(/\s+/).filter(Boolean);
+    const score = qWords.reduce((s, w) => {
+      const hit = cWords.some(cw => levenshtein(w, cw) <= Math.max(1, Math.floor(w.length * 0.3)));
+      return s + (hit ? 0 : 1);
+    }, 0);
+    if (score < bestScore) {
+      bestScore = score;
+      bestIdx = i;
+    }
+  }
+
+  if (bestScore <= Math.max(2, Math.floor(qWords.length * 0.6))) {
+    return candidates[bestIdx].entry.answer
+      .toString()
+      .split('\n')
+      .slice(0, 5)
+      .join('\n') + '\n\n💡 Want to rephrase your question? I\'ll try my best!';
+  }
+
+  return `Hmm, I'm not totally sure what you're asking 🧐\n\nBut here's what I know about Aryan — pick a topic:\n\n• Skills & tech\n• Projects\n• Work experience\n• Education\n• Certifications\n• Publications\n• Contact info\n\nType "help" for more info!`;
+}
+
+// ---------- Component ----------
 interface Message {
   id: string;
   text: string;
@@ -9,227 +375,88 @@ interface Message {
   timestamp: Date;
 }
 
-const Chatbot = () => {
+const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
-      text: "Hey there! 👋 I'm Aryan's AI assistant (built into this portfolio). Ask me anything about his skills, projects, experience, or certifications!",
+      id: '0',
+      text: "Hey! 👋 I'm Aryan's AI assistant — ask me anything about his skills, projects, experience, or any topic below!",
       sender: 'bot',
       timestamp: new Date(),
-    }
+    },
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const wasOpenLast = useRef(false);
+
+  const stickyLast = useRef(true);
+  const isStillOpen = useRef(isOpen);
+  useEffect(() => { isStillOpen.current = isOpen; }, [isOpen]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (isStillOpen.current) scrollToBottom();
   }, [messages]);
 
   // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
     }
   }, [inputValue]);
 
-  // Smart response generator using profile data
+  // --- Fuzzy word→synonym expansion ---
+  const synonyms: Record<string, string[]> = {
+    'email': ['email', 'mail', 'reach'],
+    'phone': ['phone', 'call', 'number', 'contact'],
+    'skill': ['skill', 'tech', 'stack', 'know', 'language'],
+    'project': ['project', 'app', 'built', 'building', 'made', 'created'],
+    'intern': ['intern', 'interned', 'work', 'worked', 'job'],
+    'cert': ['cert', 'certific', 'achievement'],
+    'pib': ['pib', 'multilingual', 'press', 'video'],
+    'face': ['face', 'recognition', 'missing', 'aadhaar', 'biometric'],
+    'thala': ['thala', 'thalassemia', 'healthcare', 'medical'],
+    'weather': ['weather', 'forecast', 'climate', 'prediction'],
+    'rag': ['rag', 'offline', 'multimodal', 'document'],
+    '5g': ['5g', 'network', 'simulation', 'telecom'],
+    'csv': ['csv', 'dashboard', 'data'],
+    'sql': ['sql', 'database'],
+    'contact': ['contact', 'reach', 'connect', 'email'],
+    'availability': ['available', 'open', 'seeking', 'hiring'],
+  };
+
+  const buildRichQuery = (raw: string): string => {
+    const tokens = raw.toLowerCase().split(/\s+/);
+    const expanded = tokens.flatMap(t => synonyms[t] ?? [t]);
+    const ordered = [...new Set(expanded)];
+    return ordered.join(' ');
+  };
+
   const generateResponse = (query: string): string => {
-    const q = query.toLowerCase();
+    const q = buildRichQuery(query);
 
-    // Greetings
-    if (/\b(hi|hello|hey|greetings|sup|yo)\b/.test(q)) {
-      return "Hey! 👋 Great to see you! What would you like to know about Aryan?";
-    }
-
-    // Goodbye
-    if (/\b(bye|goodbye|see you|later)\b/.test(q)) {
-      return "Thanks for chatting! 👋 Don't forget to check out Aryan's projects!";
-    }
-
-    // Thanks
-    if (/\b(thanks|thank you|thx)\b/.test(q)) {
-      return "You're welcome! 😊 Anything else you'd like to know?";
-    }
-
-    // Help
-    if (/\b(help|what can you)\b/.test(q)) {
-      return `I can tell you about:\n• Skills & tech stack 💻\n• 12+ projects 🚀\n• 5 internships 💼\n• Education 🎓\n• 25+ certifications 🏆\n• Contact info 📧\n\nJust ask naturally!`;
-    }
-
-    // Jokes
-    if (/\b(joke|funny|laugh)\b/.test(q)) {
-      const jokes = [
-        "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
-        "How many programmers to change a bulb? None - that's hardware! 💡",
-        "Why do Java devs wear glasses? Because they can't C#! 😎",
-        "A SQL query walks into a bar... Can I JOIN you? 🍺",
-        "Why did the dev go broke? Used up all his cache! 💸",
-      ];
-      return jokes[Math.floor(Math.random() * jokes.length)];
-    }
-
-    // WHO ARE YOU / ABOUT
-    if (/\b(who are you|what are you|your name)\b/.test(q) || q.includes("who is aryan")) {
-      return `Aryan Mishra - AI & ML specialist & Full-Stack Developer 🎓\n\nFinal semester B.Tech (CS with AI/ML) at Presidency University Bengaluru. He's built an award-winning facial recognition system (92%+ accuracy), worked 5 internships, earned 25+ certifications, and has 72+ technical skills. Currently seeking ML/SDE/Full-Stack roles!\n\nContact: ${profileData.contact.email}`;
-    }
-
-    // SKILLS
-    if (/\b(skill|technology|tech stack|programming|languages)\b/.test(q)) {
-      const sorted = [...profileData.skills].sort((a, b) => b.level - a.level);
-      const top = sorted.slice(0, 5);
-      return `Top skills (${sorted.length} total):\n\n${top.map(s => `• ${s.name}: ${s.level}%`).join('\n')}\n\nHe also knows: ML, AI, Computer Vision, Data Science, Cloud, IoT, and more!`;
-    }
-
-    // SPECIFIC SKILL QUERIES
-    const skillMap: Record<string, string> = {
-      'python': `Python: ${profileData.skills.find(s => s.name === 'Python')?.level}% - Used for ML, AI, data science, and backend. Powers his facial recognition and 5G simulation projects.`,
-      'javascript': `JavaScript: ${profileData.skills.find(s => s.name === 'JavaScript')?.level}% - Used for web dev with React. Full-stack expertise.`,
-      'react': `React: ${profileData.skills.find(s => s.name === 'React')?.level}% - Built this portfolio with React + TypeScript. Also skilled in hooks, components, modern patterns.`,
-      'machine learning': `Machine Learning: ${profileData.skills.find(s => s.name === 'Machine Learning')?.level}% - Core specialty! Projects: facial recognition, 5G optimization, weather prediction, CSV automation.`,
-      'ml': `ML: ${profileData.skills.find(s => s.name === 'Machine Learning')?.level}% - Uses TensorFlow, scikit-learn, and more.`,
-      'ai': `AI: ${profileData.skills.find(s => s.name === 'Artificial Intelligence')?.level}% - Deep learning, neural networks, NLP, computer vision.`,
-    };
-
-    for (const [key, answer] of Object.entries(skillMap)) {
-      if (q.includes(key)) return answer;
-    }
-
-    // PROJECTS
-    if (/\b(project|built|created|developed|work)\b/.test(q)) {
-      // Specific projects
-      if (/(face|facial|recognition|missing)/.test(q)) {
-        return `🏆 Facial Recognition System\n• 92%+ accuracy 🎯\n• Identifies missing persons using Aadhaar biometrics\n• Won "Best Societal Relevant Project" (400+ submissions)\n• Python, OpenCV, Raspberry Pi\n\nThis is his award-winning project!`;
+    // first pass: direct regex matcher
+    const matched = matcher(q);
+    if (matched !== null) {
+      if (typeof matched === 'function') {
+        try { return matched(query); } catch (_) { /* fall through */ }
       }
-      if (/(5g|network|simulation)/.test(q)) {
-        return `📡 5G Network Simulation\n• 300-400% throughput improvement 🚀\n• AI-driven adaptive resource management\n• Reinforcement learning (Q-Learning)\n• Python, Flask, TensorFlow, NumPy\n\nDemonstrates AI + networking mastery!`;
-      }
-      if (/(pib|multilingual|video|press)/.test(q)) {
-        return `🎥 PIB Multilingual Video Platform\n• Transforms press releases into videos\n• 94% speech synthesis accuracy\n• 87% user satisfaction\n• Next.js, React, TypeScript, AI/ML\n\nGovernment communications revolutionized!`;
-      }
-      if (/(csv|dashboard|automated)/.test(q)) {
-        return `📊 CSV-Automated Dashboard\n• Full ML pipeline automation\n• File upload → cleaning → analysis → predictions → visualizations → reports\n• Python, pandas, matplotlib, plotly\n\nA data scientist's dream tool!`;
-      }
-      if (/(thala|thalassemia|healthcare|medical)/.test(q)) {
-        return `❤️ ThalaCare AI Assistant\n• Helps thalassemia patients manage condition\n• Multilingual conversational AI\n• Medical report translation\n• Symptom tracking\n\nTech for social good!`;
-      }
-      if (/(weather|forecast|prediction)/.test(q)) {
-        return `🌤️ Weather Prediction Platform\n• 5-year forecasts using ML\n• Simulated models (Random Forest, XGBoost, LSTM, Ensemble)\n• Historical + real-time data\n• React, TypeScript, Chart.js\n\nAccurate and user-friendly!`;
-      }
-      if (/(sql|database|monitoring)/.test(q)) {
-        return `🗄️ SQL Database Dashboard\n• Real-time DB monitoring\n• Server & DB stats with <1s latency\n• Performance metrics\n• Terminate heavy processes\n• SQL, Web Development\n\nLike a task manager for databases!`;
-      }
-      if (/(face detection)/.test(q) || q.includes('face dection')) {
-        return `👁️ Face Detection/Recognition - see "facial recognition" above.`;
-      }
-
-      // Default project list
-      return `Aryan has 12+ major projects:\n\n🏆 Facial Recognition (92% accuracy)\n📡 5G Network Simulation (300-400% improvement)\n🎥 PIB Multilingual Video Platform\n📊 CSV-Automated Dashboard\n🏥 ThalaCare AI Assistant\n🌤️ Weather Prediction\n🗄️ SQL Database Dashboard\n\nWant details on a specific project? Just ask!`;
+      console.debug('[chatbot] matched directly →', matched.toString().slice(0, 60));
+      return matched;
     }
 
-    // EXPERIENCE / INTERNSHIPS
-    if (/\b(experience|internship|interned|worked|job|company)\b/.test(q)) {
-      if (q.includes('airtel')) return `📱 **Airtel Digital** (Aug-Oct 2025)\nStudent Intern - Data Science & Network Optimization. Gained real-world experience at India's leading telecom.`;
-      if (q.includes('gaia') || q.includes('smart city')) return `🌆 **Gaia Smart City** (Jul-Oct 2025)\nAI-ML Intern - IoT-based smart city solutions. Got a Letter of Recommendation!`;
-      if (q.includes('scanpick')) return `💻 **ScanPick** (Oct 2024 - May 2025)\nFull-Stack Developer - Built responsive full-stack apps. Got Offer Letter + LOR!`;
-      if (q.includes('xtelify')) return `📊 **Xtelify Limited** (Aug-Oct 2025)\nData Science Intern - Research projects with expert mentorship.`;
-      if (q.includes('capgemini')) return `☁️ **Capgemini** (Feb-May 2026)\nCloud Infrastructure Associate - Enterprise cloud projects, automation, optimization.`;
-      if (q.includes('sewa') || q.includes('social')) return `❤️ **Subhansh Sewa Trust** (May-Jun 2024)\nSocial Entrepreneurship Intern - Fundraising, social impact. Got LOR!`;
-
-      return `5 impressive internships:\n\n1. Capgemini - Cloud Infrastructure (2026)\n2. Airtel Digital - Data Science (2025)\n3. Xtelify - Data Science (2025)\n4. Gaia Smart City - AI/ML (2025)\n5. ScanPick - Full-Stack (2024-25)\n\nAll with recommendation letters!`;
-    }
-
-    // EDUCATION
-    if (/\b(education|university|college|degree|study|school)\b/.test(q)) {
-      if (q.includes('presidency') || q.includes('current')) {
-        return `🎓 **B.Tech in CS with AI/ML**\nPresidency University, Bengaluru\nNov 2022 - Nov 2026 (Final semester)\n\nSkills acquired: DSA, Web Apps, TensorFlow, MySQL, Video Analytics, Chatbot Dev, and more!`;
-      }
-      if (q.includes('hiranandani') || q.includes('school')) {
-        return `🏫 **Hiranandani Foundation School** (2020-2022)\nComputer Science - HTML, XML, CSS, JavaScript, problem solving. This is where it all began!`;
-      }
-      return `🎓 B.Tech (CS + AI/ML) - Presidency University (2022-2026)\n🏫 Hiranandani Foundation School (2020-2022)`;
-    }
-
-    // CERTIFICATES
-    if (/\b(certificate|certification|achievement|award)\b/.test(q)) {
-      if (q.includes('google')) return `Google certs:\n• Google Analytics Individual Qualification\n• Digital Marketing\n• And more! (25+ total)`;
-      if (q.includes('oracle')) return `🏆 Oracle Foundation Associate - prestigious DB & enterprise tech cert!`;
-      if (q.includes('deloitte')) return `📊 Deloitte Australia - Data Analytics Job Simulation via Forage.`;
-      if (q.includes('linux')) return `🐧 Linux Foundation - "A Beginner's Guide to Linux Kernel Development"`;
-      if (q.includes('microsoft')) return `Microsoft: Power BI Desktop, Azure DevOps, SCCM Training.`;
-      if (q.includes('ibm')) return `IBM: Design Thinking, Vector Database Essentials.`;
-      return `🏆 25+ certifications from:\nGoogle, Oracle, Deloitte, Linux Foundation, Microsoft, IBM, TCS, and more!`;
-    }
-
-    // CONTACT
-    if (/\b(contact|email|phone|reach|connect|location)\b/.test(q)) {
-      return `📬 **Contact Aryan:**\n\n📧 ${profileData.contact.email}\n📱 ${profileData.contact.phone}\n📍 ${profileData.contact.location}\n\n💼 LinkedIn: ${profileData.contact.linkedinLink}\n💻 GitHub: ${profileData.contact.githubLink}\n🐦 ${profileData.contact.twitter}\n\nHe's responsive and open to opportunities! 🚀`;
-    }
-
-    // SOCIAL MEDIA
-    if (/\b(linkedin|github|social|twitter|facebook)\b/.test(q)) {
-      if (q.includes('linkedin')) return `💼 LinkedIn: ${profileData.contact.linkedinLink}\n\n743+ followers, 500+ connections, #OPEN_TO_WORK, very active!`;
-      if (q.includes('github')) return `💻 GitHub: ${profileData.contact.githubLink}\n\nCheck out his repos: AI/ML, web apps, data science, open source!`;
-      return `Social media:\n\n💼 LinkedIn: ${profileData.contact.linkedinLink}\n💻 GitHub: ${profileData.contact.githubLink}\n🐦 Twitter: ${profileData.contact.twitter}\n📘 Facebook: ${profileData.contact.facebook}`;
-    }
-
-    // CURRENT STATUS / AVAILABILITY
-    if (/\b(current|now|present|doing|available|open to work|hire|hiring)\b/.test(q)) {
-      return `🎯 **Currently:**\n• Final semester B.Tech at Presidency University\n• Recently completed Capgemini Cloud Infrastructure role\n• **Actively seeking** ML, SDE, and Full-Stack roles!\n• Available after graduation (Nov 2026)\n\nInterested? Email: ${profileData.contact.email}`;
-    }
-
-    // ABOUT / SUMMARY
-    if (/\b(about|bio|summary|tell me about|who is)\b/.test(q)) {
-      return `Aryan Mishra - AI & ML Specialist & Full-Stack Developer 🌟\n\n🏆 Award-winning facial recognition (92%+ accuracy, 400+ submissions)\n📜 25+ certifications (Google, Oracle, Deloitte, Linux, Microsoft)\n💼 5 internships (Capgemini, Airtel, Xtelify, Gaia, ScanPick)\n🚀 12+ major projects\n💻 72+ technical skills\n🎓 Final semester B.Tech (CS + AI/ML) at Presidency University\n\nOpen to ML, SDE, and Full-Stack roles!`;
-    }
-
-    // ACHIEVEMENTS / AWARDS
-    if (/\b(achievement|award|recognition|won|best)\b/.test(q)) {
-      return `🏆 **Major Awards & Achievements:**\n\n• "Best Societal Relevant Project" award (400+ submissions)\n• Facial recognition system: 92%+ accuracy\n• Raspberry Pi certification (top 70/400)\n• 25+ industry certifications\n• Letters of Recommendation from all internships\n• 743+ LinkedIn followers`;
-    }
-
-    // HOW MANY
-    if (/\b(how many)\b/.test(q)) {
-      if (q.includes('project')) return `12+ major projects! 🚀`;
-      if (q.includes('certificate') || q.includes('certification')) return `25+ certifications! 🏆`;
-      if (q.includes('skill')) return `72+ technical skills! 💻`;
-      if (q.includes('internship') || q.includes('experience')) return `5 internships + 1 social entrepreneurship role! 💼`;
-      return `He's accomplished a lot! Try asking "how many projects" or "how many certifications"?`;
-    }
-
-    // BEST / TOP
-    if (/\b(best|strongest|top)\b/.test(q)) {
-      if (q.includes('skill')) return `Top skills:\n1. Python - 90% 🔥\n2. HTML - 90% 🔥\n3. TypeScript - 80%\n4. React - 80%\n5. ML/AI - 80%`;
-      if (q.includes('project')) return `Facial Recognition System - his standout project! 92%+ accuracy, award-winning, helps find missing persons.`;
-      return `His greatest strength is combining AI/ML with real-world impact - like the facial recognition system that reunites families! 🌟`;
-    }
-
-    // LOCATION
-    if (/\b(where|located|live|based|from)\b/.test(q) && /\b(based|located|live)\b/.test(q)) {
-      return `📍 Bengaluru (Bangalore), Karnataka, India - India's Silicon Valley! 🌆 Open to relocation for the right opportunity.`;
-    }
-
-    // RESUME / CV
-    if (/\b(resume|cv|download)\b/.test(q)) {
-      return `📄 Download Aryan's CV from the Resume page on this website! Or email him at ${profileData.contact.email}`;
-    }
-
-    // PORTFOLIO / WEBSITE
-    if (/\b(portfolio|website|this site)\b/.test(q)) {
-      return `He built this entire portfolio himself! 💻 React + TypeScript + Tailwind CSS + Three.js (3D effects). Yes, this chatbot is also his creation! 🤖`;
-    }
-
-    // Default fallback
-    return `I'm not sure I understood. I can tell you about Aryan's:\n\n• Skills & technologies 💻\n• Projects & achievements 🚀\n• Work experience 💼\n• Education 🎓\n• 25+ certifications 🏆\n• Contact info 📧\n\nJust ask naturally! Example: "What projects has he built?"`;
+    // second pass: fallback against regex-filtered candidates
+    const fb = fallbackResponse(query);
+    console.debug('[chatbot] fallback →', fb.slice(0, 80));
+    return fb;
   };
 
   const handleSendMessage = () => {
@@ -237,19 +464,19 @@ const Chatbot = () => {
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      text: inputValue.trim(),
       sender: 'user',
       timestamp: new Date(),
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const sent = inputValue.trim();
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate natural thinking delay (300-800ms)
-    const thinkingTime = 300 + Math.random() * 500;
+    const variation = 250 + Math.random() * 400;
     setTimeout(() => {
-      const response = generateResponse(userMessage.text);
+      const response = generateResponse(sent);
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: response,
@@ -258,7 +485,7 @@ const Chatbot = () => {
       };
       setMessages(prev => [...prev, botMessage]);
       setIsLoading(false);
-    }, thinkingTime);
+    }, variation);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -268,100 +495,117 @@ const Chatbot = () => {
     }
   };
 
+  const handleClearChat = () => {
+    setMessages([
+      {
+        id: '0',
+        text: "Chat cleared! 👋 Ask me anything new about Aryan.",
+        sender: 'bot',
+        timestamp: new Date(),
+      },
+    ]);
+  };
+
+  // ---------- Render ----------
   return (
     <div className="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6 max-w-[calc(100vw-2rem)]">
       {isOpen ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-[90vw] max-w-xs sm:w-80 h-[70vh] max-h-[500px] sm:h-96 flex flex-col border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-[92vw] max-w-sm sm:w-80 sm:max-w-md h-[72vh] max-h-[580px] flex flex-col border border-gray-200 dark:border-gray-700 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-t-lg flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-white/20 p-1.5">
-                <Bot size={20} className="text-white" />
+          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white p-3.5 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm">
+                AI
               </div>
               <div>
-                <span className="font-medium block text-sm">Aryan's Assistant</span>
-                <span className="text-xs opacity-90 flex items-center gap-1">
-                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                  Offline
+                <span className="font-semibold block text-sm leading-tight">Aryan's Assistant</span>
+                <span className="text-xs opacity-90 flex items-center gap-1.5">
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_6px_rgba(52,211,153,0.8)]"></span>
+                  Online — replies instantly
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
+              <button
+                onClick={handleClearChat}
+                className="p-1.5 hover:bg-white/15 rounded-full transition-colors"
+                title="Clear chat"
+              >
+                <Trash2 size={16} />
+              </button>
               <button
                 onClick={() => setShowSettings(true)}
-                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                className="p-1.5 hover:bg-white/15 rounded-full transition-colors"
                 title="Info"
               >
-                <Settings size={18} />
+                <Settings size={16} />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                className="p-1.5 hover:bg-white/15 rounded-full transition-colors"
                 title="Close"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-            {messages.map((message) => (
+          <div className="flex-1 overflow-y-auto px-3 py-3 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 space-y-3">
+            {messages.map((message, idx) => (
               <div
                 key={message.id}
-                className={`mb-3 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}
+                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-1 duration-200`}
               >
                 <div
-                  className={`inline-block p-3 rounded-lg max-w-[85%] sm:max-w-xs shadow-md ${
+                  className={`max-w-[87%] sm:max-w-[78%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
                     message.sender === 'user'
-                      ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-tr-none'
-                      : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-tl-none border border-gray-200 dark:border-gray-600'
+                      ? 'bg-gradient-to-br from-indigo-500 to-purple-500 text-white rounded-br-md'
+                      : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-bl-md'
                   }`}
                 >
-                  {/* Format message with links */}
                   {message.text.split('\n').map((line, i) => {
-                    const urlParts = line.split(/(https?:\/\/[^\s]+)/g);
+                    const urlParts = line.split(/(https?:\/\/[^\s<]+)/g);
                     return (
-                      <div key={i} className="mb-1 last:mb-0">
+                      <div key={i} className="mb-0.5 last:mb-0">
                         {urlParts.map((urlPart, j) => {
-                          if (urlPart.match(/https?:\/\/[^\s]+/)) {
+                          if (/^https?:\/\/[^\s<]+$/.test(urlPart)) {
                             return (
                               <a
                                 key={`${i}-${j}`}
                                 href={urlPart}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`${message.sender === 'user' ? 'text-yellow-200' : 'text-blue-600 dark:text-blue-400'} underline hover:opacity-80 font-medium`}
+                                className={`${message.sender === 'user' ? 'text-yellow-100 hover:text-white' : 'text-blue-600 dark:text-blue-400 hover:underline'} font-medium break-all`}
                               >
-                                {urlPart}
+                                {urlPart.replace(/^https?:\/\//, '')}
                               </a>
                             );
                           }
                           const emailParts = urlPart.split(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g);
                           return (
-                            <span key={`${i}-${j}`}>
-                              {emailParts.map((emailPart, k) => {
-                                if (emailPart.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
-                                  return (
+                            <React.Fragment key={`${i}-${j}`}>
+                              {emailParts.map((ep, k) =>
+                                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(ep)
+                                  ? (
                                     <a
                                       key={`${i}-${j}-${k}`}
-                                      href={`mailto:${emailPart}`}
-                                      className={`${message.sender === 'user' ? 'text-yellow-200' : 'text-blue-600 dark:text-blue-400'} underline hover:opacity-80 font-medium`}
+                                      href={`mailto:${ep}`}
+                                      className={`${message.sender === 'user' ? 'text-yellow-100 hover:text-white' : 'text-blue-600 dark:text-blue-400 hover:underline'} font-medium`}
                                     >
-                                      {emailPart}
+                                      {ep}
                                     </a>
-                                  );
-                                }
-                                return <span key={`${i}-${j}-${k}`}>{emailPart}</span>;
-                              })}
-                            </span>
+                                  )
+                                  : <span key={`${i}-${j}-${k}`}>{ep}</span>
+                              )}
+                            </React.Fragment>
                           );
                         })}
                       </div>
                     );
                   })}
                 </div>
-                <div className={`text-xs text-gray-500 dark:text-gray-400 mt-1 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                <div className={`text-[10px] text-gray-400 dark:text-gray-500 mt-1 px-1 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
               </div>
@@ -369,11 +613,11 @@ const Chatbot = () => {
 
             {/* Typing indicator */}
             {isLoading && (
-              <div className="mb-3 text-left">
-                <div className="inline-block p-3 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-tl-none shadow-md border border-gray-200 dark:border-gray-600">
-                  <div className="flex items-center gap-2">
-                    <Loader2 size={16} className="animate-spin text-indigo-500" />
-                    <span className="text-sm text-gray-500">Thinking...</span>
+              <div className="flex justify-start animate-in fade-in duration-200">
+                <div className="bg-white dark:bg-gray-700 px-3.5 py-2.5 rounded-2xl rounded-bl-md border border-gray-200 dark:border-gray-600 shadow-sm">
+                  <div className="flex items-center gap-1.5">
+                    <Loader2 size={14} className="animate-spin text-indigo-500" />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Thinking…</span>
                   </div>
                 </div>
               </div>
@@ -383,23 +627,23 @@ const Chatbot = () => {
           </div>
 
           {/* Input */}
-          <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-            <div className="flex gap-2">
+          <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shrink-0">
+            <div className="flex items-end gap-2">
               <textarea
                 ref={textareaRef}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask about Aryan... 💬"
-                className="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white transition-all"
+                placeholder="Ask anything about Aryan… 💬"
+                className="flex-1 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white transition-all leading-relaxed"
                 rows={1}
-                style={{ minHeight: '40px', maxHeight: '120px' }}
+                style={{ minHeight: '42px', maxHeight: '120px' }}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={isLoading || !inputValue.trim()}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 shadow-md"
-                aria-label="Send"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-2.5 rounded-xl hover:from-indigo-700 hover:to-purple-700 disabled:opacity-45 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg shrink-0"
+                aria-label="Send message"
               >
                 <Send size={16} />
               </button>
@@ -409,70 +653,86 @@ const Chatbot = () => {
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center group relative"
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white w-14 h-14 rounded-full shadow-xl hover:shadow-2xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center group"
           aria-label="Open chatbot"
         >
-          <MessageCircle size={24} />
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
+          <MessageCircle size={26} className="group-hover:scale-110 transition-transform" />
+          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-emerald-400 rounded-full border-2 border-gray-900 dark:border-gray-700 animate-pulse"></span>
         </button>
       )}
 
-      {/* Settings/Info Modal */}
+      {/* Settings Modal */}
       {showSettings && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Chatbot Info</h3>
-              <button
-                onClick={() => setShowSettings(false)}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-              >
+        <div className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-[60] p-4" onClick={() => setShowSettings(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <Bot size={20} className="text-indigo-600 dark:text-indigo-400" />
+                Chatbot Info
+              </h3>
+              <button onClick={() => setShowSettings(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                 <X size={20} />
               </button>
             </div>
 
             <div className="space-y-4">
-              <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 border border-indigo-200 dark:border-indigo-800">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl p-4 border border-indigo-100 dark:border-indigo-800">
                 <div className="flex items-center gap-2 mb-2">
-                  <Bot size={20} className="text-indigo-600 dark:text-indigo-400" />
-                  <span className="font-medium text-indigo-900 dark:text-indigo-100">Offline Rule-Based System</span>
+                  <Bot size={18} className="text-indigo-600 dark:text-indigo-400" />
+                  <span className="font-medium text-indigo-900 dark:text-indigo-100 text-sm">Smart Rule-Based Engine</span>
                 </div>
-                <p className="text-sm text-indigo-700 dark:text-indigo-300">
-                  This chatbot runs completely offline using Aryan's portfolio data. No external API calls, no internet required!
+                <p className="text-xs text-indigo-700 dark:text-indigo-300 leading-relaxed">
+                  This chatbot runs completely offline. It has fuzzy matching, synonym expansion, and structured knowledge from every section of Aryan's portfolio — no external API or internet required.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-medium text-gray-900 dark:text-white mb-2">What I know about:</h4>
-                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                  <li>✅ All 12+ projects with details</li>
-                  <li>✅ 5 internships & work experience</li>
-                  <li>✅ 25+ certifications</li>
-                  <li>✅ 72+ skills & proficiency levels</li>
-                  <li>✅ Education & achievements</li>
-                  <li>✅ Contact info & social links</li>
-                  <li>✅ Can tell jokes! 😄</li>
-                </ul>
+                <h4 className="font-medium text-gray-900 dark:text-white mb-2 text-sm">What I know about:</h4>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {[
+                    [`${allSkills.length}+ skills & levels`, '🧠'],
+                    [`${allProjects.length}+ projects`, '🚀'],
+                    [`${allExperiences.length} work roles`, '💼'],
+                    ['Education history', '🎓'],
+                    [`${allCertificates.length}+ certifications`, '🏆'],
+                    [`${allPublications.length} publications`, '📄'],
+                    ['Contact & social links', '📬'],
+                    ['Jokes included 😄', '🤖'],
+                  ].map(([label, icon]) => (
+                    <div key={label} className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/40 rounded-lg px-2.5 py-1.5">
+                      <span>{icon}</span>
+                      <span>{label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-sm text-gray-600 dark:text-gray-400">
-                <p className="font-medium mb-1">💡 Example questions:</p>
-                <ul className="space-y-1 text-xs">
-                  <li>"What are Aryan's top skills?"</li>
-                  <li>"Tell me about his facial recognition project"</li>
-                  <li>"Where has he worked?"</li>
-                  <li>"What certifications does he have?"</li>
-                  <li>"How can I contact him?"</li>
-                  <li>"Tell me a joke!"</li>
-                </ul>
+              <div className="bg-gray-50 dark:bg-gray-700/40 rounded-xl p-3.5 text-xs text-gray-600 dark:text-gray-400">
+                <p className="font-semibold mb-2 text-gray-700 dark:text-gray-300">💡 Try these:</p>
+                <div className="flex flex-wrap gap-1">
+                  {[
+                    'What are his top skills?',
+                    'Tell me about the PIB project',
+                    'Where has he worked?',
+                    'Does he know TensorFlow?',
+                    'How many certifications?',
+                    'Email Aryan',
+                    'Tell me a joke',
+                    'What are his publications?',
+                  ].map(q => (
+                    <span key={q} className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full text-[11px]">
+                      {q}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
             <button
               onClick={() => setShowSettings(false)}
-              className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition-colors"
+              className="mt-4 w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-2.5 rounded-xl transition-colors text-sm font-medium"
             >
-              Got it!
+              Let's chat! →
             </button>
           </div>
         </div>

@@ -1,11 +1,11 @@
 import React from 'react';
 import Layout from '../components/Layout/Layout';
 import { profileData } from '../data/profileData';
-import { Download, Briefcase, GraduationCap, Award, User, Mail, Phone, MapPin, Linkedin, Github as GitHub, Twitter, Facebook } from 'lucide-react';
+import { Download, Briefcase, GraduationCap, Award, User, Mail, Phone, MapPin, Linkedin, Github as GitHub, Twitter, Facebook, FileText, ExternalLink } from 'lucide-react';
 import SkillBar from '../components/UI/SkillBar';
 
 const ResumePage: React.FC = () => {
-  const { name, title, bio, contact, skills, experiences, education } = profileData;
+  const { name, title, bio, contact, skills, experiences, education, publications } = profileData;
   
   const downloadResume = () => {
     const link = document.createElement('a');
@@ -159,7 +159,33 @@ const ResumePage: React.FC = () => {
               ))}
             </div>
           </div>
-          
+
+          {/* Publications */}
+          {publications.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                <FileText className="text-indigo-400" /> Publications
+              </h3>
+              <div className="space-y-6">
+                {publications.map((pub, index) => (
+                  <div key={index} className="border-l-2 border-indigo-500 pl-4">
+                    <h4 className="text-lg font-semibold text-white">{pub.title}</h4>
+                    <p className="text-gray-400 text-sm mb-2">{pub.period}</p>
+                    <p className="text-gray-300 whitespace-pre-line">{pub.description}</p>
+                    <a
+                      href={pub.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300 transition-colors mt-2"
+                    >
+                      <ExternalLink size={14} /> View Publication
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Education */}
           <div className="mb-8">
             <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
