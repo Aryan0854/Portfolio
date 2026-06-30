@@ -1,44 +1,42 @@
 <!doctype html>
 <html lang="en">
-   <head>
-     <meta charset="UTF-8" />
-     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-     <link rel="apple-touch-icon" href="/favicon.ico" />
-     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-     
-      <!-- WebP detection and preload critical image -->
-      <script>
-        (function() {
-          // WebP support detection
-          const webpSupported = (function() {
-            try {
-              return document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0;
-            } catch(e) {
-              return false;
-            }
-          })();
-          
-          if (webpSupported) {
-            // Preload WebP version (smaller, faster)
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'image';
-            link.href = '/img/ME-1.webp';
-            link.type = 'image/webp';
-            document.head.appendChild(link);
-          } else {
-            // Fallback to PNG
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'image';
-            link.href = '/img/ME-1.png';
-            link.type = 'image/png';
-            document.head.appendChild(link);
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    
+    <!-- WebP detection and preload critical image -->
+    <script>
+      (function() {
+        const webpSupported = (function() {
+          try {
+            return document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0;
+          } catch(e) {
+            return false;
           }
         })();
-      </script>
-     
-     <!-- Primary Meta Tags -->
+        
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        if (webpSupported) {
+          link.href = '/img/ME-1.webp';
+          link.type = 'image/webp';
+        } else {
+          link.href = '/img/ME-1.png';
+          link.type = 'image/png';
+        }
+        document.head.appendChild(link);
+      })();
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Primary Meta Tags -->
     <title>Aryan Mishra | AI & ML Portfolio</title>
     <meta name="description" content="Portfolio of Aryan Mishra – AI & ML student showcasing projects, skills, and achievements. Explore my work at Aryan Portfolio." />
     <meta name="keywords" content="Aryan Mishra, Aryan Portfolio, AI Portfolio, ML Projects, Aryan AI, Aryan ML, Aryan Projects">
@@ -70,19 +68,18 @@
     
     <!-- Structured Data -->
     <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Aryan Mishra",
-  "url": "https://aryanportfolio.me",
-  "sameAs": [
-    "https://www.linkedin.com/in/yourprofile",
-    "https://github.com/yourprofile",
-    "https://www.instagram.com/yourprofile"
-  ],
-  "jobTitle": "AI & ML Student / Developer",
-  "description": "Portfolio of Aryan Mishra showcasing AI & ML projects, skills, and achievements."
-}
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Aryan Mishra",
+      "url": "https://aryanportfolio.me",
+      "sameAs": [
+        "https://www.linkedin.com/in/aryan0854/",
+        "https://github.com/Aryan0854"
+      ],
+      "jobTitle": "AI & ML Student / Developer",
+      "description": "Portfolio of Aryan Mishra showcasing AI & ML projects, skills, and achievements."
+    }
     </script>
   </head>
   <body>

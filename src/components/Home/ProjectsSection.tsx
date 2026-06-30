@@ -10,15 +10,15 @@ const ProjectsSection: React.FC = () => {
   
   return (
     <div className="py-16 relative z-10">
-      <div className="container mx-auto px-4">
+      <div className="w-full">
         <div className="flex justify-between items-center mb-12">
           <h2 className="text-3xl font-bold text-white">
-            Featured <span className="text-indigo-500">Projects</span>
+            Featured <span className="text-[#6366f1]">Projects</span>
           </h2>
           
           <Link
             to="/projects"
-            className="text-indigo-400 hover:text-indigo-300 transition-colors inline-flex items-center gap-1"
+            className="text-[#6366f1] hover:text-[#8b5cf6] transition-colors inline-flex items-center gap-1"
           >
             View All <ArrowRight size={18} />
           </Link>

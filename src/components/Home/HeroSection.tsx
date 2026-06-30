@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Github as GitHub, Linkedin, Mail, PhoneCall, Twitter, Facebook } from 'lucide-react';
+import { Github as GitHub, Linkedin, Mail, PhoneCall, Twitter, Facebook, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { profileData } from '../../data/profileData';
 import ImageLoader from '../UI/ImageLoader';
@@ -8,12 +8,27 @@ const HeroSection: React.FC = () => {
   const { name, title, bio, contact } = profileData;
   const nameArray = name.split(' ');
   const heroRef = useRef<HTMLDivElement>(null);
+  const avatarContainerRef = useRef<HTMLDivElement>(null);
   const [showToast, setShowToast] = useState(false);
+  const [typedText, setTypedText] = useState('');
   
+  // Custom typing animation for title
   useEffect(() => {
-    if (!heroRef.current) return;
-    
+    let index = 0;
+    const interval = setInterval(() => {
+      setTypedText(title.slice(0, index + 1));
+      index++;
+      if (index >= title.length) {
+        clearInterval(interval);
+      }
+    }, 50);
+    return () => clearInterval(interval);
+  }, [title]);
+
+  // Mouse move effect for background parallax and 3D avatar tilt
+  useEffect(() => {
     const hero = heroRef.current;
+    if (!hero) return;
     
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
@@ -22,20 +37,42 @@ const HeroSection: React.FC = () => {
       const x = (clientX - left) / width;
       const y = (clientY - top) / height;
       
-      const moveX = (x - 0.5) * 20;
-      const moveY = (y - 0.5) * 20;
-      
+      // Content shift
       const content = hero.querySelector('.hero-content') as HTMLElement;
-      
       if (content) {
-        content.style.transform = `translate(${moveX * 0.5}px, ${moveY * 0.5}px)`;
+        const moveX = (x - 0.5) * 15;
+        const moveY = (y - 0.5) * 15;
+        content.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      }
+
+      // Avatar 3D tilt
+      const avatar = avatarContainerRef.current;
+      if (avatar) {
+        const avatarRect = avatar.getBoundingClientRect();
+        const avatarCenterX = avatarRect.left + avatarRect.width / 2;
+        const avatarCenterY = avatarRect.top + avatarRect.height / 2;
+        
+        const tiltX = -(clientY - avatarCenterY) / (avatarRect.height / 2) * 15; // Max 15deg
+        const tiltY = (clientX - avatarCenterX) / (avatarRect.width / 2) * 15;   // Max 15deg
+        
+        avatar.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+      }
+    };
+
+    const handleMouseLeave = () => {
+      const avatar = avatarContainerRef.current;
+      if (avatar) {
+        avatar.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+        avatar.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
       }
     };
     
     hero.addEventListener('mousemove', handleMouseMove);
+    hero.addEventListener('mouseleave', handleMouseLeave);
     
     return () => {
       hero.removeEventListener('mousemove', handleMouseMove);
+      hero.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
   
@@ -53,120 +90,123 @@ const HeroSection: React.FC = () => {
   return (
     <div 
       ref={heroRef}
-      className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-4 py-16 z-20"
+      className="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-10 z-20"
     >
-      
       {/* Toast Notification */}
       {showToast && (
-        <div className="fixed bottom-4 right-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 text-white px-4 py-2 rounded-md shadow-lg flex items-center gap-2 z-50 animate-fade-in">
-          <PhoneCall size={18} />
-          <span>Phone number copied to clipboard!</span>
+        <div className="fixed bottom-6 right-6 bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] text-white px-5 py-3 rounded-2xl shadow-[0_10px_30px_rgba(99,102,241,0.3)] border border-white/10 flex items-center gap-3 z-50 animate-scale-in">
+          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+            <PhoneCall size={16} className="text-indigo-200" />
+          </div>
+          <div>
+            <span className="font-semibold text-sm block">Phone Copied!</span>
+            <span className="text-xs text-indigo-200">{contact.phone}</span>
+          </div>
         </div>
       )}
       
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center hero-content">
-        <div className="md:order-1 order-2 text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="block text-white mb-2">Hi, I'm</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600">
-              {nameArray[0]} <span className="block md:inline">{nameArray[1]}</span>
+      <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-center hero-content transition-transform duration-300 ease-out">
+        
+        {/* Left Text details */}
+        <div className="md:col-span-7 text-center md:text-left md:order-1 order-2 space-y-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-gray-400 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Available for Opportunities
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-none text-white">
+            Hi, I'm <br className="hidden sm:inline" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] text-glow-indigo">
+              {nameArray[0]} {nameArray[1]}
             </span>
           </h1>
           
-          <h2 className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-6">{title}</h2>
+          <div className="h-8 flex items-center justify-center md:justify-start">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-300 border-r-2 border-[#6366f1] pr-2 whitespace-nowrap overflow-hidden">
+              {typedText}
+            </h2>
+          </div>
           
-          <p className="text-gray-400 mb-8 max-w-lg">{bio}</p>
+          <p className="text-gray-400 text-base sm:text-lg max-w-xl leading-relaxed">
+            {bio}
+          </p>
           
-          <div className="flex flex-wrap gap-3 sm:gap-4 justify-center md:justify-start mb-8">
+          <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
             <a
               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full transition-colors duration-300 inline-flex items-center gap-2"
+              className="relative group overflow-hidden bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] hover:from-[#5558e3] hover:to-[#7c4ee4] text-white px-8 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2 shadow-[0_4px_20px_rgba(99,102,241,0.25)] hover:shadow-[0_4px_30px_rgba(99,102,241,0.4)]"
             >
-              <Mail size={18} /> Contact Me
+              <Mail size={18} className="group-hover:translate-x-0.5 transition-transform" />
+              <span className="font-semibold text-sm">Contact Me</span>
             </a>
             <Link
               to="/resume"
-              className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full transition-colors duration-300 inline-flex items-center gap-2"
+              className="bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20 px-8 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2 font-semibold text-sm"
             >
-              View Resume
+              <span>View Resume</span>
+              <ArrowRight size={16} />
             </Link>
           </div>
           
-          <div className="flex gap-4 justify-center md:justify-start">
-            <a
-              href={contact.githubLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
-              aria-label="GitHub"
-            >
-              <GitHub size={24} />
-            </a>
-            <a
-              href={contact.linkedinLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
-              aria-label="LinkedIn"
-            >
-              <Linkedin size={24} />
-            </a>
-            {contact.twitter && (
+          {/* Social Links */}
+          <div className="flex gap-3 justify-center md:justify-start pt-4">
+            {[
+              { icon: <GitHub size={20} />, link: contact.githubLink, label: 'GitHub' },
+              { icon: <Linkedin size={20} />, link: contact.linkedinLink, label: 'LinkedIn' },
+              { icon: <Twitter size={20} />, link: contact.twitter, label: 'Twitter' },
+              { icon: <Facebook size={20} />, link: contact.facebook, label: 'Facebook' },
+            ].filter(s => s.link).map((social, idx) => (
               <a
-                href={contact.twitter}
+                key={idx}
+                href={social.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-                aria-label="Twitter"
+                className="w-11 h-11 rounded-full bg-white/5 border border-white/8 text-gray-400 hover:text-white hover:border-[#6366f1]/50 hover:bg-[#6366f1]/10 flex items-center justify-center transition-all duration-300"
+                aria-label={social.label}
               >
-                <Twitter size={24} />
+                {social.icon}
               </a>
-            )}
-            {contact.facebook && (
-              <a
-                href={contact.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook size={24} />
-              </a>
-            )}
-            <a
-              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
-              aria-label="Email"
-            >
-              <Mail size={24} />
-            </a>
+            ))}
             <a
               href="#"
               onClick={copyPhoneNumber}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="w-11 h-11 rounded-full bg-white/5 border border-white/8 text-gray-400 hover:text-white hover:border-[#6366f1]/50 hover:bg-[#6366f1]/10 flex items-center justify-center transition-all duration-300"
               aria-label="Phone"
             >
-              <PhoneCall size={24} />
+              <PhoneCall size={20} />
             </a>
           </div>
         </div>
         
-        <div className="md:order-2 order-1 flex justify-center relative">
-          <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80" style={{ aspectRatio: '1/1' }}>
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-full animate-pulse-slow blur-xl opacity-30"></div>
-            <div className="absolute inset-2 bg-gray-900 rounded-full"></div>
-            <ImageLoader
-              src={profileData.avatar}
-              alt={name}
-              className="absolute inset-0 w-full h-full object-cover rounded-full p-2"
-              priority
-              width={320}
-              height={320}
-            />
+        {/* Right Avatar */}
+        <div className="md:col-span-5 flex justify-center md:order-2 order-1">
+          <div 
+            ref={avatarContainerRef}
+            className="relative w-64 h-64 sm:w-80 sm:h-80 transition-transform duration-300 ease-out"
+            style={{ aspectRatio: '1/1' }}
+          >
+            {/* Pulsing Backing Glow */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#6366f1] via-[#8b5cf6] to-[#a855f7] rounded-full animate-pulse-slow blur-2xl opacity-20"></div>
+            
+            {/* Outer Spinning Ring */}
+            <div className="absolute inset-[-4px] rounded-full border-2 border-dashed border-[#6366f1]/30 animate-spin" style={{ animationDuration: '40s' }}></div>
+            
+            {/* Inner Glowing Ring */}
+            <div className="absolute inset-[-10px] rounded-full border border-[#6366f1]/10 scale-95 animate-ping" style={{ animationDuration: '3s' }}></div>
+
+            {/* Avatar Frame */}
+            <div className="absolute inset-0 rounded-full overflow-hidden border border-white/10 bg-[#11151f] p-2 shadow-2xl">
+              <ImageLoader
+                src={profileData.avatar}
+                alt={name}
+                className="w-full h-full object-cover rounded-full"
+                priority
+                width={320}
+                height={320}
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -34,6 +34,14 @@ const Enhanced3DBackground = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     rendererRef.current = renderer;
     
+    // Style the canvas element explicitly to ensure it covers the viewport
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.top = '0';
+    renderer.domElement.style.left = '0';
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.domElement.style.display = 'block';
+    
     containerRef.current.appendChild(renderer.domElement);
 
     // Create multiple floating objects
@@ -50,7 +58,7 @@ const Enhanced3DBackground = () => {
     for (let i = 0; i < 4; i++) {
       const geometry = new THREE.BoxGeometry(0.5 + Math.random() * 0.5, 0.5 + Math.random() * 0.5, 0.5 + Math.random() * 0.5);
       const material = new THREE.MeshPhongMaterial({
-        color: new THREE.Color().setHSL(Math.random(), 0.7, 0.6),
+        color: new THREE.Color().setHSL(0.64 + Math.random() * 0.14, 0.7, 0.6),
         transparent: true,
         opacity: 0.6,
         specular: 0xffffff,
@@ -80,10 +88,10 @@ const Enhanced3DBackground = () => {
     for (let i = 0; i < 6; i++) {
       const geometry = new THREE.SphereGeometry(0.2 + Math.random() * 0.3, 32, 32);
       const material = new THREE.MeshPhongMaterial({
-        color: new THREE.Color().setHSL(Math.random(), 0.8, 0.7),
+        color: new THREE.Color().setHSL(0.64 + Math.random() * 0.14, 0.8, 0.7),
         transparent: true,
         opacity: 0.7,
-        emissive: new THREE.Color().setHSL(Math.random(), 0.5, 0.2),
+        emissive: new THREE.Color().setHSL(0.64 + Math.random() * 0.14, 0.5, 0.2),
         emissiveIntensity: 0.3,
         specular: 0xffffff,
         shininess: 100,
@@ -112,7 +120,7 @@ const Enhanced3DBackground = () => {
     for (let i = 0; i < 2; i++) {
       const geometry = new THREE.TorusGeometry(0.8 + Math.random() * 0.4, 0.2 + Math.random() * 0.2, 16, 100);
       const material = new THREE.MeshPhongMaterial({
-        color: new THREE.Color().setHSL(Math.random(), 0.7, 0.6),
+        color: new THREE.Color().setHSL(0.64 + Math.random() * 0.14, 0.7, 0.6),
         transparent: true,
         opacity: 0.5,
         wireframe: Math.random() > 0.5,
@@ -154,7 +162,7 @@ const Enhanced3DBackground = () => {
       posArray[i * 3 + 2] = (Math.random() - 0.5) * 20;
       
       // Color
-      const hue = Math.random();
+      const hue = 0.64 + Math.random() * 0.14;
       const color = new THREE.Color().setHSL(hue, 0.8, 0.6);
       colorArray[i * 3] = color.r;
       colorArray[i * 3 + 1] = color.g;
@@ -286,9 +294,9 @@ const Enhanced3DBackground = () => {
   return (
     <div 
       ref={containerRef} 
-      className="fixed inset-0 -z-10 w-full h-full"
+      className="fixed inset-0 -z-10 w-screen h-screen overflow-hidden pointer-events-none"
       style={{ 
-        background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)'
+        background: 'linear-gradient(135deg, #0b0e14 0%, #11151f 50%, #162035 100%)'
       }}
     />
   );

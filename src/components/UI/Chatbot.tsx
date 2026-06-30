@@ -324,44 +324,57 @@ const knowledgeBase: ReadonlyArray<KnowledgeEntry> = [
     requires: [/\b(hire|hiring|recruit|opportunity|role|position|job\s*open)\b/i],
     answer: `🚀 Aryan is open to roles in:\n\n🤖 Machine Learning / AI Engineering\n💻 Software Development Engineering (SDE)\n🌐 Full-Stack Development\n\nEmail: ${contact.email}\nLinkedIn: ${contact.linkedinLink}\n\nHe's available after Nov 2026!`,
   },
+  // --- BOT IDENTITY / CREATOR ---
+  {
+    requires: [/\b(are\s*you|your\s*maker|who\s*created|who\s*made|chatbot|ai|bot|real|human|creator)\b/i],
+    answer: "I'm a fully local AI assistant designed by Aryan to help you navigate his portfolio. I can answer questions about his B.Tech, ML projects, certifications, and experience!",
+  },
 ];
 
 const matcher = kbEntries(knowledgeBase);
 
 // ---------- Fallback: find closest match by question similarity ----------
 function fallbackResponse(query: string): string {
-  // Only compare against entries whose own regex actually matches the query
-  const candidates = knowledgeBase
-    .filter(entry => {
-      try { return (entry.requires as RegExp[]).some(r => r.test(query)); } catch { return true; }
-    })
-    .map(e => ({ entry: e, text: e.answer.toString().replace(/\n/g, ' ').slice(0, 160) }));
-
-  if (candidates.length === 0) {
+  const qWords = query.toLowerCase().split(/[^\w]+/).filter(w => w.length > 2);
+  if (qWords.length === 0) {
     return `Hmm, I'm not totally sure what you're asking 🧐\n\nBut here's what I know about Aryan — pick a topic:\n\n• Skills & tech\n• Projects\n• Work experience\n• Education\n• Certifications\n• Publications\n• Contact info\n\nType "help" for more info!`;
   }
 
-  const qWords = query.toLowerCase().split(/\s+/).filter(Boolean);
-  let bestIdx = 0;
-  let bestScore = Infinity;
-  for (let i = 0; i < candidates.length; i++) {
-    const cWords = candidates[i].text.toLowerCase().split(/\s+/).filter(Boolean);
-    const score = qWords.reduce((s, w) => {
-      const hit = cWords.some(cw => levenshtein(w, cw) <= Math.max(1, Math.floor(w.length * 0.3)));
-      return s + (hit ? 0 : 1);
-    }, 0);
-    if (score < bestScore) {
+  let bestEntry: KnowledgeEntry | null = null;
+  let bestScore = 0;
+
+  for (const entry of knowledgeBase) {
+    let score = 0;
+    
+    // 1. Check regex tests (highest priority)
+    for (const pattern of entry.requires) {
+      if (pattern instanceof RegExp) {
+        if (pattern.test(query)) score += 10;
+      } else if (typeof pattern === 'string') {
+        if (query.toLowerCase().includes(pattern.toLowerCase())) score += 5;
+      }
+    }
+
+    // 2. Word matches in the answer text
+    const answerLower = typeof entry.answer === 'string' 
+      ? entry.answer.toLowerCase() 
+      : '';
+    
+    for (const qw of qWords) {
+      if (answerLower.includes(qw)) {
+        score += 1;
+      }
+    }
+
+    if (score > bestScore) {
       bestScore = score;
-      bestIdx = i;
+      bestEntry = entry;
     }
   }
 
-  if (bestScore <= Math.max(2, Math.floor(qWords.length * 0.6))) {
-    return candidates[bestIdx].entry.answer
-      .toString()
-      .split('\n')
-      .slice(0, 5)
-      .join('\n') + '\n\n💡 Want to rephrase your question? I\'ll try my best!';
+  if (bestEntry && bestScore >= 2) {
+    const ans = typeof bestEntry.answer === 'function' ? bestEntry.answer(query) : bestEntry.answer;
+    return ans + "\n\n💡 _(Was this what you were looking for? Feel free to ask more details!)_";
   }
 
   return `Hmm, I'm not totally sure what you're asking 🧐\n\nBut here's what I know about Aryan — pick a topic:\n\n• Skills & tech\n• Projects\n• Work experience\n• Education\n• Certifications\n• Publications\n• Contact info\n\nType "help" for more info!`;
@@ -391,19 +404,14 @@ const Chatbot: React.FC = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const wasOpenLast = useRef(false);
-
-  const stickyLast = useRef(true);
-  const isStillOpen = useRef(isOpen);
-  useEffect(() => { isStillOpen.current = isOpen; }, [isOpen]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    if (isStillOpen.current) scrollToBottom();
-  }, [messages]);
+    if (isOpen) scrollToBottom();
+  }, [messages, isOpen]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -415,12 +423,45 @@ const Chatbot: React.FC = () => {
 
   // --- Fuzzy word→synonym expansion ---
   const synonyms: Record<string, string[]> = {
-    'email': ['email', 'mail', 'reach'],
-    'phone': ['phone', 'call', 'number', 'contact'],
-    'skill': ['skill', 'tech', 'stack', 'know', 'language'],
-    'project': ['project', 'app', 'built', 'building', 'made', 'created'],
-    'intern': ['intern', 'interned', 'work', 'worked', 'job'],
-    'cert': ['cert', 'certific', 'achievement'],
+    'email': ['email', 'mail', 'reach', 'contact', 'connect', 'message'],
+    'emails': ['email', 'mail', 'reach', 'contact', 'connect', 'message'],
+    'mail': ['email', 'mail', 'reach', 'contact', 'connect', 'message'],
+    'mails': ['email', 'mail', 'reach', 'contact', 'connect', 'message'],
+    'phone': ['phone', 'call', 'number', 'contact', 'mobile', 'cell'],
+    'phones': ['phone', 'call', 'number', 'contact', 'mobile', 'cell'],
+    'call': ['phone', 'call', 'number', 'contact', 'mobile', 'cell'],
+    'contact': ['contact', 'reach', 'connect', 'email', 'phone', 'address', 'location'],
+    'contacts': ['contact', 'reach', 'connect', 'email', 'phone', 'address', 'location'],
+    'address': ['location', 'where', 'live', 'city', 'bengaluru', 'bangalore', 'address'],
+    'location': ['location', 'where', 'live', 'city', 'bengaluru', 'bangalore', 'address'],
+    'skill': ['skill', 'tech', 'stack', 'know', 'language', 'programming', 'proficien'],
+    'skills': ['skill', 'tech', 'stack', 'know', 'language', 'programming', 'proficien'],
+    'tech': ['skill', 'tech', 'stack', 'know', 'language', 'programming', 'proficien'],
+    'stack': ['skill', 'tech', 'stack', 'know', 'language', 'programming', 'proficien'],
+    'know': ['skill', 'tech', 'stack', 'know', 'language', 'programming', 'proficien'],
+    'language': ['skill', 'tech', 'stack', 'know', 'language', 'programming', 'proficien'],
+    'languages': ['skill', 'tech', 'stack', 'know', 'language', 'programming', 'proficien'],
+    'project': ['project', 'app', 'built', 'building', 'made', 'created', 'developed', 'system', 'platform'],
+    'projects': ['project', 'app', 'built', 'building', 'made', 'created', 'developed', 'system', 'platform'],
+    'app': ['project', 'app', 'built', 'building', 'made', 'created', 'developed', 'system', 'platform'],
+    'apps': ['project', 'app', 'built', 'building', 'made', 'created', 'developed', 'system', 'platform'],
+    'system': ['project', 'app', 'built', 'building', 'made', 'created', 'developed', 'system', 'platform'],
+    'platform': ['project', 'app', 'built', 'building', 'made', 'created', 'developed', 'system', 'platform'],
+    'intern': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'interns': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'internship': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'internships': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'work': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'experience': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'experiences': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'job': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'jobs': ['intern', 'interned', 'work', 'worked', 'job', 'experience', 'company', 'role'],
+    'cert': ['cert', 'certific', 'achievement', 'coursera', 'udemy'],
+    'certs': ['cert', 'certific', 'achievement', 'coursera', 'udemy'],
+    'certificate': ['cert', 'certific', 'achievement', 'coursera', 'udemy'],
+    'certificates': ['cert', 'certific', 'achievement', 'coursera', 'udemy'],
+    'certification': ['cert', 'certific', 'achievement', 'coursera', 'udemy'],
+    'certifications': ['cert', 'certific', 'achievement', 'coursera', 'udemy'],
     'pib': ['pib', 'multilingual', 'press', 'video'],
     'face': ['face', 'recognition', 'missing', 'aadhaar', 'biometric'],
     'thala': ['thala', 'thalassemia', 'healthcare', 'medical'],
@@ -429,8 +470,9 @@ const Chatbot: React.FC = () => {
     '5g': ['5g', 'network', 'simulation', 'telecom'],
     'csv': ['csv', 'dashboard', 'data'],
     'sql': ['sql', 'database'],
-    'contact': ['contact', 'reach', 'connect', 'email'],
-    'availability': ['available', 'open', 'seeking', 'hiring'],
+    'education': ['education', 'university', 'college', 'degree', 'study', 'school'],
+    'availability': ['available', 'open', 'seeking', 'hiring', 'hire'],
+    'seek': ['available', 'open', 'seeking', 'hiring', 'hire'],
   };
 
   const buildRichQuery = (raw: string): string => {
@@ -449,22 +491,24 @@ const Chatbot: React.FC = () => {
       if (typeof matched === 'function') {
         try { return matched(query); } catch (_) { /* fall through */ }
       }
-      console.debug('[chatbot] matched directly →', matched.toString().slice(0, 60));
       return matched;
     }
 
     // second pass: fallback against regex-filtered candidates
-    const fb = fallbackResponse(query);
-    console.debug('[chatbot] fallback →', fb.slice(0, 80));
-    return fb;
+    return fallbackResponse(query);
   };
 
   const handleSendMessage = () => {
-    if (inputValue.trim() === '') return;
+    const trimmed = inputValue.trim();
+    if (trimmed.toLowerCase() === 'clear' || trimmed.toLowerCase() === 'reset') {
+      handleClearChat();
+      setInputValue('');
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue.trim(),
+      text: trimmed,
       sender: 'user',
       timestamp: new Date(),
     };
@@ -506,77 +550,79 @@ const Chatbot: React.FC = () => {
     ]);
   };
 
-  // ---------- Render ----------
   return (
     <div className="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6 max-w-[calc(100vw-2rem)]">
       {isOpen ? (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-[92vw] max-w-sm sm:w-80 sm:max-w-md h-[72vh] max-h-[580px] flex flex-col border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-[#11151f]/95 backdrop-blur-xl rounded-3xl shadow-2xl w-[92vw] max-w-sm sm:w-80 sm:max-w-md h-[72vh] max-h-[580px] flex flex-col border border-white/10 overflow-hidden animate-scale-in">
           {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white p-3.5 flex items-center justify-between shrink-0">
+          <div className="bg-gradient-to-r from-[#6366f1]/80 via-[#8b5cf6]/80 to-[#a855f7]/80 backdrop-blur-md text-white p-4 flex items-center justify-between shrink-0 border-b border-white/5">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm">
+              <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center font-bold text-xs border border-white/10">
                 AI
               </div>
               <div>
                 <span className="font-semibold block text-sm leading-tight">Aryan's Assistant</span>
-                <span className="text-xs opacity-90 flex items-center gap-1.5">
-                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_6px_rgba(52,211,153,0.8)]"></span>
-                  Online — replies instantly
+                <span className="text-[10px] opacity-80 flex items-center gap-1.5 mt-0.5">
+                  <span className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse shadow-[0_0_6px_rgba(99,102,241,0.8)]"></span>
+                  Replies instantly
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1">
               <button
                 onClick={handleClearChat}
-                className="p-1.5 hover:bg-white/15 rounded-full transition-colors"
+                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
                 title="Clear chat"
               >
-                <Trash2 size={16} />
+                <Trash2 size={15} />
               </button>
               <button
                 onClick={() => setShowSettings(true)}
-                className="p-1.5 hover:bg-white/15 rounded-full transition-colors"
+                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
                 title="Info"
               >
-                <Settings size={16} />
+                <Settings size={15} />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 hover:bg-white/15 rounded-full transition-colors"
+                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
                 title="Close"
               >
-                <X size={16} />
+                <X size={15} />
               </button>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-3 py-3 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 space-y-3">
-            {messages.map((message, idx) => (
+          <div className="flex-1 overflow-y-auto px-4 py-4 bg-gradient-to-b from-black/20 to-black/45 space-y-4">
+            {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-1 duration-200`}
+                className={`flex flex-col ${message.sender === 'user' ? 'items-end' : 'items-start'} animate-fade-in`}
               >
                 <div
-                  className={`max-w-[87%] sm:max-w-[78%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                  className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                     message.sender === 'user'
-                      ? 'bg-gradient-to-br from-indigo-500 to-purple-500 text-white rounded-br-md'
-                      : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-bl-md'
+                      ? 'bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 text-white rounded-br-none shadow-[0_4px_12px_rgba(99,102,241,0.2)]'
+                      : 'bg-white/[0.04] backdrop-blur-sm text-gray-200 border border-white/5 rounded-bl-none shadow-sm'
                   }`}
                 >
                   {message.text.split('\n').map((line, i) => {
-                    const urlParts = line.split(/(https?:\/\/[^\s<]+)/g);
+                    const urlRegex = /(https?:\/\/[^\s<]+|(?:github\.com|linkedin\.com|researchgate\.net|mail\.google\.com|gmail\.com)[^\s<]*)/gi;
+                    const urlParts = line.split(urlRegex);
                     return (
                       <div key={i} className="mb-0.5 last:mb-0">
                         {urlParts.map((urlPart, j) => {
-                          if (/^https?:\/\/[^\s<]+$/.test(urlPart)) {
+                          const isUrl = /^(https?:\/\/)?(github\.com|linkedin\.com|researchgate\.net|mail\.google\.com|gmail\.com)[^\s<]*$/i.test(urlPart) || /^https?:\/\/[^\s<]+$/i.test(urlPart);
+                          if (isUrl) {
+                            const hrefUrl = /^[a-z]+:\/\//i.test(urlPart) ? urlPart : `https://${urlPart}`;
                             return (
                               <a
                                 key={`${i}-${j}`}
-                                href={urlPart}
+                                href={hrefUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`${message.sender === 'user' ? 'text-yellow-100 hover:text-white' : 'text-blue-600 dark:text-blue-400 hover:underline'} font-medium break-all`}
+                                className={`${message.sender === 'user' ? 'text-indigo-200 hover:text-white' : 'text-indigo-400 hover:underline'} font-medium break-all`}
                               >
                                 {urlPart.replace(/^https?:\/\//, '')}
                               </a>
@@ -591,7 +637,7 @@ const Chatbot: React.FC = () => {
                                     <a
                                       key={`${i}-${j}-${k}`}
                                       href={`mailto:${ep}`}
-                                      className={`${message.sender === 'user' ? 'text-yellow-100 hover:text-white' : 'text-blue-600 dark:text-blue-400 hover:underline'} font-medium`}
+                                      className={`${message.sender === 'user' ? 'text-indigo-200 hover:text-white' : 'text-indigo-400 hover:underline'} font-medium`}
                                     >
                                       {ep}
                                     </a>
@@ -605,19 +651,19 @@ const Chatbot: React.FC = () => {
                     );
                   })}
                 </div>
-                <div className={`text-[10px] text-gray-400 dark:text-gray-500 mt-1 px-1 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                <span className="text-[9px] text-gray-500 mt-1 px-1">
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </div>
+                </span>
               </div>
             ))}
 
             {/* Typing indicator */}
             {isLoading && (
-              <div className="flex justify-start animate-in fade-in duration-200">
-                <div className="bg-white dark:bg-gray-700 px-3.5 py-2.5 rounded-2xl rounded-bl-md border border-gray-200 dark:border-gray-600 shadow-sm">
-                  <div className="flex items-center gap-1.5">
-                    <Loader2 size={14} className="animate-spin text-indigo-500" />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">Thinking…</span>
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-white/[0.04] backdrop-blur-sm px-4 py-3 rounded-2xl rounded-bl-none border border-white/5 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <Loader2 size={13} className="animate-spin text-indigo-400" />
+                    <span className="text-xs text-gray-400">Assistant is thinking…</span>
                   </div>
                 </div>
               </div>
@@ -626,26 +672,26 @@ const Chatbot: React.FC = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
-          <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shrink-0">
+          {/* Input Footer */}
+          <div className="p-3 bg-black/30 border-t border-white/5 shrink-0">
             <div className="flex items-end gap-2">
               <textarea
                 ref={textareaRef}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask anything about Aryan… 💬"
-                className="flex-1 border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white transition-all leading-relaxed"
+                placeholder="Ask about skills, projects, experience..."
+                className="flex-1 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/30 bg-white/[0.03] text-white placeholder-gray-500 transition-all leading-relaxed"
                 rows={1}
-                style={{ minHeight: '42px', maxHeight: '120px' }}
+                style={{ minHeight: '40px', maxHeight: '120px' }}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={isLoading || !inputValue.trim()}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-2.5 rounded-xl hover:from-indigo-700 hover:to-purple-700 disabled:opacity-45 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg shrink-0"
+                className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white p-2.5 rounded-xl transition-all shadow-md shrink-0"
                 aria-label="Send message"
               >
-                <Send size={16} />
+                <Send size={15} />
               </button>
             </div>
           </div>
@@ -653,74 +699,48 @@ const Chatbot: React.FC = () => {
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white w-14 h-14 rounded-full shadow-xl hover:shadow-2xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center group"
+          className="bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] text-white w-14 h-14 rounded-full shadow-2xl hover:shadow-[0_8px_30px_rgba(99,102,241,0.4)] transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center group"
           aria-label="Open chatbot"
         >
-          <MessageCircle size={26} className="group-hover:scale-110 transition-transform" />
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-emerald-400 rounded-full border-2 border-gray-900 dark:border-gray-700 animate-pulse"></span>
+          <MessageCircle size={24} className="group-hover:scale-110 transition-transform" />
+          <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-indigo-400 rounded-full border-2 border-[#0b0e14] animate-pulse shadow-[0_0_6px_rgba(99,102,241,0.6)]"></span>
         </button>
       )}
 
-      {/* Settings Modal */}
+      {/* Settings Info Dialog */}
       {showSettings && (
-        <div className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-[60] p-4" onClick={() => setShowSettings(false)}>
-          <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Bot size={20} className="text-indigo-600 dark:text-indigo-400" />
-                Chatbot Info
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-[60] p-4 animate-fade-in" onClick={() => setShowSettings(false)}>
+          <div className="bg-[#11151f] border border-white/10 rounded-2xl max-w-sm w-full p-6 shadow-2xl animate-scale-in" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/5">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <Bot size={18} className="text-indigo-400" />
+                Offline AI Engine
               </h3>
-              <button onClick={() => setShowSettings(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                <X size={20} />
+              <button onClick={() => setShowSettings(false)} className="text-gray-400 hover:text-white p-0.5 rounded hover:bg-white/5 transition-colors">
+                <X size={18} />
               </button>
             </div>
 
-            <div className="space-y-4">
-              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl p-4 border border-indigo-100 dark:border-indigo-800">
-                <div className="flex items-center gap-2 mb-2">
-                  <Bot size={18} className="text-indigo-600 dark:text-indigo-400" />
-                  <span className="font-medium text-indigo-900 dark:text-indigo-100 text-sm">Smart Rule-Based Engine</span>
-                </div>
-                <p className="text-xs text-indigo-700 dark:text-indigo-300 leading-relaxed">
-                  This chatbot runs completely offline. It has fuzzy matching, synonym expansion, and structured knowledge from every section of Aryan's portfolio — no external API or internet required.
-                </p>
+            <div className="space-y-4 text-xs">
+              <div className="bg-indigo-500/5 rounded-xl p-3.5 border border-indigo-500/10 text-gray-300 leading-relaxed">
+                This chatbot is built using rule-based templates, synonym mappings, and Levenshtein distance calculations. It processes requests completely locally without server-side resources.
               </div>
 
-              <div>
-                <h4 className="font-medium text-gray-900 dark:text-white mb-2 text-sm">What I know about:</h4>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {[
-                    [`${allSkills.length}+ skills & levels`, '🧠'],
-                    [`${allProjects.length}+ projects`, '🚀'],
-                    [`${allExperiences.length} work roles`, '💼'],
-                    ['Education history', '🎓'],
-                    [`${allCertificates.length}+ certifications`, '🏆'],
-                    [`${allPublications.length} publications`, '📄'],
-                    ['Contact & social links', '📬'],
-                    ['Jokes included 😄', '🤖'],
-                  ].map(([label, icon]) => (
-                    <div key={label} className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/40 rounded-lg px-2.5 py-1.5">
-                      <span>{icon}</span>
-                      <span>{label}</span>
-                    </div>
-                  ))}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-white">Ask Aryan's bot about:</h4>
+                <div className="grid grid-cols-2 gap-2 text-[10px] text-gray-400">
+                  <span className="flex items-center gap-1.5"><span className="text-indigo-400">🧠</span> Skills ({allSkills.length} techs)</span>
+                  <span className="flex items-center gap-1.5"><span className="text-indigo-400">🚀</span> Projects ({allProjects.length} total)</span>
+                  <span className="flex items-center gap-1.5"><span className="text-indigo-400">💼</span> Experience ({allExperiences.length} jobs)</span>
+                  <span className="flex items-center gap-1.5"><span className="text-indigo-400">🏆</span> Certs ({allCertificates.length} items)</span>
                 </div>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-700/40 rounded-xl p-3.5 text-xs text-gray-600 dark:text-gray-400">
-                <p className="font-semibold mb-2 text-gray-700 dark:text-gray-300">💡 Try these:</p>
+              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 text-gray-400">
+                <p className="font-semibold text-gray-300 mb-1.5 text-[11px]">💡 Query Examples:</p>
                 <div className="flex flex-wrap gap-1">
-                  {[
-                    'What are his top skills?',
-                    'Tell me about the PIB project',
-                    'Where has he worked?',
-                    'Does he know TensorFlow?',
-                    'How many certifications?',
-                    'Email Aryan',
-                    'Tell me a joke',
-                    'What are his publications?',
-                  ].map(q => (
-                    <span key={q} className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full text-[11px]">
+                  {['Tell me about PIB project', 'What are his top skills?', 'Email links', 'Certificates list'].map(q => (
+                    <span key={q} className="px-2 py-0.5 bg-indigo-500/10 text-indigo-300 rounded-full text-[10px] cursor-default border border-indigo-500/10">
                       {q}
                     </span>
                   ))}
@@ -730,9 +750,9 @@ const Chatbot: React.FC = () => {
 
             <button
               onClick={() => setShowSettings(false)}
-              className="mt-4 w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-2.5 rounded-xl transition-colors text-sm font-medium"
+              className="mt-5 w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-2.5 rounded-xl transition-colors text-xs font-semibold"
             >
-              Let's chat! →
+              Resume Conversation
             </button>
           </div>
         </div>
