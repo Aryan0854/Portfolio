@@ -298,6 +298,22 @@ function formatExperience(exp: Experience): string {
   return `${exp.title} at ${exp.company}\n${exp.period}\n\n${exp.description}`;
 }
 
+function listExperiences(): string {
+  const lines = profileData.experiences
+    .map((e) => `• ${e.title} — ${e.company} (${e.period})`)
+    .join('\n');
+  return `Here are Aryan's ${profileData.experiences.length} roles:\n\n${lines}\n\nName a company if you want the full write-up.`;
+}
+
+function listProjects(): string {
+  const lines = profileData.projects.map((p) => `• ${p.title}`).join('\n');
+  return `${profileData.projects.length} projects:\n\n${lines}\n\nName one and I will break it down.`;
+}
+
+function isListAsk(q: string): boolean {
+  return /^(name|list|show|which|what are|what were|tell me)\b/.test(q) || /\b(name them|list them|which ones|all of them|the internships|the roles|the jobs)\b/.test(q);
+}
+
 function isShortSocial(q: string): boolean {
   return /^(hi|hey|hello|yo|sup|thanks|thank you|thx|bye|goodbye|ok|okay|cool|nice|wow)$/i.test(q.trim());
 }
@@ -317,7 +333,7 @@ export function createMemory(): ChatMemory {
   return {};
 }
 
-export function reply(userText: string, history: ChatTurn[], memory: ChatMemory): EngineReply {
+export function reply(userText: string, _history: ChatTurn[], memory: ChatMemory): EngineReply {
   const query = userText.trim();
   const qNorm = normalize(query);
   const tokens = tokenize(query);
@@ -358,7 +374,26 @@ export function reply(userText: string, history: ChatTurn[], memory: ChatMemory)
     };
   }
 
-  const wantsFollowUp = /details|more|that one|this one|same|live|github|demo|link|paper|publication/.test(qNorm);
+  const wantsFollowUp = /details|more|that one|this one|same|live|github|demo|link|paper|publication|name them|list them|which ones|all of them/.test(qNorm);
+
+  if ((isListAsk(qNorm) && /intern|experience|role|job|work/.test(qNorm)) || (wantsFollowUp && memory.lastTopic === 'experience' && /name|list|which|them|all|role|intern/.test(qNorm))) {
+    next.lastTopic = 'experience';
+    return {
+      text: listExperiences(),
+      suggestions: ['Infinite', 'Capgemini', 'Gaia'],
+      memory: next,
+    };
+  }
+
+  if ((isListAsk(qNorm) && /project/.test(qNorm)) || (wantsFollowUp && memory.lastTopic === 'project' && /name|list|which|them|all/.test(qNorm))) {
+    next.lastTopic = 'project';
+    return {
+      text: listProjects(),
+      suggestions: ['HR Screening Console', 'PIB project', 'Offline RAG'],
+      memory: next,
+    };
+  }
+
   if (wantsFollowUp && memory.lastProjectId) {
     const project = profileData.projects.find((p) => p.id === memory.lastProjectId);
     if (project) {
@@ -402,7 +437,14 @@ export function reply(userText: string, history: ChatTurn[], memory: ChatMemory)
     if (/project/.test(qNorm)) return { text: `He has ${profileData.projects.length} projects on this site, from hiring systems and offline RAG to games.`, suggestions: ['Show top projects'], memory: next };
     if (/skill/.test(qNorm)) return { text: `${profileData.skills.length} core skills are listed, led by Python and HTML at 90%.`, suggestions: ['Top skills'], memory: next };
     if (/cert/.test(qNorm)) return { text: `${profileData.certificates.length} certificates and letters are on the Certificates page.`, suggestions: ['Recent certs'], memory: next };
-    if (/experience|intern/.test(qNorm)) return { text: `${profileData.experiences.length} roles — internships plus a Capgemini cloud associate stint.`, suggestions: ['Work experience'], memory: next };
+    if (/experience|intern/.test(qNorm)) {
+      next.lastTopic = 'experience';
+      return {
+        text: `${profileData.experiences.length} roles — internships plus a Capgemini cloud associate stint.`,
+        suggestions: ['Name the internships', 'Infinite', 'Capgemini'],
+        memory: next,
+      };
+    }
   }
 
   if (/hire|open to|available|recruit|looking for|job/.test(qNorm) && !projectHit) {
@@ -442,7 +484,7 @@ export function reply(userText: string, history: ChatTurn[], memory: ChatMemory)
     };
   }
 
-  if (expHit && (top?.doc.type === 'experience' || /experience|intern|worked|company|capgemini|infinite|gaia|scanpick|xtelify/.test(qNorm))) {
+  if (expHit && !isListAsk(qNorm) && (top?.doc.type === 'experience' || /\b(worked|company|capgemini|infinite|gaia|scanpick|xtelify|airtel)\b/.test(qNorm))) {
     next.lastTopic = 'experience';
     next.lastExperienceCompany = expHit.company;
     return {
@@ -519,9 +561,13 @@ export function reply(userText: string, history: ChatTurn[], memory: ChatMemory)
     };
   }
 
-  if (/experience|intern|work/.test(qNorm)) {
-    const list = profileData.experiences.map((e) => `• ${e.title} — ${e.company} (${e.period})`).join('\n');
-    return { text: `Roles:\n\n${list}\n\nAsk about a company for the write-up.`, suggestions: ['Infinite', 'Capgemini', 'Education'], memory: next };
+  if (/experience|intern|role|job/.test(qNorm) || memory.lastTopic === 'experience' && isListAsk(qNorm)) {
+    next.lastTopic = 'experience';
+    return {
+      text: listExperiences(),
+      suggestions: ['Infinite', 'Capgemini', 'Education'],
+      memory: next,
+    };
   }
 
   if (/help|what can you|what do you/.test(qNorm)) {
@@ -551,11 +597,11 @@ export function reply(userText: string, history: ChatTurn[], memory: ChatMemory)
     }
   }
 
-  const lastUser = history.filter((h) => h.role === 'user').slice(-2).map((h) => h.text).join(' ');
-  if (lastUser && /project|skill|intern/.test(normalize(lastUser))) {
+  if (memory.lastTopic === 'experience') {
+    next.lastTopic = 'experience';
     return {
-      text: 'I might have missed the target. Try naming a project (PIB, RAG, HR console), a company, or a skill.',
-      suggestions: ['HR Screening Console', 'Python', 'Capgemini'],
+      text: listExperiences(),
+      suggestions: ['Infinite', 'Capgemini', 'Gaia'],
       memory: next,
     };
   }
