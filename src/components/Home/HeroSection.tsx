@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Github as GitHub, Linkedin, Mail, PhoneCall, Twitter, Facebook, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { profileData } from '../../data/profileData';
@@ -7,6 +7,7 @@ import ImageLoader from '../UI/ImageLoader';
 const HeroSection: React.FC = () => {
   const { name, title, contact } = profileData;
   const nameArray = name.split(' ');
+  const avatarContainerRef = useRef<HTMLDivElement>(null);
   const [showToast, setShowToast] = useState(false);
   const [typedText, setTypedText] = useState('');
   
@@ -22,6 +23,29 @@ const HeroSection: React.FC = () => {
     }, 50);
     return () => clearInterval(interval);
   }, [title]);
+
+  useEffect(() => {
+    const avatar = avatarContainerRef.current;
+    if (!avatar) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = avatar.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      avatar.style.transform = `perspective(1000px) rotateX(${-y * 10}deg) rotateY(${x * 10}deg)`;
+    };
+
+    const handleMouseLeave = () => {
+      avatar.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    };
+
+    avatar.addEventListener('mousemove', handleMouseMove);
+    avatar.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      avatar.removeEventListener('mousemove', handleMouseMove);
+      avatar.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
 
   const copyPhoneNumber = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -127,7 +151,11 @@ const HeroSection: React.FC = () => {
         
         {/* Right Avatar */}
         <div className="md:col-span-5 flex justify-start md:justify-end md:order-2 order-1">
-          <div className="relative w-64 h-64 sm:w-80 sm:h-80" style={{ aspectRatio: '1/1' }}>
+          <div
+            ref={avatarContainerRef}
+            className="relative w-64 h-64 sm:w-80 sm:h-80 transition-transform duration-200 ease-out"
+            style={{ aspectRatio: '1/1', transformStyle: 'preserve-3d' }}
+          >
             {/* Pulsing Backing Glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#6366f1] via-[#8b5cf6] to-[#a855f7] rounded-full animate-pulse-slow blur-2xl opacity-20"></div>
             

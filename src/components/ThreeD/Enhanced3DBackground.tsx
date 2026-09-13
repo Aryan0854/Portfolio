@@ -199,70 +199,57 @@ const Enhanced3DBackground = () => {
     pointLight.position.set(0, 0, 5);
     scene.add(pointLight);
 
-    // Mouse interaction
     let mouseX = 0;
     let mouseY = 0;
-    
+
     const handleMouseMove = (event: MouseEvent) => {
       mouseX = (event.clientX / window.innerWidth) * 2 - 1;
       mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
     };
-    
+
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Animation loop
     let time = 0;
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
-      
+
       time += 0.01;
-      
-      // Animate objects
-      objectData.forEach(({ mesh, originalPosition, phase, speed, type }) => {
-        // Floating motion
+
+      objectData.forEach(({ mesh, originalPosition, phase, speed }) => {
         mesh.position.y = originalPosition.y + Math.sin(time * speed + phase) * 0.5;
-        mesh.position.x = originalPosition.x + Math.cos(time * speed * 0.7 + phase) * 0.3;
+        mesh.position.x = Math.max(1.4, originalPosition.x + Math.cos(time * speed * 0.7 + phase) * 0.3);
         mesh.position.z = originalPosition.z + Math.sin(time * speed * 0.5 + phase) * 0.2;
-        
-        // Rotation
-        mesh.rotation.x += 0.01 * speed;
-        mesh.rotation.y += 0.01 * speed;
+
+        mesh.rotation.x += 0.01 * speed + mouseY * 0.012;
+        mesh.rotation.y += 0.01 * speed + mouseX * 0.012;
         mesh.rotation.z += 0.005 * speed;
-        
-        // Scale pulsing
+
         const scale = 1 + Math.sin(time * speed * 2 + phase) * 0.1;
         mesh.scale.setScalar(scale);
-        
-        // Mouse interaction
-        mesh.rotation.y += mouseX * 0.01;
-        mesh.rotation.x += mouseY * 0.01;
       });
-      
-      // Animate particles
-      particlesMesh.rotation.x += 0.0005;
-      particlesMesh.rotation.y += 0.0005;
-      particlesMesh.rotation.y += mouseX * 0.0005;
-      particlesMesh.rotation.x += mouseY * 0.0005;
-      
-      // Animate particle positions
+
+      particlesMesh.rotation.x += 0.0005 + mouseY * 0.0008;
+      particlesMesh.rotation.y += 0.0005 + mouseX * 0.0008;
+
       const positions = particlesMesh.geometry.attributes.position.array as Float32Array;
       for (let i = 0; i < particlesCount; i++) {
         positions[i * 3 + 1] += Math.sin(time + i * 0.01) * 0.002;
         positions[i * 3] += Math.cos(time + i * 0.01) * 0.001;
       }
       particlesMesh.geometry.attributes.position.needsUpdate = true;
-      
-      // Animate particle sizes
+
       const sizes = particlesMesh.geometry.attributes.size.array as Float32Array;
       for (let i = 0; i < particlesCount; i++) {
-        sizes[i] = (Math.sin(time * 2 + i * 0.1) * 0.05 + 0.05);
+        sizes[i] = Math.sin(time * 2 + i * 0.1) * 0.05 + 0.05;
       }
       particlesMesh.geometry.attributes.size.needsUpdate = true;
-      
-      camera.position.x = 0;
-      camera.position.y = 0;
-      camera.lookAt(scene.position);
-      
+
+      const targetX = mouseX * 0.2;
+      const targetY = mouseY * 0.16;
+      camera.position.x += (targetX - camera.position.x) * 0.06;
+      camera.position.y += (targetY - camera.position.y) * 0.06;
+      camera.lookAt(1.4, 0, 0);
+
       renderer.render(scene, camera);
     };
     
@@ -291,13 +278,15 @@ const Enhanced3DBackground = () => {
   }, []);
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className="fixed inset-0 -z-10 w-screen h-screen overflow-hidden pointer-events-none"
-      style={{ 
-        background: 'linear-gradient(135deg, #0b0e14 0%, #11151f 50%, #162035 100%)'
+      style={{
+        background: 'linear-gradient(135deg, #0b0e14 0%, #11151f 50%, #162035 100%)',
       }}
-    />
+    >
+      <div className="absolute inset-y-0 left-0 w-[58%] z-[1] bg-gradient-to-r from-[#0b0e14] via-[#0b0e14]/85 to-transparent pointer-events-none" />
+    </div>
   );
 };
 
