@@ -36,8 +36,8 @@ export const profileData: ProfileData = {
     {
       title: "Academic Intern",
       company: "Infinite Computer Solutions",
-      period: "May 2026 - Present",
-      description: "Worked on enterprise-level software projects at Infinite Computer Solutions as an Academic Intern on the Iron Mountain project, contributing to development, testing, and optimization of solutions. Collaborated with teams to build scalable and efficient systems while applying core computer science and AI/ML concepts, gaining hands-on experience with industry tools, workflows, and real-world problem-solving in a professional environment."
+      period: "May 2026 - Nov 2026",
+      description: "Worked on the Iron Mountain project, developing an enterprise HR Screening Console to match and evaluate 114+ Corp Pool resources against job descriptions using a skill-based scoring engine. Built automated JD matching and Excel-based percentage analysis workflows, integrated a local Qwen 4B model for AI-assisted profile evaluation, and reduced per-profile processing time from ~30–90 seconds to ~12 seconds. Contributed to full-stack development, data workflows, API integration, security, and recruiter-focused product features using Next.js, TypeScript, React, Supabase PostgreSQL, ExcelJS, and local LLM infrastructure."
     },     
     {
       title: "Cloud Infrastructure Associate",
@@ -431,6 +431,15 @@ export const profileData: ProfileData = {
     }
   ],
   projects: [
+     {
+     id: "proj14",
+     title: "HR Screening Console — JD-to-Corp-Pool Intelligence",
+     description: "A production hiring platform that matches bench resources to live job descriptions for Infinite, with Corp Pool and Employee Portal kept as fully separate data planes. The system scores people against BR/JDs using a skill-family engine (DevOps, Linux, Test Automation, Full Stack) and optional on-prem Qwen 3.5 4B analysis over an OpenAI-compatible local API. Recruiter decisions are banded as <30% reject, 30–50% evaluate, 51–70% L1/screen (≥60% qualified), and ≥75% interview. Operated against a 114-person Corp Pool, five live requirements (88001–88005BR), and a pinned 8-person Full Stack selected pool so only the shortlisted subset is analyzed. Local LLM thinking-off cut per-profile generation from ~30–90s to ~12s (~5–7×) on CPU while still returning citation-style JD-vs-skills rationales. Includes percentage-summary Excel scorecards, shortlist/pool controls, interview exports, and Vercel-hosted admin with Qwen remaining air-gapped on localhost.",
+     image: import.meta.env.BASE_URL + "img/HRConsole.png",
+     technologies: ["Next.js + React 18", "TypeScript", "Supabase Postgres", "ExcelJS", "llamafile / Qwen 3.5 4B", "Tailwind CSS"],
+     liveLink: "https://ai-interview-ics-poc.vercel.app/admin",
+     githubLink: "https://github.com/ics-anand-poc/AI-Interview.git",
+    },
     {
       id: "proj13",
       title: "Offline Multimodal RAG for Secure Document Intelligence",
