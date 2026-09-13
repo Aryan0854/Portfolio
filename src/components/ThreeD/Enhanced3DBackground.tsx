@@ -3,18 +3,13 @@ import * as THREE from 'three';
 
 const Enhanced3DBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<THREE.Scene | null>(null);
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const animationIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Scene setup
     const scene = new THREE.Scene();
-    sceneRef.current = scene;
 
-    // Camera setup
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -23,181 +18,177 @@ const Enhanced3DBackground = () => {
     );
     camera.position.z = 5;
 
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ 
-      alpha: true, 
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
       antialias: true,
-      powerPreference: "high-performance"
+      powerPreference: 'high-performance',
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    rendererRef.current = renderer;
-    
-    // Style the canvas element explicitly to ensure it covers the viewport
+
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0';
     renderer.domElement.style.left = '0';
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     renderer.domElement.style.display = 'block';
-    
+
     containerRef.current.appendChild(renderer.domElement);
 
-    // Create multiple floating objects
-    const objects: THREE.Mesh[] = [];
     const objectData: Array<{
       mesh: THREE.Mesh;
       originalPosition: THREE.Vector3;
       phase: number;
       speed: number;
-      type: 'cube' | 'sphere' | 'torus';
     }> = [];
 
-    // Create cubes
-    for (let i = 0; i < 4; i++) {
-      const geometry = new THREE.BoxGeometry(0.5 + Math.random() * 0.5, 0.5 + Math.random() * 0.5, 0.5 + Math.random() * 0.5);
+    const placeAwayFromText = (x: number) => {
+      if (x > -1.2 && x < 1.2) {
+        return x >= 0 ? 2.4 + Math.random() * 2 : -2.4 - Math.random() * 2;
+      }
+      return x;
+    };
+
+    for (let i = 0; i < 6; i++) {
+      const geometry = new THREE.BoxGeometry(
+        0.5 + Math.random() * 0.6,
+        0.5 + Math.random() * 0.6,
+        0.5 + Math.random() * 0.6
+      );
       const material = new THREE.MeshPhongMaterial({
-        color: new THREE.Color().setHSL(0.64 + Math.random() * 0.14, 0.7, 0.6),
+        color: new THREE.Color().setHSL(0.7 + Math.random() * 0.1, 0.75, 0.62),
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.75,
         specular: 0xffffff,
-        shininess: 100,
+        shininess: 120,
+        emissive: new THREE.Color().setHSL(0.72, 0.5, 0.15),
+        emissiveIntensity: 0.35,
       });
-      
+
       const cube = new THREE.Mesh(geometry, material);
       cube.position.set(
-        2 + Math.random() * 6,
-        (Math.random() - 0.5) * 8,
-        (Math.random() - 0.5) * 8
+        placeAwayFromText((Math.random() - 0.5) * 12),
+        (Math.random() - 0.5) * 10,
+        (Math.random() - 0.5) * 10
       );
-      
       scene.add(cube);
-      objects.push(cube);
-      
       objectData.push({
         mesh: cube,
         originalPosition: cube.position.clone(),
         phase: Math.random() * Math.PI * 2,
         speed: 0.5 + Math.random() * 1.5,
-        type: 'cube'
       });
     }
 
-    // Create spheres
-    for (let i = 0; i < 6; i++) {
-      const geometry = new THREE.SphereGeometry(0.2 + Math.random() * 0.3, 32, 32);
+    for (let i = 0; i < 8; i++) {
+      const geometry = new THREE.SphereGeometry(0.22 + Math.random() * 0.38, 32, 32);
       const material = new THREE.MeshPhongMaterial({
-        color: new THREE.Color().setHSL(0.64 + Math.random() * 0.14, 0.8, 0.7),
+        color: new THREE.Color().setHSL(0.68 + Math.random() * 0.12, 0.85, 0.68),
         transparent: true,
-        opacity: 0.7,
-        emissive: new THREE.Color().setHSL(0.64 + Math.random() * 0.14, 0.5, 0.2),
-        emissiveIntensity: 0.3,
+        opacity: 0.8,
+        emissive: new THREE.Color().setHSL(0.7, 0.6, 0.22),
+        emissiveIntensity: 0.45,
         specular: 0xffffff,
-        shininess: 100,
+        shininess: 120,
       });
-      
+
       const sphere = new THREE.Mesh(geometry, material);
       sphere.position.set(
-        1.5 + Math.random() * 7,
-        (Math.random() - 0.5) * 8,
-        (Math.random() - 0.5) * 8
+        placeAwayFromText((Math.random() - 0.5) * 14),
+        (Math.random() - 0.5) * 12,
+        (Math.random() - 0.5) * 12
       );
-      
       scene.add(sphere);
-      objects.push(sphere);
-      
       objectData.push({
         mesh: sphere,
         originalPosition: sphere.position.clone(),
         phase: Math.random() * Math.PI * 2,
         speed: 0.3 + Math.random() * 1.2,
-        type: 'sphere'
       });
     }
 
-    // Create torus
-    for (let i = 0; i < 2; i++) {
-      const geometry = new THREE.TorusGeometry(0.8 + Math.random() * 0.4, 0.2 + Math.random() * 0.2, 16, 100);
-      const material = new THREE.MeshPhongMaterial({
-        color: new THREE.Color().setHSL(0.64 + Math.random() * 0.14, 0.7, 0.6),
-        transparent: true,
-        opacity: 0.5,
-        wireframe: Math.random() > 0.5,
-        specular: 0xffffff,
-        shininess: 100,
-      });
-      
-      const torus = new THREE.Mesh(geometry, material);
-      torus.position.set(
-        3 + Math.random() * 4,
-        (Math.random() - 0.4) * 6,
-        -2 - Math.random() * 3
+    for (let i = 0; i < 3; i++) {
+      const geometry = new THREE.TorusGeometry(
+        0.9 + Math.random() * 0.5,
+        0.22 + Math.random() * 0.18,
+        16,
+        100
       );
-      
+      const material = new THREE.MeshPhongMaterial({
+        color: new THREE.Color().setHSL(0.7 + Math.random() * 0.08, 0.75, 0.6),
+        transparent: true,
+        opacity: 0.65,
+        wireframe: i === 0,
+        specular: 0xffffff,
+        shininess: 120,
+        emissive: new THREE.Color().setHSL(0.72, 0.5, 0.12),
+        emissiveIntensity: 0.3,
+      });
+
+      const torus = new THREE.Mesh(geometry, material);
+      const side = i % 2 === 0 ? 1 : -1;
+      torus.position.set(
+        side * (3.2 + Math.random() * 2.4),
+        (Math.random() - 0.5) * 6,
+        -1 - Math.random() * 4
+      );
       scene.add(torus);
-      objects.push(torus);
-      
       objectData.push({
         mesh: torus,
         originalPosition: torus.position.clone(),
         phase: Math.random() * Math.PI * 2,
         speed: 0.4 + Math.random() * 1.0,
-        type: 'torus'
       });
     }
 
-    // Create particle system
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1000;
-    
+    const particlesCount = 1400;
     const posArray = new Float32Array(particlesCount * 3);
     const colorArray = new Float32Array(particlesCount * 3);
     const sizeArray = new Float32Array(particlesCount);
-    
+
     for (let i = 0; i < particlesCount; i++) {
-      // Position
-      posArray[i * 3] = (Math.random() - 0.5) * 20;
-      posArray[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      posArray[i * 3 + 2] = (Math.random() - 0.5) * 20;
-      
-      // Color
-      const hue = 0.64 + Math.random() * 0.14;
-      const color = new THREE.Color().setHSL(hue, 0.8, 0.6);
+      posArray[i * 3] = (Math.random() - 0.5) * 22;
+      posArray[i * 3 + 1] = (Math.random() - 0.5) * 22;
+      posArray[i * 3 + 2] = (Math.random() - 0.5) * 22;
+
+      const color = new THREE.Color().setHSL(0.68 + Math.random() * 0.12, 0.85, 0.65);
       colorArray[i * 3] = color.r;
       colorArray[i * 3 + 1] = color.g;
       colorArray[i * 3 + 2] = color.b;
-      
-      // Size
-      sizeArray[i] = Math.random() * 0.1 + 0.02;
+      sizeArray[i] = Math.random() * 0.12 + 0.03;
     }
-    
+
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
     particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizeArray, 1));
-    
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.05,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.8,
-      blending: THREE.AdditiveBlending,
-    });
-    
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+
+    const particlesMesh = new THREE.Points(
+      particlesGeometry,
+      new THREE.PointsMaterial({
+        size: 0.06,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+      })
+    );
     scene.add(particlesMesh);
 
-    // Add lights
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
-    scene.add(ambientLight);
-    
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    scene.add(new THREE.AmbientLight(0x606080, 0.85));
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.1);
     directionalLight.position.set(1, 1, 1);
     scene.add(directionalLight);
-    
-    const pointLight = new THREE.PointLight(0x4a72f5, 0.5, 100);
-    pointLight.position.set(0, 0, 5);
+
+    const pointLight = new THREE.PointLight(0x8b5cf6, 1.1, 100);
+    pointLight.position.set(2, 1, 4);
     scene.add(pointLight);
+
+    const accentLight = new THREE.PointLight(0x6366f1, 0.8, 80);
+    accentLight.position.set(-3, -1, 3);
+    scene.add(accentLight);
 
     let mouseX = 0;
     let mouseY = 0;
@@ -212,24 +203,22 @@ const Enhanced3DBackground = () => {
     let time = 0;
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
-
       time += 0.01;
 
       objectData.forEach(({ mesh, originalPosition, phase, speed }) => {
         mesh.position.y = originalPosition.y + Math.sin(time * speed + phase) * 0.5;
-        mesh.position.x = Math.max(1.4, originalPosition.x + Math.cos(time * speed * 0.7 + phase) * 0.3);
+        mesh.position.x = originalPosition.x + Math.cos(time * speed * 0.7 + phase) * 0.3;
         mesh.position.z = originalPosition.z + Math.sin(time * speed * 0.5 + phase) * 0.2;
 
-        mesh.rotation.x += 0.01 * speed + mouseY * 0.012;
-        mesh.rotation.y += 0.01 * speed + mouseX * 0.012;
+        mesh.rotation.x += 0.01 * speed + mouseY * 0.01;
+        mesh.rotation.y += 0.01 * speed + mouseX * 0.01;
         mesh.rotation.z += 0.005 * speed;
 
-        const scale = 1 + Math.sin(time * speed * 2 + phase) * 0.1;
-        mesh.scale.setScalar(scale);
+        mesh.scale.setScalar(1 + Math.sin(time * speed * 2 + phase) * 0.1);
       });
 
-      particlesMesh.rotation.x += 0.0005 + mouseY * 0.0008;
-      particlesMesh.rotation.y += 0.0005 + mouseX * 0.0008;
+      particlesMesh.rotation.x += 0.0005 + mouseY * 0.0006;
+      particlesMesh.rotation.y += 0.0005 + mouseX * 0.0006;
 
       const positions = particlesMesh.geometry.attributes.position.array as Float32Array;
       for (let i = 0; i < particlesCount; i++) {
@@ -238,37 +227,25 @@ const Enhanced3DBackground = () => {
       }
       particlesMesh.geometry.attributes.position.needsUpdate = true;
 
-      const sizes = particlesMesh.geometry.attributes.size.array as Float32Array;
-      for (let i = 0; i < particlesCount; i++) {
-        sizes[i] = Math.sin(time * 2 + i * 0.1) * 0.05 + 0.05;
-      }
-      particlesMesh.geometry.attributes.size.needsUpdate = true;
-
-      const targetX = mouseX * 0.2;
-      const targetY = mouseY * 0.16;
-      camera.position.x += (targetX - camera.position.x) * 0.06;
-      camera.position.y += (targetY - camera.position.y) * 0.06;
-      camera.lookAt(1.4, 0, 0);
+      camera.position.x += (mouseX * 0.45 - camera.position.x) * 0.05;
+      camera.position.y += (mouseY * 0.35 - camera.position.y) * 0.05;
+      camera.lookAt(0, 0, 0);
 
       renderer.render(scene, camera);
     };
-    
+
     animate();
 
-    // Resize handler
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
-    
+
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
-      if (animationIdRef.current) {
-        cancelAnimationFrame(animationIdRef.current);
-      }
+      if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
       if (containerRef.current && renderer.domElement) {
         containerRef.current.removeChild(renderer.domElement);
       }
@@ -284,9 +261,7 @@ const Enhanced3DBackground = () => {
       style={{
         background: 'linear-gradient(135deg, #0b0e14 0%, #11151f 50%, #162035 100%)',
       }}
-    >
-      <div className="absolute inset-y-0 left-0 w-[58%] z-[1] bg-gradient-to-r from-[#0b0e14] via-[#0b0e14]/85 to-transparent pointer-events-none" />
-    </div>
+    />
   );
 };
 

@@ -76,7 +76,8 @@ const HeroSection: React.FC = () => {
       <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-center hero-content transition-transform duration-300 ease-out">
         
         {/* Left Text details */}
-        <div className="md:col-span-7 text-left md:order-1 order-2 space-y-6">
+        <div className="md:col-span-7 text-left md:order-1 order-2 space-y-6 relative">
+          <div className="absolute -inset-10 -z-10 bg-[#07080d]/55 blur-3xl rounded-full pointer-events-none" />
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-400/10 border border-emerald-400/20 rounded-full text-xs text-emerald-300 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             Available for opportunities
