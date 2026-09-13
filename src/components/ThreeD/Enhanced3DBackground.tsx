@@ -67,9 +67,9 @@ const Enhanced3DBackground = () => {
       
       const cube = new THREE.Mesh(geometry, material);
       cube.position.set(
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10
+        2 + Math.random() * 6,
+        (Math.random() - 0.5) * 8,
+        (Math.random() - 0.5) * 8
       );
       
       scene.add(cube);
@@ -99,9 +99,9 @@ const Enhanced3DBackground = () => {
       
       const sphere = new THREE.Mesh(geometry, material);
       sphere.position.set(
-        (Math.random() - 0.5) * 12,
-        (Math.random() - 0.5) * 12,
-        (Math.random() - 0.5) * 12
+        1.5 + Math.random() * 7,
+        (Math.random() - 0.5) * 8,
+        (Math.random() - 0.5) * 8
       );
       
       scene.add(sphere);
@@ -130,9 +130,9 @@ const Enhanced3DBackground = () => {
       
       const torus = new THREE.Mesh(geometry, material);
       torus.position.set(
-        (Math.random() - 0.5) * 8,
-        (Math.random() - 0.5) * 8,
-        (Math.random() - 0.5) * 8
+        3 + Math.random() * 4,
+        (Math.random() - 0.4) * 6,
+        -2 - Math.random() * 3
       );
       
       scene.add(torus);
@@ -259,9 +259,8 @@ const Enhanced3DBackground = () => {
       }
       particlesMesh.geometry.attributes.size.needsUpdate = true;
       
-      // Animate camera
-      camera.position.x = mouseX * 0.5;
-      camera.position.y = mouseY * 0.5;
+      camera.position.x = 0;
+      camera.position.y = 0;
       camera.lookAt(scene.position);
       
       renderer.render(scene, camera);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Github as GitHub, Linkedin, Mail, PhoneCall, Twitter, Facebook, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { profileData } from '../../data/profileData';
@@ -7,8 +7,6 @@ import ImageLoader from '../UI/ImageLoader';
 const HeroSection: React.FC = () => {
   const { name, title, contact } = profileData;
   const nameArray = name.split(' ');
-  const heroRef = useRef<HTMLDivElement>(null);
-  const avatarContainerRef = useRef<HTMLDivElement>(null);
   const [showToast, setShowToast] = useState(false);
   const [typedText, setTypedText] = useState('');
   
@@ -25,57 +23,6 @@ const HeroSection: React.FC = () => {
     return () => clearInterval(interval);
   }, [title]);
 
-  // Mouse move effect for background parallax and 3D avatar tilt
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const { width, height, left, top } = hero.getBoundingClientRect();
-      
-      const x = (clientX - left) / width;
-      const y = (clientY - top) / height;
-      
-      // Content shift
-      const content = hero.querySelector('.hero-content') as HTMLElement;
-      if (content) {
-        const moveX = (x - 0.5) * 15;
-        const moveY = (y - 0.5) * 15;
-        content.style.transform = `translate(${moveX}px, ${moveY}px)`;
-      }
-
-      // Avatar 3D tilt
-      const avatar = avatarContainerRef.current;
-      if (avatar) {
-        const avatarRect = avatar.getBoundingClientRect();
-        const avatarCenterX = avatarRect.left + avatarRect.width / 2;
-        const avatarCenterY = avatarRect.top + avatarRect.height / 2;
-        
-        const tiltX = -(clientY - avatarCenterY) / (avatarRect.height / 2) * 15; // Max 15deg
-        const tiltY = (clientX - avatarCenterX) / (avatarRect.width / 2) * 15;   // Max 15deg
-        
-        avatar.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
-      }
-    };
-
-    const handleMouseLeave = () => {
-      const avatar = avatarContainerRef.current;
-      if (avatar) {
-        avatar.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-        avatar.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
-      }
-    };
-    
-    hero.addEventListener('mousemove', handleMouseMove);
-    hero.addEventListener('mouseleave', handleMouseLeave);
-    
-    return () => {
-      hero.removeEventListener('mousemove', handleMouseMove);
-      hero.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, []);
-  
   const copyPhoneNumber = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
@@ -88,10 +35,7 @@ const HeroSection: React.FC = () => {
   };
   
   return (
-    <div 
-      ref={heroRef}
-      className="relative min-h-[82vh] flex items-center overflow-hidden py-10 z-20"
-    >
+    <div className="relative min-h-[82vh] flex items-center overflow-hidden py-10 z-20">
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed bottom-6 right-6 bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] text-white px-5 py-3 rounded-2xl shadow-[0_10px_30px_rgba(99,102,241,0.3)] border border-white/10 flex items-center gap-3 z-50 animate-scale-in">
@@ -183,11 +127,7 @@ const HeroSection: React.FC = () => {
         
         {/* Right Avatar */}
         <div className="md:col-span-5 flex justify-start md:justify-end md:order-2 order-1">
-          <div 
-            ref={avatarContainerRef}
-            className="relative w-64 h-64 sm:w-80 sm:h-80 transition-transform duration-300 ease-out"
-            style={{ aspectRatio: '1/1' }}
-          >
+          <div className="relative w-64 h-64 sm:w-80 sm:h-80" style={{ aspectRatio: '1/1' }}>
             {/* Pulsing Backing Glow */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#6366f1] via-[#8b5cf6] to-[#a855f7] rounded-full animate-pulse-slow blur-2xl opacity-20"></div>
             
