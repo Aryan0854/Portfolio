@@ -5,17 +5,20 @@ import react from '@vitejs/plugin-react';
 import vitePluginImagemin from 'vite-plugin-imagemin';
 
 // https://vitejs.dev/config/
+const imageMinPlugin = process.env.CI
+  ? []
+  : [
+      vitePluginImagemin({
+        gifsicle: { optimizationLevel: 7, interlaced: false },
+        optipng: { optimizationLevel: 7 },
+        mozjpeg: { quality: 75, progressive: true },
+        pngquant: { quality: [0.65, 0.8], speed: 4 },
+        svgo: { plugins: [{ removeViewBox: false }] },
+      }),
+    ];
+
 export default defineConfig({
-  plugins: [
-    react(),
-    vitePluginImagemin({
-      gifsicle: { optimizationLevel: 7, interlaced: false },
-      optipng: { optimizationLevel: 7 },
-      mozjpeg: { quality: 75, progressive: true },
-      pngquant: { quality: [0.65, 0.8], speed: 4 },
-      svgo: { plugins: [{ removeViewBox: false }] },
-    }),
-  ],
+  plugins: [react(), ...imageMinPlugin],
   base: '/', // For custom domain deployment
   optimizeDeps: {
     exclude: ['lucide-react'],

@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://aryanportfolio.me/sitemap.xml
+Sitemap: https://aryanmishra.online/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
