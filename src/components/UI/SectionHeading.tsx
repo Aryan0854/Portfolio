@@ -13,9 +13,9 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({
   title,
   highlight,
   subtitle,
-  align = 'center',
+  align = 'left',
 }) => {
-  const alignment = align === 'left' ? 'text-left items-start' : 'text-center items-center';
+  const alignment = align === 'center' ? 'text-center items-center' : 'text-left items-start';
 
   return (
     <div className={`flex flex-col ${alignment} gap-3 mb-12 sm:mb-14`}>

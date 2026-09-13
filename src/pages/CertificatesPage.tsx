@@ -27,7 +27,7 @@ const CertificatesPage: React.FC = () => {
         />
         
         {/* Sleek Search Control */}
-        <div className="max-w-md mx-auto">
+        <div className="max-w-md">
           <div className="relative">
             <Search size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input

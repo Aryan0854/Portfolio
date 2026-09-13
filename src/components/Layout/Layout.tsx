@@ -13,8 +13,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Enhanced3DBackground />
       <div className="relative z-10 flex flex-col min-h-screen w-full">
         <Header />
-        <main className="flex-grow pt-28 sm:pt-32 pb-20 animate-fade-in">
-          <div className="w-full max-w-6xl mx-auto px-5 sm:px-8">
+        <main className="flex-grow pt-24 sm:pt-28 pb-20 animate-fade-in">
+          <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24">
             {children}
           </div>
         </main>

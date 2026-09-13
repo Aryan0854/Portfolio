@@ -47,7 +47,7 @@ const ProjectsPage: React.FC = () => {
         />
         
         {/* Sleek Search Panel */}
-        <div className="max-w-xl mx-auto">
+        <div className="max-w-xl">
           <div className="relative">
             <Search size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
@@ -61,7 +61,7 @@ const ProjectsPage: React.FC = () => {
         </div>
         
         {/* Responsive Horizontal scroll filter chips */}
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="flex flex-wrap gap-2 justify-start">
           <button
             className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide border transition-all duration-300 ${
               selectedTechnology === '' 

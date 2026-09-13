@@ -42,7 +42,7 @@ const ResumePage: React.FC = () => {
       <div className="w-full py-6 space-y-8">
         
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-white/[0.06]">
-          <div className="space-y-2 text-center sm:text-left">
+          <div className="space-y-2 text-left">
             <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-indigo-300/80">Profile</span>
             <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Curriculum <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">Vitae</span></h1>
             <p className="text-sm text-slate-400 font-light">Interactive resume, publications, and credentials</p>
@@ -50,7 +50,7 @@ const ResumePage: React.FC = () => {
           
           <button
             onClick={downloadResume}
-            className="mx-auto sm:mx-0 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all duration-300 flex items-center gap-2 shadow-[0_4px_15px_rgba(99,102,241,0.2)] hover:shadow-[0_4px_25px_rgba(99,102,241,0.35)] shrink-0"
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-sm font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-[0_4px_15px_rgba(99,102,241,0.2)] hover:shadow-[0_4px_25px_rgba(99,102,241,0.35)] shrink-0"
           >
             <Download size={16} /> Download Offline PDF
           </button>

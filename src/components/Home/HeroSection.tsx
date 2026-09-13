@@ -90,7 +90,7 @@ const HeroSection: React.FC = () => {
   return (
     <div 
       ref={heroRef}
-      className="relative min-h-[78vh] flex items-center justify-center overflow-hidden py-8 z-20"
+      className="relative min-h-[82vh] flex items-center overflow-hidden py-10 z-20"
     >
       {/* Toast Notification */}
       {showToast && (
@@ -108,7 +108,7 @@ const HeroSection: React.FC = () => {
       <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-center hero-content transition-transform duration-300 ease-out">
         
         {/* Left Text details */}
-        <div className="md:col-span-7 text-center md:text-left md:order-1 order-2 space-y-6">
+        <div className="md:col-span-7 text-left md:order-1 order-2 space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-400/10 border border-emerald-400/20 rounded-full text-xs text-emerald-300 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             Available for opportunities
@@ -121,7 +121,7 @@ const HeroSection: React.FC = () => {
             </span>
           </h1>
           
-          <div className="h-8 flex items-center justify-center md:justify-start">
+          <div className="h-8 flex items-center justify-start">
             <h2 className="text-lg sm:text-xl font-semibold text-slate-300 border-r-2 border-indigo-400 pr-2 whitespace-nowrap overflow-hidden">
               {typedText}
             </h2>
@@ -132,19 +132,19 @@ const HeroSection: React.FC = () => {
             Final-year B.Tech in CS (AI/ML) — open to ML, SDE, and Full-Stack roles.
           </p>
           
-          <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
+          <div className="flex flex-wrap gap-4 justify-start pt-2">
             <a
               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative group overflow-hidden bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] hover:from-[#5558e3] hover:to-[#7c4ee4] text-white px-8 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2 shadow-[0_4px_20px_rgba(99,102,241,0.25)] hover:shadow-[0_4px_30px_rgba(99,102,241,0.4)]"
+              className="relative group overflow-hidden bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] hover:from-[#5558e3] hover:to-[#7c4ee4] text-white px-7 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-[0_4px_20px_rgba(99,102,241,0.25)] hover:shadow-[0_4px_30px_rgba(99,102,241,0.4)]"
             >
               <Mail size={18} className="group-hover:translate-x-0.5 transition-transform" />
               <span className="font-semibold text-sm">Contact Me</span>
             </a>
             <Link
               to="/resume"
-              className="bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20 px-8 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2 font-semibold text-sm"
+              className="bg-transparent hover:bg-white/5 text-white border border-white/15 hover:border-white/30 px-7 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 font-semibold text-sm"
             >
               <span>View Resume</span>
               <ArrowRight size={16} />
@@ -152,7 +152,7 @@ const HeroSection: React.FC = () => {
           </div>
           
           {/* Social Links */}
-          <div className="flex gap-3 justify-center md:justify-start pt-4">
+          <div className="flex gap-3 justify-start pt-4">
             {[
               { icon: <GitHub size={20} />, link: contact.githubLink, label: 'GitHub' },
               { icon: <Linkedin size={20} />, link: contact.linkedinLink, label: 'LinkedIn' },
@@ -164,7 +164,7 @@ const HeroSection: React.FC = () => {
                 href={social.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 rounded-full bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:border-indigo-400/50 hover:bg-indigo-500/10 flex items-center justify-center transition-all duration-300"
+                className="text-slate-400 hover:text-white transition-colors"
                 aria-label={social.label}
               >
                 {social.icon}
@@ -173,7 +173,7 @@ const HeroSection: React.FC = () => {
             <a
               href="#"
               onClick={copyPhoneNumber}
-              className="w-11 h-11 rounded-full bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:border-indigo-400/50 hover:bg-indigo-500/10 flex items-center justify-center transition-all duration-300"
+              className="text-slate-400 hover:text-white transition-colors"
               aria-label="Phone"
             >
               <PhoneCall size={20} />
@@ -182,7 +182,7 @@ const HeroSection: React.FC = () => {
         </div>
         
         {/* Right Avatar */}
-        <div className="md:col-span-5 flex justify-center md:order-2 order-1">
+        <div className="md:col-span-5 flex justify-start md:justify-end md:order-2 order-1">
           <div 
             ref={avatarContainerRef}
             className="relative w-64 h-64 sm:w-80 sm:h-80 transition-transform duration-300 ease-out"

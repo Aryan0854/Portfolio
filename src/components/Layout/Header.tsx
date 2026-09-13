@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 16);
+    const handleScroll = () => setIsScrolled(window.scrollY > 12);
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -28,61 +28,54 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4 md:px-8">
-      <div
-        className={`mx-auto max-w-6xl rounded-full transition-all duration-300 flex justify-between items-center relative ${
-          isScrolled
-            ? 'bg-[#07080d]/75 backdrop-blur-xl border border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.45)] px-5 py-2'
-            : 'bg-white/[0.04] backdrop-blur-md border border-white/[0.06] px-5 py-2.5'
-        }`}
-      >
-        <Link to="/" className="text-white font-extrabold text-lg tracking-[0.18em] hover:opacity-80 transition-opacity">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+        isScrolled ? 'bg-[#07080d]/80 backdrop-blur-xl border-b border-white/[0.06]' : 'bg-transparent'
+      }`}
+    >
+      <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24 h-16 sm:h-[72px] flex items-center justify-between">
+        <Link to="/" className="text-white font-extrabold text-lg tracking-[0.2em] hover:opacity-80 transition-opacity">
           <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
             ARYAN
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
             <Link
               key={item.name}
               to={item.path}
-              className={`relative px-3.5 py-1.5 text-[13px] tracking-wide rounded-full transition-all duration-300 font-medium ${
-                isActive(item.path)
-                  ? 'text-white bg-white/10'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              className={`relative text-[13px] tracking-wide transition-colors duration-200 font-medium ${
+                isActive(item.path) ? 'text-white' : 'text-slate-400 hover:text-white'
               }`}
             >
               {item.name}
+              {isActive(item.path) && (
+                <span className="absolute -bottom-1.5 left-0 right-0 h-px bg-gradient-to-r from-indigo-400 to-fuchsia-400" />
+              )}
             </Link>
           ))}
         </nav>
 
         <button
-          className="md:hidden text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+          className="md:hidden text-white p-2 -mr-2 hover:bg-white/10 rounded-lg transition-colors"
           onClick={() => setIsMenuOpen((open) => !open)}
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={isMenuOpen}
         >
-          {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
+      </div>
 
-        <div
-          className={`absolute left-0 right-0 top-[calc(100%+10px)] md:hidden z-40 rounded-2xl border border-white/10 bg-[#07080d]/95 backdrop-blur-xl shadow-2xl transition-all duration-300 ${
-            isMenuOpen
-              ? 'opacity-100 translate-y-0 visible'
-              : 'opacity-0 -translate-y-2 invisible pointer-events-none'
-          }`}
-        >
-          <div className="flex flex-col py-3 px-2">
+      {isMenuOpen && (
+        <div className="md:hidden border-t border-white/[0.06] bg-[#07080d]/95 backdrop-blur-xl">
+          <div className="flex flex-col px-6 py-3">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`px-4 py-3 rounded-xl text-sm tracking-wide transition-colors ${
-                  isActive(item.path)
-                    ? 'text-white bg-white/10 font-semibold'
-                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                className={`py-3 text-sm tracking-wide border-b border-white/[0.04] last:border-0 ${
+                  isActive(item.path) ? 'text-white font-semibold' : 'text-slate-300 hover:text-white'
                 }`}
               >
                 {item.name}
@@ -90,7 +83,7 @@ const Header: React.FC = () => {
             ))}
           </div>
         </div>
-      </div>
+      )}
     </header>
   );
 };
