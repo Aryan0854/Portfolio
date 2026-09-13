@@ -49,7 +49,7 @@ const SkillBar: React.FC<SkillBarProps> = ({ skill }) => {
   const offset = circumference - (skill.level / 100) * circumference;
 
   return (
-    <div className={`group relative p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:bg-white/[0.06] hover:border-white/[0.12] flex items-center justify-between`}>
+    <div className="group relative p-4 sm:p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl hover:bg-white/[0.055] hover:border-white/15 transition-all duration-300 flex items-center justify-between">
       {/* Glow Effect */}
       <div className={`absolute inset-0 -z-10 rounded-2xl bg-gradient-to-r ${config.gradient} opacity-0 group-hover:opacity-[0.03] blur-xl transition-opacity duration-300`}></div>
       

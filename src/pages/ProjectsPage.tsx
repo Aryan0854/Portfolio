@@ -4,6 +4,7 @@ import { profileData } from '../data/profileData';
 import ProjectCard from '../components/UI/ProjectCard';
 import Projects3DEffects from '../components/ThreeD/Projects3DEffects';
 import { Search } from 'lucide-react';
+import SectionHeading from '../components/UI/SectionHeading';
 
 const ProjectsPage: React.FC = () => {
   const { projects } = profileData;
@@ -37,16 +38,13 @@ const ProjectsPage: React.FC = () => {
   return (
     <Layout>
       <Projects3DEffects />
-      <div className="w-full py-8 relative z-20 space-y-10">
-        <div className="text-center max-w-xl mx-auto space-y-3">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white">
-            My <span className="text-[#6366f1] text-glow-indigo">Projects</span>
-          </h1>
-          <div className="w-16 h-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] mx-auto rounded-full"></div>
-          <p className="text-gray-400 text-xs sm:text-sm">
-            Search or filter through {projects.length} academic publications, IoT devices, ML simulation dashboards, and full-stack applications.
-          </p>
-        </div>
+      <div className="w-full py-6 relative z-20 space-y-10">
+        <SectionHeading
+          eyebrow="Build log"
+          title="My"
+          highlight="Projects"
+          subtitle={`Search or filter ${projects.length} publications, IoT builds, ML dashboards, and full-stack apps.`}
+        />
         
         {/* Sleek Search Panel */}
         <div className="max-w-xl mx-auto">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout/Layout';
 import { profileData } from '../data/profileData';
-import { Download, Briefcase, GraduationCap, Award, User, Mail, Phone, MapPin, Linkedin, Github as GitHub, Twitter, Facebook, FileText, ExternalLink, PhoneCall } from 'lucide-react';
+import { Download, Briefcase, GraduationCap, Award, Mail, Phone, MapPin, Linkedin, Github as GitHub, FileText, ExternalLink, PhoneCall } from 'lucide-react';
 import SkillBar from '../components/UI/SkillBar';
 
 const ResumePage: React.FC = () => {
@@ -39,13 +39,13 @@ const ResumePage: React.FC = () => {
         </div>
       )}
 
-      <div className="w-full py-8 space-y-8">
+      <div className="w-full py-6 space-y-8">
         
-        {/* Title / Action Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
-          <div className="space-y-1.5 text-center sm:text-left">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Curriculum <span className="text-indigo-400 text-glow-indigo">Vitae</span></h1>
-            <p className="text-xs text-gray-400 font-light">Interactive digital profile & credentials repository</p>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-white/[0.06]">
+          <div className="space-y-2 text-center sm:text-left">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-indigo-300/80">Profile</span>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Curriculum <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">Vitae</span></h1>
+            <p className="text-sm text-slate-400 font-light">Interactive resume, publications, and credentials</p>
           </div>
           
           <button
@@ -57,7 +57,7 @@ const ResumePage: React.FC = () => {
         </div>
         
         {/* Dynamic Glass Resume Panel */}
-        <div className="bg-[#11151f]/40 backdrop-blur-md rounded-3xl border border-white/5 shadow-2xl p-6 sm:p-10 space-y-10">
+        <div className="bg-white/[0.03] backdrop-blur-md rounded-3xl border border-white/[0.07] shadow-2xl p-6 sm:p-10 space-y-10">
           
           {/* Header Card Details */}
           <div className="border-b border-white/5 pb-8 flex flex-col md:flex-row gap-6 md:items-start justify-between">

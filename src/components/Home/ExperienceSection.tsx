@@ -1,92 +1,82 @@
 import React from 'react';
 import { profileData } from '../../data/profileData';
-import { Briefcase, GraduationCap, Calendar, MapPin } from 'lucide-react';
+import { Briefcase, GraduationCap, Calendar } from 'lucide-react';
+import SectionHeading from '../UI/SectionHeading';
 
 const ExperienceSection: React.FC = () => {
   const { experiences, education } = profileData;
-  
+
   return (
-    <div className="py-20 relative z-10 bg-black/20">
-      <div className="w-full">
-        <div className="text-center max-w-xl mx-auto mb-16 space-y-3">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-            Journey & <span className="text-indigo-400 text-glow-indigo">History</span>
-          </h2>
-          <div className="w-16 h-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] mx-auto rounded-full"></div>
-          <p className="text-gray-400 text-sm sm:text-base">
-            Internships, academic milestones, and cloud associate experience.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Experience Column */}
-          <div className="space-y-8">
-            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3 px-2">
-              <span className="p-2.5 rounded-xl bg-[#6366f1]/10 text-[#6366f1] border border-[#6366f1]/20">
-                <Briefcase size={20} />
-              </span>
-              Work Experience
-            </h3>
-            
-            <div className="relative pl-6 border-l border-white/10 ml-5 space-y-6">
-              {experiences.map((experience, index) => (
-                <div key={index} className="relative group">
-                  {/* Timeline Node */}
-                  <span className="absolute -left-[33px] top-[26px] w-4 h-4 rounded-full bg-[#6366f1] border-4 border-[#0b0e14] group-hover:scale-125 group-hover:bg-[#8b5cf6] transition-all duration-300"></span>
-                  
-                  {/* Glass Card */}
-                  <div className="glass-card p-6 rounded-2xl space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <h4 className="text-lg font-bold text-white group-hover:text-[#6366f1] transition-colors">{experience.title}</h4>
-                      <div className="flex items-center gap-1.5 text-xs text-[#6366f1] font-semibold">
-                        <Calendar size={13} />
-                        <span>{experience.period}</span>
-                      </div>
+    <section className="py-16 sm:py-20 relative z-10">
+      <SectionHeading
+        eyebrow="Background"
+        title="Journey &"
+        highlight="History"
+        subtitle="Internships, academic milestones, and cloud associate experience."
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="space-y-7">
+          <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-3">
+            <span className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+              <Briefcase size={18} />
+            </span>
+            Work Experience
+          </h3>
+
+          <div className="relative pl-6 border-l border-white/10 ml-4 space-y-5">
+            {experiences.map((experience, index) => (
+              <div key={index} className="relative group">
+                <span className="absolute -left-[33px] top-7 w-3.5 h-3.5 rounded-full bg-indigo-500 border-4 border-[#07080d] group-hover:scale-125 transition-transform duration-300" />
+                <div className="glass-card p-5 sm:p-6 rounded-2xl space-y-2.5">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                    <h4 className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors leading-snug">
+                      {experience.title}
+                    </h4>
+                    <div className="flex items-center gap-1.5 text-[11px] text-indigo-300 font-semibold shrink-0">
+                      <Calendar size={12} />
+                      <span>{experience.period}</span>
                     </div>
-                    
-                    <p className="text-sm text-gray-400 font-semibold">{experience.company}</p>
-                    <p className="text-sm text-gray-300 leading-relaxed font-light">{experience.description}</p>
                   </div>
+                  <p className="text-sm text-slate-400 font-medium">{experience.company}</p>
+                  <p className="text-sm text-slate-300 leading-relaxed font-light">{experience.description}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          
-          {/* Education Column */}
-          <div className="space-y-8">
-            <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3 px-2">
-              <span className="p-2.5 rounded-xl bg-[#8b5cf6]/10 text-[#8b5cf6] border border-[#8b5cf6]/20">
-                <GraduationCap size={20} />
-              </span>
-              Education History
-            </h3>
-            
-            <div className="relative pl-6 border-l border-white/10 ml-5 space-y-6">
-              {education.map((edu, index) => (
-                <div key={index} className="relative group">
-                  {/* Timeline Node */}
-                  <span className="absolute -left-[33px] top-[26px] w-4 h-4 rounded-full bg-[#8b5cf6] border-4 border-[#0b0e14] group-hover:scale-125 group-hover:bg-[#6366f1] transition-all duration-300"></span>
-                  
-                  {/* Glass Card */}
-                  <div className="glass-card p-6 rounded-2xl space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <h4 className="text-lg font-bold text-white group-hover:text-[#8b5cf6] transition-colors">{edu.degree}</h4>
-                      <div className="flex items-center gap-1.5 text-xs text-[#8b5cf6] font-semibold">
-                        <Calendar size={13} />
-                        <span>{edu.period}</span>
-                      </div>
+        </div>
+
+        <div className="space-y-7">
+          <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-3">
+            <span className="p-2.5 rounded-xl bg-violet-500/10 text-violet-300 border border-violet-500/20">
+              <GraduationCap size={18} />
+            </span>
+            Education
+          </h3>
+
+          <div className="relative pl-6 border-l border-white/10 ml-4 space-y-5">
+            {education.map((edu, index) => (
+              <div key={index} className="relative group">
+                <span className="absolute -left-[33px] top-7 w-3.5 h-3.5 rounded-full bg-violet-500 border-4 border-[#07080d] group-hover:scale-125 transition-transform duration-300" />
+                <div className="glass-card p-5 sm:p-6 rounded-2xl space-y-2.5">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                    <h4 className="text-base font-bold text-white group-hover:text-violet-300 transition-colors leading-snug">
+                      {edu.degree}
+                    </h4>
+                    <div className="flex items-center gap-1.5 text-[11px] text-violet-300 font-semibold shrink-0">
+                      <Calendar size={12} />
+                      <span>{edu.period}</span>
                     </div>
-                    
-                    <p className="text-sm text-gray-400 font-semibold">{edu.institution}</p>
-                    <p className="text-sm text-gray-300 leading-relaxed font-light">{edu.description}</p>
                   </div>
+                  <p className="text-sm text-slate-400 font-medium">{edu.institution}</p>
+                  <p className="text-sm text-slate-300 leading-relaxed font-light">{edu.description}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

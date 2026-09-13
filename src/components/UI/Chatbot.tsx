@@ -699,7 +699,7 @@ const Chatbot: React.FC = () => {
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] text-white w-14 h-14 rounded-full shadow-2xl hover:shadow-[0_8px_30px_rgba(99,102,241,0.4)] transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center group"
+          className="relative bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 text-white w-14 h-14 rounded-full shadow-2xl hover:shadow-[0_8px_30px_rgba(99,102,241,0.4)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center group"
           aria-label="Open chatbot"
         >
           <MessageCircle size={24} className="group-hover:scale-110 transition-transform" />

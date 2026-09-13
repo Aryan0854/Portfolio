@@ -90,7 +90,7 @@ const ImageLoader = ({
     <div
       ref={containerRef}
       className={`relative overflow-hidden ${className}`}
-      style={width && height ? { aspectRatio: `${width}/${height}` } : { minHeight: priority ? '200px' : '100px' }}
+      style={width && height ? { aspectRatio: `${width}/${height}` } : undefined}
     >
       {/* Shimmer placeholder */}
       {isLoading && (

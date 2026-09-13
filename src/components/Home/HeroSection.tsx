@@ -5,7 +5,7 @@ import { profileData } from '../../data/profileData';
 import ImageLoader from '../UI/ImageLoader';
 
 const HeroSection: React.FC = () => {
-  const { name, title, bio, contact } = profileData;
+  const { name, title, contact } = profileData;
   const nameArray = name.split(' ');
   const heroRef = useRef<HTMLDivElement>(null);
   const avatarContainerRef = useRef<HTMLDivElement>(null);
@@ -90,7 +90,7 @@ const HeroSection: React.FC = () => {
   return (
     <div 
       ref={heroRef}
-      className="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-10 z-20"
+      className="relative min-h-[78vh] flex items-center justify-center overflow-hidden py-8 z-20"
     >
       {/* Toast Notification */}
       {showToast && (
@@ -109,26 +109,27 @@ const HeroSection: React.FC = () => {
         
         {/* Left Text details */}
         <div className="md:col-span-7 text-center md:text-left md:order-1 order-2 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-gray-400 font-medium">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-400/10 border border-emerald-400/20 rounded-full text-xs text-emerald-300 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            Available for Opportunities
+            Available for opportunities
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-none text-white">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[0.95] text-white">
             Hi, I'm <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] text-glow-indigo">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-fuchsia-400">
               {nameArray[0]} {nameArray[1]}
             </span>
           </h1>
           
           <div className="h-8 flex items-center justify-center md:justify-start">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-300 border-r-2 border-[#6366f1] pr-2 whitespace-nowrap overflow-hidden">
+            <h2 className="text-lg sm:text-xl font-semibold text-slate-300 border-r-2 border-indigo-400 pr-2 whitespace-nowrap overflow-hidden">
               {typedText}
             </h2>
           </div>
           
-          <p className="text-gray-400 text-base sm:text-lg max-w-xl leading-relaxed">
-            {bio}
+          <p className="text-slate-400 text-[15px] sm:text-base max-w-lg leading-relaxed font-light">
+            Building AI products, full-stack systems, and automation that ship.
+            Final-year B.Tech in CS (AI/ML) — open to ML, SDE, and Full-Stack roles.
           </p>
           
           <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
@@ -163,7 +164,7 @@ const HeroSection: React.FC = () => {
                 href={social.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 rounded-full bg-white/5 border border-white/8 text-gray-400 hover:text-white hover:border-[#6366f1]/50 hover:bg-[#6366f1]/10 flex items-center justify-center transition-all duration-300"
+                className="w-11 h-11 rounded-full bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:border-indigo-400/50 hover:bg-indigo-500/10 flex items-center justify-center transition-all duration-300"
                 aria-label={social.label}
               >
                 {social.icon}
@@ -172,7 +173,7 @@ const HeroSection: React.FC = () => {
             <a
               href="#"
               onClick={copyPhoneNumber}
-              className="w-11 h-11 rounded-full bg-white/5 border border-white/8 text-gray-400 hover:text-white hover:border-[#6366f1]/50 hover:bg-[#6366f1]/10 flex items-center justify-center transition-all duration-300"
+              className="w-11 h-11 rounded-full bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:border-indigo-400/50 hover:bg-indigo-500/10 flex items-center justify-center transition-all duration-300"
               aria-label="Phone"
             >
               <PhoneCall size={20} />

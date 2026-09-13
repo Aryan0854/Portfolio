@@ -21,7 +21,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
   return (
     <>
       <div 
-        className="group relative flex flex-col bg-[#11151f]/40 backdrop-blur-md rounded-2xl overflow-hidden border border-white/5 shadow-xl hover:border-[#6366f1]/30 hover:shadow-[0_10px_35px_rgba(99,102,241,0.15)] transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
+        className="group relative flex flex-col h-full bg-white/[0.03] backdrop-blur-md rounded-2xl overflow-hidden border border-white/[0.07] shadow-xl hover:border-indigo-400/30 hover:shadow-[0_16px_40px_rgba(99,102,241,0.12)] transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
         onClick={openModal}
       >
         {/* Certificate Image Frame */}
@@ -44,7 +44,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
         {/* Content Details */}
         <div className="p-5 flex flex-col flex-grow justify-between space-y-3">
           <div className="space-y-1.5">
-            <h3 className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors leading-snug line-clamp-1">{certificate.title}</h3>
+            <h3 className="text-sm font-bold text-white group-hover:text-indigo-200 transition-colors leading-snug line-clamp-2">{certificate.title}</h3>
             
             <div className="flex items-center gap-1.5 text-xs text-gray-400">
               <Award size={13} className="text-indigo-400 shrink-0" />

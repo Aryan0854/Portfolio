@@ -4,6 +4,7 @@ import { profileData } from '../data/profileData';
 import CertificateCard from '../components/UI/CertificateCard';
 import Certificates3DEffects from '../components/ThreeD/Certificates3DEffects';
 import { Search } from 'lucide-react';
+import SectionHeading from '../components/UI/SectionHeading';
 
 const CertificatesPage: React.FC = () => {
   const { certificates } = profileData;
@@ -17,16 +18,13 @@ const CertificatesPage: React.FC = () => {
   return (
     <Layout>
       <Certificates3DEffects />
-      <div className="w-full py-8 relative z-20 space-y-10">
-        <div className="text-center max-w-xl mx-auto space-y-3">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white">
-            My <span className="text-[#6366f1] text-glow-indigo">Certificates</span>
-          </h1>
-          <div className="w-16 h-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] mx-auto rounded-full"></div>
-          <p className="text-gray-400 text-xs sm:text-sm">
-            Professional development records, including internships, cloud associateships, and technical certification courses.
-          </p>
-        </div>
+      <div className="w-full py-6 relative z-20 space-y-10">
+        <SectionHeading
+          eyebrow="Credentials"
+          title="My"
+          highlight="Certificates"
+          subtitle="Internships, cloud associateships, and technical certification courses."
+        />
         
         {/* Sleek Search Control */}
         <div className="max-w-md mx-auto">
