@@ -97,8 +97,9 @@ const HeroSection: React.FC = () => {
           </div>
           
           <p className="text-slate-400 text-[15px] sm:text-base max-w-lg leading-relaxed font-light">
-            Building AI products, full-stack systems, and automation that ship.
-            Final-year B.Tech in CS (AI/ML) — open to ML, SDE, and Full-Stack roles.
+            Bengaluru-based AI &amp; ML developer building Python, React, and TypeScript products —
+            from machine learning systems to full-stack automation.
+            Final-year B.Tech in CS (AI/ML), open to ML, SDE, and full-stack roles.
           </p>
           
           <div className="flex flex-wrap gap-4 justify-start pt-2">
@@ -170,7 +171,7 @@ const HeroSection: React.FC = () => {
             <div className="absolute inset-0 rounded-full overflow-hidden border border-white/10 bg-[#11151f] p-2 shadow-2xl">
               <ImageLoader
                 src={profileData.avatar}
-                alt={name}
+                alt="Aryan Mishra, AI and Machine Learning developer in Bengaluru"
                 className="w-full h-full object-cover rounded-full"
                 priority
                 width={320}

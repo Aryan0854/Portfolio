@@ -3,6 +3,8 @@ import Layout from '../components/Layout/Layout';
 import { profileData } from '../data/profileData';
 import { Download, Briefcase, GraduationCap, Award, Mail, Phone, MapPin, Linkedin, Github as GitHub, FileText, ExternalLink, PhoneCall } from 'lucide-react';
 import SkillBar from '../components/UI/SkillBar';
+import SEOHead from '../components/SEO/SEOHead';
+import { pagesSeo } from '../config/site';
 
 const ResumePage: React.FC = () => {
   const { name, title, bio, contact, skills, experiences, education, publications } = profileData;
@@ -26,6 +28,7 @@ const ResumePage: React.FC = () => {
   
   return (
     <Layout>
+      <SEOHead {...pagesSeo.resume} />
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed bottom-6 right-6 bg-gradient-to-br from-indigo-600 to-purple-700 text-white px-5 py-3 rounded-2xl shadow-[0_10px_30px_rgba(99,102,241,0.3)] border border-white/10 flex items-center gap-3 z-50 animate-scale-in">
@@ -44,8 +47,8 @@ const ResumePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-white/[0.06]">
           <div className="space-y-2 text-left">
             <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-indigo-300/80">Profile</span>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Curriculum <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">Vitae</span></h1>
-            <p className="text-sm text-slate-400 font-light">Interactive resume, publications, and credentials</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Aryan Mishra <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">Resume</span></h1>
+            <p className="text-sm text-slate-400 font-light">AI &amp; ML full-stack developer CV, publications, internships, and credentials</p>
           </div>
           
           <button

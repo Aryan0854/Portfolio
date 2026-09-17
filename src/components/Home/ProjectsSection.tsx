@@ -15,7 +15,7 @@ const ProjectsSection: React.FC = () => {
             Selected work
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">Projects</span>
+            Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">AI &amp; Full-Stack Projects</span>
           </h2>
         </div>
 

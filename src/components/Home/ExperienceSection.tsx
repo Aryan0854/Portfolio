@@ -12,7 +12,7 @@ const ExperienceSection: React.FC = () => {
         eyebrow="Background"
         title="Journey &"
         highlight="History"
-        subtitle="Internships, academic milestones, and cloud associate experience."
+        subtitle="AI/ML internships, full-stack roles, and academic work at Presidency University, Bengaluru."
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

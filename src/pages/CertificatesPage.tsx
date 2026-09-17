@@ -5,6 +5,8 @@ import CertificateCard from '../components/UI/CertificateCard';
 import Certificates3DEffects from '../components/ThreeD/Certificates3DEffects';
 import { Search } from 'lucide-react';
 import SectionHeading from '../components/UI/SectionHeading';
+import SEOHead from '../components/SEO/SEOHead';
+import { pagesSeo } from '../config/site';
 
 const CertificatesPage: React.FC = () => {
   const { certificates } = profileData;
@@ -17,13 +19,14 @@ const CertificatesPage: React.FC = () => {
   
   return (
     <Layout>
+      <SEOHead {...pagesSeo.certificates} />
       <Certificates3DEffects />
       <div className="w-full py-6 relative z-20 space-y-10">
         <SectionHeading
           eyebrow="Credentials"
-          title="My"
-          highlight="Certificates"
-          subtitle="Internships, cloud associateships, and technical certification courses."
+          title="Certificates &"
+          highlight="Internships"
+          subtitle="Google, Oracle, Databricks, Azure, and AI/ML internship credentials earned by Aryan Mishra."
         />
         
         {/* Sleek Search Control */}

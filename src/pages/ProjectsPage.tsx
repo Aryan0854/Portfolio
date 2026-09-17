@@ -5,6 +5,8 @@ import ProjectCard from '../components/UI/ProjectCard';
 import Projects3DEffects from '../components/ThreeD/Projects3DEffects';
 import { Search } from 'lucide-react';
 import SectionHeading from '../components/UI/SectionHeading';
+import SEOHead from '../components/SEO/SEOHead';
+import { pagesSeo } from '../config/site';
 
 const ProjectsPage: React.FC = () => {
   const { projects } = profileData;
@@ -37,13 +39,14 @@ const ProjectsPage: React.FC = () => {
   
   return (
     <Layout>
+      <SEOHead {...pagesSeo.projects} />
       <Projects3DEffects />
       <div className="w-full py-6 relative z-20 space-y-10">
         <SectionHeading
           eyebrow="Build log"
-          title="My"
+          title="AI, ML & Full-Stack"
           highlight="Projects"
-          subtitle={`Search or filter ${projects.length} publications, IoT builds, ML dashboards, and full-stack apps.`}
+          subtitle={`Search or filter ${projects.length} machine learning, IoT, RAG, and full-stack apps by Aryan Mishra.`}
         />
         
         {/* Sleek Search Panel */}

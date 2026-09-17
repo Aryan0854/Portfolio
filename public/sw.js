@@ -1,5 +1,5 @@
 // Service Worker for image caching and performance optimization
-const CACHE_NAME = 'portfolio-cache-v1';
+const CACHE_NAME = 'portfolio-cache-v2';
 const STATIC_ASSETS = [
   '/',
   '/img/ME-1.png',

@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
               Aryan Mishra
             </h3>
             <p className="text-sm leading-relaxed text-slate-400 font-light">
-              Final-year B.Tech student building AI systems, full-stack products, and automation that ships.
+              Final-year B.Tech AI &amp; ML student in Bengaluru building Python, React, and full-stack products.
             </p>
           </div>
 
