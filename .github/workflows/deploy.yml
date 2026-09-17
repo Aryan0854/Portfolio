@@ -33,6 +33,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Add crawlable SPA pages
+        run: |
+          mkdir -p dist/projects dist/resume dist/certificates
+          cp dist/index.html dist/projects/index.html
+          cp dist/index.html dist/resume/index.html
+          cp dist/index.html dist/certificates/index.html
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

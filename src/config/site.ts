@@ -22,7 +22,7 @@ export const pagesSeo = {
     keywords: DEFAULT_KEYWORDS,
   },
   projects: {
-    path: '/projects',
+    path: '/projects/',
     title: 'Projects | Aryan Mishra — AI, ML & Full-Stack Work',
     description:
       'Browse Aryan Mishra’s AI, machine learning, IoT, and full-stack projects, including offline RAG, multilingual video generation, and production hiring tools.',
@@ -30,7 +30,7 @@ export const pagesSeo = {
       'Aryan Mishra projects, AI projects, machine learning portfolio, full stack projects, RAG system, Python React TypeScript',
   },
   resume: {
-    path: '/resume',
+    path: '/resume/',
     title: 'Resume | Aryan Mishra — AI & ML Developer',
     description:
       'View Aryan Mishra’s resume: B.Tech CS (AI/ML), internships at Infinite, Capgemini, Gaia, and ScanPick, plus skills in Python, React, and machine learning.',
@@ -38,7 +38,7 @@ export const pagesSeo = {
       'Aryan Mishra resume, AI ML resume, full stack developer CV, Python developer Bengaluru, machine learning intern',
   },
   certificates: {
-    path: '/certificates',
+    path: '/certificates/',
     title: 'Certificates | Aryan Mishra — Internships & Credentials',
     description:
       'Certificates and internships of Aryan Mishra, including Google Analytics, Oracle, Databricks, Azure DevOps, and AI/ML credentials.',
