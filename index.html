@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    
+    <!-- WebP detection and preload critical image -->
+    <script>
+      (function() {
+        const webpSupported = (function() {
+          try {
+            return document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0;
+          } catch(e) {
+            return false;
+          }
+        })();
+        
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        if (webpSupported) {
+          link.href = '/img/ME-1.webp';
+          link.type = 'image/webp';
+        } else {
+          link.href = '/img/ME-1.png';
+          link.type = 'image/png';
+        }
+        document.head.appendChild(link);
+      })();
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Primary Meta Tags -->
+    <title>Aryan Mishra | AI & ML Full-Stack Developer in Bengaluru</title>
+    <meta name="description" content="Portfolio of Aryan Mishra, a Bengaluru AI & ML full-stack developer. Explore Python, React, and TypeScript projects, internships, and machine learning research." />
+    <meta name="keywords" content="Aryan Mishra, Aryan Mishra portfolio, AI ML developer Bengaluru, full stack developer India, Python machine learning projects, React TypeScript developer, B.Tech AI ML Presidency University">
+    <meta name="author" content="Aryan Mishra" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="IN-KA" />
+    <meta name="geo.placename" content="Bengaluru" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://aryanmishra.online/" />
+    <meta property="og:title" content="Aryan Mishra | AI & ML Full-Stack Developer in Bengaluru" />
+    <meta property="og:description" content="Portfolio of Aryan Mishra, a Bengaluru AI & ML full-stack developer. Explore Python, React, and TypeScript projects, internships, and machine learning research." />
+    <meta property="og:image" content="https://aryanmishra.online/img/ME-1.png" />
+    <meta property="og:image:alt" content="Aryan Mishra, AI and Machine Learning developer in Bengaluru" />
+    <meta property="og:site_name" content="Aryan Mishra Portfolio" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://aryanmishra.online/" />
+    <meta name="twitter:title" content="Aryan Mishra | AI & ML Full-Stack Developer in Bengaluru" />
+    <meta name="twitter:description" content="Portfolio of Aryan Mishra, a Bengaluru AI & ML full-stack developer. Explore Python, React, and TypeScript projects, internships, and machine learning research." />
+    <meta name="twitter:image" content="https://aryanmishra.online/img/ME-1.png" />
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="msapplication-TileColor" content="#1a1a2e" />
+    <link rel="canonical" href="https://aryanmishra.online/" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://aryanmishra.online/sitemap.xml" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://aryanmishra.online/#website",
+          "url": "https://aryanmishra.online/",
+          "name": "Aryan Mishra Portfolio",
+          "description": "Portfolio of Aryan Mishra, AI & ML full-stack developer in Bengaluru.",
+          "inLanguage": "en",
+          "publisher": { "@id": "https://aryanmishra.online/#person" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://aryanmishra.online/#person",
+          "name": "Aryan Mishra",
+          "url": "https://aryanmishra.online/",
+          "image": "https://aryanmishra.online/img/ME-1.png",
+          "jobTitle": "AI & ML Full-Stack Developer",
+          "description": "Bengaluru-based AI and machine learning developer building Python, React, and TypeScript products.",
+          "email": "mailto:aryanofficial0854@gmail.com",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bengaluru",
+            "addressRegion": "Karnataka",
+            "addressCountry": "IN"
+          },
+          "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "Presidency University, Bengaluru"
+          },
+          "knowsAbout": [
+            "Artificial Intelligence",
+            "Machine Learning",
+            "Python",
+            "React",
+            "TypeScript",
+            "Full-Stack Development",
+            "Data Analytics"
+          ],
+          "sameAs": [
+            "https://www.linkedin.com/in/aryan0854/",
+            "https://github.com/Aryan0854",
+            "https://x.com/Aryan000980805"
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- GitHub Pages SPA: restore pretty URLs after 404 fallback -->
+    <script>
+      (function(l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&');
+          }).join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      }(window.location));
+    </script>
+    <script type="module" crossorigin src="/assets/index-HvTsSb9o.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-Bm7FCeSL.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-vendor-Cq0omvdC.js">
+    <link rel="modulepreload" crossorigin href="/assets/icon-vendor-DJwQx6W5.js">
+    <link rel="modulepreload" crossorigin href="/assets/three-vendor-sM8N-Gp7.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-BMdsjEIN.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <main>
+        <h1>Aryan Mishra | AI &amp; ML Full-Stack Developer in Bengaluru</h1>
+        <p>Portfolio of Aryan Mishra, a Bengaluru AI and machine learning developer building Python, React, and TypeScript products.</p>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/projects">Projects</a>
+          <a href="/resume">Resume</a>
+          <a href="/certificates">Certificates</a>
+        </nav>
+      </main>
+    </noscript>
+  </body>
+</html>
