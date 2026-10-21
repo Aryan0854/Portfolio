@@ -25,15 +25,22 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
   const isActive = (path: string) => location.pathname === path;
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        isScrolled ? 'bg-[#07080d]/80 backdrop-blur-xl border-b border-white/[0.06]' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 pt-[env(safe-area-inset-top)] transition-colors duration-300 ${
+        isScrolled || isMenuOpen ? 'bg-[#07080d]/85 backdrop-blur-xl border-b border-white/[0.06]' : 'bg-transparent'
       }`}
     >
-      <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24 h-16 sm:h-[72px] flex items-center justify-between">
+      <div className="flex h-16 w-full items-center justify-between px-5 sm:h-[72px] sm:px-10 lg:px-16 xl:px-24">
         <Link to="/" className="text-white font-extrabold text-lg tracking-[0.2em] hover:opacity-80 transition-opacity">
           <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
             ARYAN
@@ -58,31 +65,32 @@ const Header: React.FC = () => {
         </nav>
 
         <button
-          className="md:hidden text-white p-2 -mr-2 hover:bg-white/10 rounded-lg transition-colors"
+          className="inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-xl text-white transition-colors hover:bg-white/10 md:hidden"
           onClick={() => setIsMenuOpen((open) => !open)}
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={isMenuOpen}
         >
-          {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden border-t border-white/[0.06] bg-[#07080d]/95 backdrop-blur-xl">
-          <div className="flex flex-col px-6 py-3">
+        <nav className="border-t border-white/[0.06] bg-[#07080d]/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl md:hidden">
+          <div className="flex flex-col">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`py-3 text-sm tracking-wide border-b border-white/[0.04] last:border-0 ${
-                  isActive(item.path) ? 'text-white font-semibold' : 'text-slate-300 hover:text-white'
+                className={`flex min-h-12 items-center justify-between rounded-xl px-3 text-[15px] tracking-wide ${
+                  isActive(item.path) ? 'bg-white/[0.05] font-semibold text-white' : 'text-slate-300'
                 }`}
               >
                 {item.name}
+                {isActive(item.path) && <span className="h-1.5 w-1.5 rounded-full bg-fuchsia-400" />}
               </Link>
             ))}
           </div>
-        </div>
+        </nav>
       )}
     </header>
   );

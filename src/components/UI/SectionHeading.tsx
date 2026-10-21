@@ -18,7 +18,7 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({
   const alignment = align === 'center' ? 'text-center items-center' : 'text-left items-start';
 
   return (
-    <div className={`flex flex-col ${alignment} gap-3 mb-12 sm:mb-14`}>
+    <div className={`mb-8 flex flex-col gap-3 sm:mb-14 ${alignment}`}>
       {eyebrow && (
         <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-indigo-300/80">
           {eyebrow}

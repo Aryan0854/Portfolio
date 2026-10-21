@@ -58,83 +58,109 @@ const HeroSection: React.FC = () => {
     }
   };
   
+  const socials = [
+    { icon: <GitHub size={18} />, link: contact.githubLink, label: 'GitHub' },
+    { icon: <Linkedin size={18} />, link: contact.linkedinLink, label: 'LinkedIn' },
+    { icon: <Twitter size={18} />, link: contact.twitter, label: 'Twitter' },
+    { icon: <Facebook size={18} />, link: contact.facebook, label: 'Facebook' },
+  ].filter((social) => social.link);
+
   return (
-    <div className="relative min-h-[82vh] flex items-center overflow-hidden py-10 z-20">
-      {/* Toast Notification */}
+    <div className="relative z-20 overflow-hidden py-1 md:flex md:min-h-[82vh] md:items-center md:py-10">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-[-12%] -top-6 bottom-0 -z-10 bg-[radial-gradient(ellipse_at_50%_38%,rgba(7,8,13,0.82)_0%,rgba(7,8,13,0.45)_46%,transparent_72%)] md:hidden"
+      />
+
       {showToast && (
-        <div className="fixed bottom-6 right-6 bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] text-white px-5 py-3 rounded-2xl shadow-[0_10px_30px_rgba(99,102,241,0.3)] border border-white/10 flex items-center gap-3 z-50 animate-scale-in">
-          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+        <div className="fixed bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+4.5rem))] left-4 right-4 z-50 flex items-center gap-3 rounded-2xl border border-white/10 bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] px-5 py-3 text-white shadow-[0_10px_30px_rgba(99,102,241,0.3)] animate-scale-in sm:bottom-6 sm:left-auto sm:right-6 sm:w-auto">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
             <PhoneCall size={16} className="text-indigo-200" />
           </div>
           <div>
-            <span className="font-semibold text-sm block">Phone Copied!</span>
+            <span className="block text-sm font-semibold">Phone Copied!</span>
             <span className="text-xs text-indigo-200">{contact.phone}</span>
           </div>
         </div>
       )}
-      
-      <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-center hero-content transition-transform duration-300 ease-out">
-        
-        {/* Left Text details */}
-        <div className="md:col-span-7 text-left md:order-1 order-2 space-y-6 relative">
-          <div className="absolute -inset-10 -z-10 bg-[#07080d]/55 blur-3xl rounded-full pointer-events-none" />
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-400/10 border border-emerald-400/20 rounded-full text-xs text-emerald-300 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+
+      <div className="flex w-full flex-col items-center gap-5 text-center md:grid md:grid-cols-12 md:items-center md:gap-12 md:text-left">
+        <div className="order-1 md:order-2 md:col-span-5 md:flex md:justify-end">
+          <div
+            ref={avatarContainerRef}
+            className="relative h-[9.25rem] w-[9.25rem] transition-transform duration-200 ease-out min-[420px]:h-40 min-[420px]:w-40 md:h-80 md:w-80"
+            style={{ aspectRatio: '1/1', transformStyle: 'preserve-3d' }}
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#6366f1] via-[#8b5cf6] to-[#a855f7] opacity-25 blur-2xl animate-pulse-slow" />
+            <div className="absolute inset-[-5px] rounded-full border-2 border-dashed border-[#6366f1]/35 animate-spin" style={{ animationDuration: '40s' }} />
+            <div className="absolute inset-[-12px] hidden rounded-full border border-[#6366f1]/15 animate-ping md:block" style={{ animationDuration: '3s' }} />
+            <div className="absolute inset-0 overflow-hidden rounded-full border border-white/15 bg-[#11151f] p-1.5 shadow-[0_12px_40px_rgba(99,102,241,0.28)] md:p-2">
+              <ImageLoader
+                src={profileData.avatar}
+                alt="Aryan Mishra, AI and Machine Learning developer in Bengaluru"
+                className="h-full w-full rounded-full object-cover"
+                priority
+                width={320}
+                height={320}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="relative order-2 flex w-full flex-col items-center gap-3.5 md:order-1 md:col-span-7 md:items-start md:gap-6">
+          <div className="pointer-events-none absolute -inset-10 -z-10 hidden rounded-full bg-[#07080d]/55 blur-3xl md:block" />
+
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[11px] font-medium text-emerald-300 sm:text-xs">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
             Available for opportunities
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[0.95] text-white">
-            Hi, I'm <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-fuchsia-400">
+          <h1 className="text-[2.05rem] font-extrabold leading-[0.92] tracking-tight text-white min-[390px]:text-4xl sm:text-5xl lg:text-7xl">
+            Hi, I'm <br />
+            <span className="whitespace-nowrap bg-gradient-to-r from-indigo-400 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
               {nameArray[0]} {nameArray[1]}
             </span>
           </h1>
-          
-          <div className="h-8 flex items-center justify-start">
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-300 border-r-2 border-indigo-400 pr-2 whitespace-nowrap overflow-hidden">
+
+          <div className="flex min-h-7 w-full items-center justify-center md:h-8 md:justify-start">
+            <h2 className="max-w-full border-r-2 border-indigo-400 pr-2 text-[15px] font-semibold text-slate-200 sm:text-xl md:whitespace-nowrap">
               {typedText}
             </h2>
           </div>
-          
-          <p className="text-slate-400 text-[15px] sm:text-base max-w-lg leading-relaxed font-light">
+
+          <p className="max-w-md text-[13.5px] font-light leading-relaxed text-slate-300 sm:text-base md:max-w-lg md:text-slate-400">
             Bengaluru-based AI &amp; ML developer building Python, React, and TypeScript products —
             from machine learning systems to full-stack automation.
             Final-year B.Tech in CS (AI/ML), open to ML, SDE, and full-stack roles.
           </p>
-          
-          <div className="flex flex-wrap gap-4 justify-start pt-2">
+
+          <div className="grid w-full grid-cols-2 gap-2.5 pt-1 md:flex md:w-auto md:flex-wrap md:justify-start md:gap-4 md:pt-2">
             <a
               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative group overflow-hidden bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] hover:from-[#5558e3] hover:to-[#7c4ee4] text-white px-7 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-[0_4px_20px_rgba(99,102,241,0.25)] hover:shadow-[0_4px_30px_rgba(99,102,241,0.4)]"
+              className="group relative flex touch-manipulation items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] px-3 py-3.5 text-white shadow-[0_4px_20px_rgba(99,102,241,0.25)] transition-all duration-300 hover:from-[#5558e3] hover:to-[#7c4ee4] hover:shadow-[0_4px_30px_rgba(99,102,241,0.4)] active:scale-[0.98] md:rounded-lg md:px-7 md:py-3"
             >
-              <Mail size={18} className="group-hover:translate-x-0.5 transition-transform" />
-              <span className="font-semibold text-sm">Contact Me</span>
+              <Mail size={18} className="shrink-0 transition-transform group-hover:translate-x-0.5" />
+              <span className="text-[13px] font-semibold sm:text-sm">Contact Me</span>
             </a>
             <Link
               to="/resume"
-              className="bg-transparent hover:bg-white/5 text-white border border-white/15 hover:border-white/30 px-7 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 font-semibold text-sm"
+              className="flex touch-manipulation items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-3 py-3.5 text-[13px] font-semibold text-white transition-all duration-300 hover:border-white/30 hover:bg-white/5 active:scale-[0.98] sm:text-sm md:rounded-lg md:bg-transparent md:px-7 md:py-3"
             >
               <span>View Resume</span>
-              <ArrowRight size={16} />
+              <ArrowRight size={16} className="shrink-0" />
             </Link>
           </div>
-          
-          {/* Social Links */}
-          <div className="flex gap-3 justify-start pt-4">
-            {[
-              { icon: <GitHub size={20} />, link: contact.githubLink, label: 'GitHub' },
-              { icon: <Linkedin size={20} />, link: contact.linkedinLink, label: 'LinkedIn' },
-              { icon: <Twitter size={20} />, link: contact.twitter, label: 'Twitter' },
-              { icon: <Facebook size={20} />, link: contact.facebook, label: 'Facebook' },
-            ].filter(s => s.link).map((social, idx) => (
+
+          <div className="flex items-center justify-center gap-1.5 pt-1 md:justify-start md:gap-3 md:pt-4">
+            {socials.map((social) => (
               <a
-                key={idx}
+                key={social.label}
                 href={social.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-white transition-colors"
+                className="inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-white/25 hover:text-white active:scale-95 md:h-9 md:w-9 md:border-transparent md:bg-transparent md:text-slate-400"
                 aria-label={social.label}
               >
                 {social.icon}
@@ -143,41 +169,11 @@ const HeroSection: React.FC = () => {
             <a
               href="#"
               onClick={copyPhoneNumber}
-              className="text-slate-400 hover:text-white transition-colors"
+              className="inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-white/25 hover:text-white active:scale-95 md:h-9 md:w-9 md:border-transparent md:bg-transparent md:text-slate-400"
               aria-label="Phone"
             >
-              <PhoneCall size={20} />
+              <PhoneCall size={18} />
             </a>
-          </div>
-        </div>
-        
-        {/* Right Avatar */}
-        <div className="md:col-span-5 flex justify-start md:justify-end md:order-2 order-1">
-          <div
-            ref={avatarContainerRef}
-            className="relative w-64 h-64 sm:w-80 sm:h-80 transition-transform duration-200 ease-out"
-            style={{ aspectRatio: '1/1', transformStyle: 'preserve-3d' }}
-          >
-            {/* Pulsing Backing Glow */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#6366f1] via-[#8b5cf6] to-[#a855f7] rounded-full animate-pulse-slow blur-2xl opacity-20"></div>
-            
-            {/* Outer Spinning Ring */}
-            <div className="absolute inset-[-4px] rounded-full border-2 border-dashed border-[#6366f1]/30 animate-spin" style={{ animationDuration: '40s' }}></div>
-            
-            {/* Inner Glowing Ring */}
-            <div className="absolute inset-[-10px] rounded-full border border-[#6366f1]/10 scale-95 animate-ping" style={{ animationDuration: '3s' }}></div>
-
-            {/* Avatar Frame */}
-            <div className="absolute inset-0 rounded-full overflow-hidden border border-white/10 bg-[#11151f] p-2 shadow-2xl">
-              <ImageLoader
-                src={profileData.avatar}
-                alt="Aryan Mishra, AI and Machine Learning developer in Bengaluru"
-                className="w-full h-full object-cover rounded-full"
-                priority
-                width={320}
-                height={320}
-              />
-            </div>
           </div>
         </div>
       </div>

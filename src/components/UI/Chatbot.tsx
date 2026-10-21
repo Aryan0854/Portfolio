@@ -131,9 +131,9 @@ const Chatbot: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6 max-w-[calc(100vw-2rem)]">
+    <div className={`fixed z-50 ${isOpen ? 'inset-x-3 sm:inset-x-auto sm:right-6' : 'right-4 sm:right-6'} bottom-[max(0.75rem,env(safe-area-inset-bottom))] sm:bottom-6`}>
       {isOpen ? (
-        <div className="bg-[#11151f]/95 backdrop-blur-xl rounded-3xl shadow-2xl w-[92vw] max-w-md sm:w-[380px] h-[74vh] max-h-[640px] flex flex-col border border-white/10 overflow-hidden animate-scale-in">
+        <div className="flex h-[min(72dvh,640px)] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#11151f]/95 shadow-2xl backdrop-blur-xl animate-scale-in sm:w-[380px]">
           <div className="bg-gradient-to-r from-indigo-500/80 via-violet-500/80 to-fuchsia-500/80 text-white p-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center border border-white/10">

@@ -63,25 +63,24 @@ const ProjectsPage: React.FC = () => {
           </div>
         </div>
         
-        {/* Responsive Horizontal scroll filter chips */}
-        <div className="flex flex-wrap gap-2 justify-start">
+        <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
           <button
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide border transition-all duration-300 ${
-              selectedTechnology === '' 
-                ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.25)]' 
+            className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2.5 text-xs font-semibold tracking-wide transition-all duration-300 md:py-1.5 ${
+              selectedTechnology === ''
+                ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.25)]'
                 : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
             }`}
             onClick={() => setSelectedTechnology('')}
           >
             All Projects
           </button>
-          
+
           {allTechnologies.map((tech) => (
             <button
               key={tech}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide border transition-all duration-300 ${
-                selectedTechnology === tech 
-                  ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.25)]' 
+              className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2.5 text-xs font-semibold tracking-wide transition-all duration-300 md:py-1.5 ${
+                selectedTechnology === tech
+                  ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.25)]'
                   : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
               }`}
               onClick={() => setSelectedTechnology(tech)}

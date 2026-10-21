@@ -7,7 +7,7 @@ const SkillsSection: React.FC = () => {
   const { skills } = profileData;
 
   return (
-    <section className="py-16 sm:py-20 relative z-10">
+    <section className="relative z-10 py-12 sm:py-20">
       <SectionHeading
         eyebrow="Capabilities"
         title="Technical"

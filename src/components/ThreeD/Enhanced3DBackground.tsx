@@ -1,9 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 const Enhanced3DBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const animationIdRef = useRef<number | null>(null);
+  const [narrow, setNarrow] = useState(() => window.matchMedia('(max-width: 767px)').matches);
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)');
+    const sync = () => setNarrow(media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -11,21 +20,21 @@ const Enhanced3DBackground = () => {
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(
-      75,
+      narrow ? 62 : 75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 5;
+    camera.position.z = narrow ? 8.4 : 5;
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance',
+      antialias: !narrow,
+      powerPreference: narrow ? 'low-power' : 'high-performance',
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, narrow ? 1.5 : 2));
 
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0';
@@ -44,13 +53,62 @@ const Enhanced3DBackground = () => {
     }> = [];
 
     const placeAwayFromText = (x: number) => {
+      if (narrow) {
+        const side = x >= 0 ? 1 : -1;
+        return side * (3.4 + Math.random() * 0.8);
+      }
       if (x > -1.2 && x < 1.2) {
         return x >= 0 ? 2.4 + Math.random() * 2 : -2.4 - Math.random() * 2;
       }
       return x;
     };
 
-    for (let i = 0; i < 6; i++) {
+    const pushMesh = (
+      mesh: THREE.Mesh,
+      speed = 0.4 + Math.random()
+    ) => {
+      scene.add(mesh);
+      objectData.push({
+        mesh,
+        originalPosition: mesh.position.clone(),
+        phase: Math.random() * Math.PI * 2,
+        speed,
+      });
+    };
+
+    if (narrow) {
+      const accents: Array<{ kind: 'sphere' | 'cube' | 'torus'; x: number; y: number; z: number; size: number }> = [
+        { kind: 'sphere', x: -2.7, y: 4.6, z: -2.4, size: 0.34 },
+        { kind: 'cube', x: 2.85, y: 3.8, z: -2.8, size: 0.42 },
+        { kind: 'sphere', x: 3.05, y: -0.2, z: -3.2, size: 0.28 },
+        { kind: 'torus', x: -2.9, y: -4.2, z: -2.6, size: 0.48 },
+        { kind: 'sphere', x: 2.55, y: -4.8, z: -3.1, size: 0.36 },
+        { kind: 'cube', x: -3.1, y: 0.6, z: -3.4, size: 0.32 },
+      ];
+
+      accents.forEach((accent, index) => {
+        const color = new THREE.Color().setHSL(0.68 + (index % 4) * 0.03, 0.75, 0.62);
+        const material = new THREE.MeshPhongMaterial({
+          color,
+          transparent: true,
+          opacity: 0.55,
+          shininess: 80,
+          emissive: color.clone().multiplyScalar(0.18),
+          emissiveIntensity: 0.35,
+        });
+        const geometry =
+          accent.kind === 'sphere'
+            ? new THREE.SphereGeometry(accent.size, 20, 20)
+            : accent.kind === 'cube'
+              ? new THREE.BoxGeometry(accent.size, accent.size, accent.size)
+              : new THREE.TorusGeometry(accent.size, accent.size * 0.28, 12, 40);
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(accent.x, accent.y, accent.z);
+        pushMesh(mesh, 0.35 + index * 0.08);
+      });
+    }
+
+    if (!narrow) for (let i = 0; i < 6; i++) {
       const geometry = new THREE.BoxGeometry(
         0.5 + Math.random() * 0.6,
         0.5 + Math.random() * 0.6,
@@ -72,16 +130,10 @@ const Enhanced3DBackground = () => {
         (Math.random() - 0.5) * 10,
         (Math.random() - 0.5) * 10
       );
-      scene.add(cube);
-      objectData.push({
-        mesh: cube,
-        originalPosition: cube.position.clone(),
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.5 + Math.random() * 1.5,
-      });
+      pushMesh(cube, 0.5 + Math.random() * 1.5);
     }
 
-    for (let i = 0; i < 8; i++) {
+    if (!narrow) for (let i = 0; i < 8; i++) {
       const geometry = new THREE.SphereGeometry(0.22 + Math.random() * 0.38, 32, 32);
       const material = new THREE.MeshPhongMaterial({
         color: new THREE.Color().setHSL(0.68 + Math.random() * 0.12, 0.85, 0.68),
@@ -99,16 +151,10 @@ const Enhanced3DBackground = () => {
         (Math.random() - 0.5) * 12,
         (Math.random() - 0.5) * 12
       );
-      scene.add(sphere);
-      objectData.push({
-        mesh: sphere,
-        originalPosition: sphere.position.clone(),
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.3 + Math.random() * 1.2,
-      });
+      pushMesh(sphere, 0.3 + Math.random() * 1.2);
     }
 
-    for (let i = 0; i < 3; i++) {
+    if (!narrow) for (let i = 0; i < 3; i++) {
       const geometry = new THREE.TorusGeometry(
         0.9 + Math.random() * 0.5,
         0.22 + Math.random() * 0.18,
@@ -133,17 +179,11 @@ const Enhanced3DBackground = () => {
         (Math.random() - 0.5) * 6,
         -1 - Math.random() * 4
       );
-      scene.add(torus);
-      objectData.push({
-        mesh: torus,
-        originalPosition: torus.position.clone(),
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.4 + Math.random() * 1.0,
-      });
+      pushMesh(torus, 0.4 + Math.random() * 1.0);
     }
 
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1400;
+    const particlesCount = narrow ? 420 : 1400;
     const posArray = new Float32Array(particlesCount * 3);
     const colorArray = new Float32Array(particlesCount * 3);
     const sizeArray = new Float32Array(particlesCount);
@@ -205,9 +245,10 @@ const Enhanced3DBackground = () => {
       animationIdRef.current = requestAnimationFrame(animate);
       time += 0.01;
 
+      const drift = narrow ? 0.22 : 0.5;
       objectData.forEach(({ mesh, originalPosition, phase, speed }) => {
-        mesh.position.y = originalPosition.y + Math.sin(time * speed + phase) * 0.5;
-        mesh.position.x = originalPosition.x + Math.cos(time * speed * 0.7 + phase) * 0.3;
+        mesh.position.y = originalPosition.y + Math.sin(time * speed + phase) * drift;
+        mesh.position.x = originalPosition.x + Math.cos(time * speed * 0.7 + phase) * drift * 0.45;
         mesh.position.z = originalPosition.z + Math.sin(time * speed * 0.5 + phase) * 0.2;
 
         mesh.rotation.x += 0.01 * speed + mouseY * 0.01;
@@ -220,12 +261,14 @@ const Enhanced3DBackground = () => {
       particlesMesh.rotation.x += 0.0005 + mouseY * 0.0006;
       particlesMesh.rotation.y += 0.0005 + mouseX * 0.0006;
 
-      const positions = particlesMesh.geometry.attributes.position.array as Float32Array;
-      for (let i = 0; i < particlesCount; i++) {
-        positions[i * 3 + 1] += Math.sin(time + i * 0.01) * 0.002;
-        positions[i * 3] += Math.cos(time + i * 0.01) * 0.001;
+      if (!narrow) {
+        const positions = particlesMesh.geometry.attributes.position.array as Float32Array;
+        for (let i = 0; i < particlesCount; i++) {
+          positions[i * 3 + 1] += Math.sin(time + i * 0.01) * 0.002;
+          positions[i * 3] += Math.cos(time + i * 0.01) * 0.001;
+        }
+        particlesMesh.geometry.attributes.position.needsUpdate = true;
       }
-      particlesMesh.geometry.attributes.position.needsUpdate = true;
 
       camera.position.x += (mouseX * 0.45 - camera.position.x) * 0.05;
       camera.position.y += (mouseY * 0.35 - camera.position.y) * 0.05;
@@ -251,13 +294,14 @@ const Enhanced3DBackground = () => {
       }
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
+      renderer.dispose();
     };
-  }, []);
+  }, [narrow]);
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 -z-10 w-screen h-screen overflow-hidden pointer-events-none"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #0b0e14 0%, #11151f 50%, #162035 100%)',
       }}

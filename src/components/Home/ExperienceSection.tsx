@@ -7,7 +7,7 @@ const ExperienceSection: React.FC = () => {
   const { experiences, education } = profileData;
 
   return (
-    <section className="py-16 sm:py-20 relative z-10">
+    <section className="relative z-10 py-12 sm:py-20">
       <SectionHeading
         eyebrow="Background"
         title="Journey &"

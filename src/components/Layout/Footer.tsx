@@ -7,9 +7,9 @@ const Footer: React.FC = () => {
   const { contact } = profileData;
 
   return (
-    <footer className="relative z-10 border-t border-white/[0.06] bg-black/40 backdrop-blur-md text-slate-400 py-14">
-      <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className="relative z-10 border-t border-white/[0.06] bg-black/40 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-10 text-slate-400 backdrop-blur-md sm:py-14">
+      <div className="w-full px-5 sm:px-10 lg:px-16 xl:px-24">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-10">
           <div className="space-y-3">
             <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">
               Aryan Mishra

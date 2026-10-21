@@ -74,10 +74,7 @@ body {
 
 /* hardware acceleration optimizations */
 img {
-  will-change: transform;
   content-visibility: auto;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
 /* Custom Animations */
@@ -124,11 +121,13 @@ img {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card:hover {
-  background: rgba(22, 21, 38, 0.6);
-  border-color: rgba(99, 102, 241, 0.25);
-  box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15);
-  transform: translateY(-4px);
+@media (hover: hover) {
+  .glass-card:hover {
+    background: rgba(22, 21, 38, 0.6);
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15);
+    transform: translateY(-4px);
+  }
 }
 
 .glass-navbar {

@@ -3,9 +3,10 @@ import * as THREE from 'three';
 
 const Projects3DEffects = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!isDesktop || !containerRef.current) return;
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -114,12 +115,14 @@ const Projects3DEffects = () => {
       }
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isDesktop]);
+
+  if (!isDesktop) return null;
 
   return (
     <div 
       ref={containerRef} 
-      className="fixed inset-0 -z-10 w-full h-full opacity-30"
+      className="pointer-events-none fixed inset-0 -z-10 hidden h-full w-full opacity-30 md:block"
     />
   );
 };

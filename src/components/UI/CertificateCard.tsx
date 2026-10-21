@@ -21,7 +21,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
   return (
     <>
       <div 
-        className="group relative flex flex-col h-full bg-white/[0.03] backdrop-blur-md rounded-2xl overflow-hidden border border-white/[0.07] shadow-xl hover:border-indigo-400/30 hover:shadow-[0_16px_40px_rgba(99,102,241,0.12)] transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
+        className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.03] shadow-xl backdrop-blur-md transition-all duration-300 hover:border-indigo-400/30 hover:shadow-[0_16px_40px_rgba(99,102,241,0.12)] md:hover:-translate-y-1.5"
         onClick={openModal}
       >
         {/* Certificate Image Frame */}
@@ -36,7 +36,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate }) => {
           <div className="absolute inset-0 bg-gradient-to-t from-[#080710] via-black/40 to-transparent"></div>
           
           {/* Action indicators */}
-          <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white opacity-80 backdrop-blur-md transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
             <ArrowUpRight size={14} />
           </div>
         </div>

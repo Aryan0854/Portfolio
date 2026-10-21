@@ -31,7 +31,7 @@ const ResumePage: React.FC = () => {
       <SEOHead {...pagesSeo.resume} />
       {/* Toast Notification */}
       {showToast && (
-        <div className="fixed bottom-6 right-6 bg-gradient-to-br from-indigo-600 to-purple-700 text-white px-5 py-3 rounded-2xl shadow-[0_10px_30px_rgba(99,102,241,0.3)] border border-white/10 flex items-center gap-3 z-50 animate-scale-in">
+        <div className="fixed bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+4.5rem))] left-4 right-4 z-50 flex items-center gap-3 rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-600 to-purple-700 px-5 py-3 text-white shadow-[0_10px_30px_rgba(99,102,241,0.3)] animate-scale-in sm:bottom-6 sm:left-auto sm:right-6 sm:w-auto">
           <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
             <PhoneCall size={16} className="text-indigo-200" />
           </div>
@@ -53,7 +53,7 @@ const ResumePage: React.FC = () => {
           
           <button
             onClick={downloadResume}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-sm font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-[0_4px_15px_rgba(99,102,241,0.2)] hover:shadow-[0_4px_25px_rgba(99,102,241,0.35)] shrink-0"
+            className="flex w-full shrink-0 touch-manipulation items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_4px_15px_rgba(99,102,241,0.2)] transition-all duration-300 hover:from-indigo-500 hover:to-purple-500 hover:shadow-[0_4px_25px_rgba(99,102,241,0.35)] active:scale-[0.98] sm:w-auto"
           >
             <Download size={16} /> Download Offline PDF
           </button>

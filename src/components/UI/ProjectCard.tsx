@@ -18,7 +18,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
     <>
       <article
-        className="group relative flex flex-col h-full bg-white/[0.03] backdrop-blur-md rounded-2xl overflow-hidden border border-white/[0.07] shadow-xl hover:border-indigo-400/30 hover:shadow-[0_16px_40px_rgba(99,102,241,0.12)] transition-all duration-300 hover:-translate-y-1.5"
+        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.03] shadow-xl backdrop-blur-md transition-all duration-300 hover:border-indigo-400/30 hover:shadow-[0_16px_40px_rgba(99,102,241,0.12)] md:hover:-translate-y-1.5"
         onClick={openModal}
       >
         <div className="relative aspect-[16/10] overflow-hidden shrink-0 bg-[#0c1018]">
@@ -30,7 +30,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#07080d] via-transparent to-transparent opacity-80" />
-          <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white opacity-80 backdrop-blur-md transition-opacity md:opacity-0 md:group-hover:opacity-100">
             <ArrowUpRight size={14} />
           </div>
         </div>
