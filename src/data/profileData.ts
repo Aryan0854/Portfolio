@@ -437,7 +437,7 @@ export const profileData: ProfileData = {
      description: "A production hiring platform that matches bench resources to live job descriptions for Infinite, with Corp Pool and Employee Portal kept as fully separate data planes. The system scores people against BR/JDs using a skill-family engine (DevOps, Linux, Test Automation, Full Stack) and optional on-prem Qwen 3.5 4B analysis over an OpenAI-compatible local API. Recruiter decisions are banded as <30% reject, 30–50% evaluate, 51–70% L1/screen (≥60% qualified), and ≥75% interview. Operated against a 114-person Corp Pool, five live requirements (88001–88005BR), and a pinned 8-person Full Stack selected pool so only the shortlisted subset is analyzed. Local LLM thinking-off cut per-profile generation from ~30–90s to ~12s (~5–7×) on CPU while still returning citation-style JD-vs-skills rationales. Includes percentage-summary Excel scorecards, shortlist/pool controls, interview exports, and Vercel-hosted admin with Qwen remaining air-gapped on localhost.",
      image: import.meta.env.BASE_URL + "img/HRConsole.png",
      technologies: ["Next.js + React 18", "TypeScript", "Supabase Postgres", "ExcelJS", "llamafile / Qwen 3.5 4B", "Tailwind CSS"],
-     liveLink: "https://ai-interview-ics-poc.vercel.app/admin",
+     liveLink: "https://talentscope.infinite.com/",
      githubLink: "https://github.com/ics-anand-poc/AI-Interview.git",
     },
     {
