@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">
               Aryan Mishra
             </h3>
-            <p className="text-sm leading-relaxed text-slate-400 font-light">
+            <p className="text-sm leading-relaxed text-slate-300">
               Final-year B.Tech AI &amp; ML student in Bengaluru building Python, React, and full-stack products.
             </p>
           </div>

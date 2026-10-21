@@ -12,8 +12,8 @@ const HomePage: React.FC = () => {
     <Layout>
       <SEOHead {...pagesSeo.home} />
       <HeroSection />
-      <SkillsSection />
       <ProjectsSection />
+      <SkillsSection />
       <ExperienceSection />
     </Layout>
   );

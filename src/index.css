@@ -27,13 +27,15 @@
   }
 }
 
-/* Fix mobile scrolling issues */
+/* Keep page scroll, hide every scrollbar (including the purple bar next to the photo) */
 html {
   min-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 body {
@@ -41,6 +43,9 @@ body {
   min-height: -webkit-fill-available;
   overflow-x: hidden;
   position: relative;
+  overscroll-behavior-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 #root {
@@ -48,28 +53,23 @@ body {
   min-height: -webkit-fill-available;
 }
 
-/* Prevent pull-to-refresh on mobile */
-body {
-  overscroll-behavior-y: auto;
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Custom Scrollbar - futuristic thin line */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+*::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+  background: transparent !important;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(8, 7, 16, 0.5);
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #6366f1, #a855f7);
-  border-radius: 99px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #4f46e5, #9333ea);
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-corner {
+  display: none !important;
+  background: transparent !important;
 }
 
 /* hardware acceleration optimizations */
@@ -103,6 +103,30 @@ img {
   50% { border-color: #6366f1; }
 }
 
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes nameShimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes btnShine {
+  0%, 58% { transform: translateX(-130%); }
+  100% { transform: translateX(130%); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes orbitSpin {
+  to { transform: rotate(360deg); }
+}
+
 /* Premium Classes */
 .animate-pulse-slow {
   animation: pulseSlow 4s ease-in-out infinite;
@@ -112,19 +136,110 @@ img {
   animation: float 4s ease-in-out infinite;
 }
 
+.hero-float {
+  animation: heroFloat 6.5s ease-in-out infinite;
+}
+
+.name-shimmer {
+  background-image: linear-gradient(100deg, #818cf8 0%, #ddd6fe 28%, #ffffff 46%, #f0abfc 62%, #818cf8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: nameShimmer 5.5s linear infinite;
+}
+
+.btn-shine {
+  position: relative;
+  isolation: isolate;
+}
+
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.38) 48%, transparent 64%);
+  transform: translateX(-130%);
+  animation: btnShine 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.orbit {
+  position: absolute;
+  inset: -12px;
+  border-radius: 999px;
+  animation: orbitSpin 14s linear infinite;
+  pointer-events: none;
+}
+
+.orbit span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 999px;
+  background: #ddd6fe;
+  box-shadow: 0 0 12px #a78bfa, 0 0 2px #fff;
+}
+
+.orbit-reverse {
+  inset: -22px;
+  animation-duration: 20s;
+  animation-direction: reverse;
+}
+
+.orbit-reverse span {
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  background: #a5f3fc;
+  box-shadow: 0 0 12px #22d3ee, 0 0 2px #fff;
+}
+
+@media (min-width: 768px) {
+  .orbit { inset: -14px; }
+  .orbit-reverse { inset: -24px; }
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee-track {
+  animation: marquee 32s linear infinite;
+}
+
+.marquee-mask:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .turn-card {
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .turn-card:hover {
+    transform: translateY(-10px) rotateX(5deg) rotateY(-7deg);
+  }
+}
+
 .glass-card {
-  background: rgba(17, 16, 28, 0.45);
+  background: rgba(17, 21, 31, 0.94);
   backdrop-filter: blur(16px) saturate(120%);
   -webkit-backdrop-filter: blur(16px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (hover: hover) {
   .glass-card:hover {
-    background: rgba(22, 21, 38, 0.6);
-    border-color: rgba(99, 102, 241, 0.25);
+    background: rgba(20, 24, 36, 0.98);
+    border-color: rgba(99, 102, 241, 0.28);
     box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15);
     transform: translateY(-4px);
   }

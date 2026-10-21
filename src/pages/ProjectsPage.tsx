@@ -58,7 +58,7 @@ const ProjectsPage: React.FC = () => {
               placeholder="Search by title, description, or technology..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/[0.03] border border-white/10 hover:border-white/20 focus:border-indigo-500/50 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300"
+              className="w-full rounded-2xl border border-white/10 bg-[#11151f] py-3.5 pl-11 pr-4 text-sm text-white placeholder-slate-500 transition-all duration-300 hover:border-white/20 focus:border-indigo-500/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
             />
           </div>
         </div>
@@ -67,8 +67,8 @@ const ProjectsPage: React.FC = () => {
           <button
             className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2.5 text-xs font-semibold tracking-wide transition-all duration-300 md:py-1.5 ${
               selectedTechnology === ''
-                ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.25)]'
-                : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                ? 'border-indigo-500 bg-indigo-600 text-white shadow-[0_4px_12px_rgba(99,102,241,0.25)]'
+                : 'border-white/15 bg-[#11151f] text-slate-300 hover:border-white/25 hover:text-white'
             }`}
             onClick={() => setSelectedTechnology('')}
           >
@@ -80,8 +80,8 @@ const ProjectsPage: React.FC = () => {
               key={tech}
               className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2.5 text-xs font-semibold tracking-wide transition-all duration-300 md:py-1.5 ${
                 selectedTechnology === tech
-                  ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.25)]'
-                  : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                  ? 'border-indigo-500 bg-indigo-600 text-white shadow-[0_4px_12px_rgba(99,102,241,0.25)]'
+                  : 'border-white/15 bg-[#11151f] text-slate-300 hover:border-white/25 hover:text-white'
               }`}
               onClick={() => setSelectedTechnology(tech)}
             >

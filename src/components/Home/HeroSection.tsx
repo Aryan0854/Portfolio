@@ -66,7 +66,7 @@ const HeroSection: React.FC = () => {
   ].filter((social) => social.link);
 
   return (
-    <div className="relative z-20 overflow-hidden py-1 md:flex md:min-h-[82vh] md:items-center md:py-10">
+    <div className="relative z-20 overflow-x-hidden py-1 md:flex md:min-h-[82vh] md:flex-col md:justify-center md:py-10">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-[-12%] -top-6 bottom-0 -z-10 bg-[radial-gradient(ellipse_at_50%_38%,rgba(7,8,13,0.82)_0%,rgba(7,8,13,0.45)_46%,transparent_72%)] md:hidden"
@@ -85,39 +85,40 @@ const HeroSection: React.FC = () => {
       )}
 
       <div className="flex w-full flex-col items-center gap-5 text-center md:grid md:grid-cols-12 md:items-center md:gap-12 md:text-left">
-        <div className="order-1 md:order-2 md:col-span-5 md:flex md:justify-end">
-          <div
-            ref={avatarContainerRef}
-            className="relative h-[9.25rem] w-[9.25rem] transition-transform duration-200 ease-out min-[420px]:h-40 min-[420px]:w-40 md:h-80 md:w-80"
-            style={{ aspectRatio: '1/1', transformStyle: 'preserve-3d' }}
-          >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#6366f1] via-[#8b5cf6] to-[#a855f7] opacity-25 blur-2xl animate-pulse-slow" />
-            <div className="absolute inset-[-5px] rounded-full border-2 border-dashed border-[#6366f1]/35 animate-spin" style={{ animationDuration: '40s' }} />
-            <div className="absolute inset-[-12px] hidden rounded-full border border-[#6366f1]/15 animate-ping md:block" style={{ animationDuration: '3s' }} />
-            <div className="absolute inset-0 overflow-hidden rounded-full border border-white/15 bg-[#11151f] p-1.5 shadow-[0_12px_40px_rgba(99,102,241,0.28)] md:p-2">
-              <ImageLoader
-                src={profileData.avatar}
-                alt="Aryan Mishra, AI and Machine Learning developer in Bengaluru"
-                className="h-full w-full rounded-full object-cover"
-                priority
-                width={320}
-                height={320}
-              />
+        <div className="order-1 flex justify-center overflow-visible md:order-2 md:col-span-5 md:justify-end">
+          <div className="hero-float relative w-[9.25rem] overflow-visible min-[420px]:w-40 md:w-[min(100%,17rem)] lg:w-80">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[118%] w-[118%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(129,140,248,0.35)_0%,rgba(139,92,246,0.12)_42%,transparent_68%)]"
+            />
+            <div
+              ref={avatarContainerRef}
+              className="relative aspect-square w-full transition-transform duration-200 ease-out"
+              style={{ aspectRatio: '1/1' }}
+            >
+              <div className="absolute inset-0 overflow-hidden rounded-full border border-white/20 bg-[#0c1018] p-1 shadow-[0_0_0_1px_rgba(99,102,241,0.15),0_0_40px_rgba(99,102,241,0.22)] md:p-1.5">
+                <ImageLoader
+                  src={profileData.avatar}
+                  alt="Aryan Mishra, AI and Machine Learning developer in Bengaluru"
+                  className="h-full w-full !rounded-full object-cover"
+                  priority
+                  width={320}
+                  height={320}
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="relative order-2 flex w-full flex-col items-center gap-3.5 md:order-1 md:col-span-7 md:items-start md:gap-6">
-          <div className="pointer-events-none absolute -inset-10 -z-10 hidden rounded-full bg-[#07080d]/55 blur-3xl md:block" />
-
+        <div className="relative z-10 order-2 flex w-full min-w-0 flex-col items-center gap-3.5 md:order-1 md:col-span-7 md:items-start md:gap-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[11px] font-medium text-emerald-300 sm:text-xs">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
             Available for opportunities
           </div>
 
           <h1 className="text-[2.05rem] font-extrabold leading-[0.92] tracking-tight text-white min-[390px]:text-4xl sm:text-5xl lg:text-7xl">
-            Hi, I'm <br />
-            <span className="whitespace-nowrap bg-gradient-to-r from-indigo-400 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+            Hi, I'm
+            <span className="name-shimmer mt-1 block whitespace-nowrap">
               {nameArray[0]} {nameArray[1]}
             </span>
           </h1>
@@ -128,18 +129,18 @@ const HeroSection: React.FC = () => {
             </h2>
           </div>
 
-          <p className="max-w-md text-[13.5px] font-light leading-relaxed text-slate-300 sm:text-base md:max-w-lg md:text-slate-400">
+          <p className="max-w-md text-[13.5px] leading-relaxed text-slate-300 sm:text-base md:max-w-lg">
             Bengaluru-based AI &amp; ML developer building Python, React, and TypeScript products —
             from machine learning systems to full-stack automation.
             Final-year B.Tech in CS (AI/ML), open to ML, SDE, and full-stack roles.
           </p>
 
-          <div className="grid w-full grid-cols-2 gap-2.5 pt-1 md:flex md:w-auto md:flex-wrap md:justify-start md:gap-4 md:pt-2">
+          <div className="grid w-full grid-cols-2 gap-2.5 pt-1 lg:flex lg:w-auto lg:flex-wrap lg:justify-start lg:gap-4 lg:pt-2">
             <a
               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex touch-manipulation items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] px-3 py-3.5 text-white shadow-[0_4px_20px_rgba(99,102,241,0.25)] transition-all duration-300 hover:from-[#5558e3] hover:to-[#7c4ee4] hover:shadow-[0_4px_30px_rgba(99,102,241,0.4)] active:scale-[0.98] md:rounded-lg md:px-7 md:py-3"
+              className="btn-shine group relative flex touch-manipulation items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] px-3 py-3.5 text-white shadow-[0_4px_20px_rgba(99,102,241,0.25)] transition-all duration-300 hover:from-[#5558e3] hover:to-[#7c4ee4] hover:shadow-[0_4px_30px_rgba(99,102,241,0.4)] active:scale-[0.98] md:rounded-lg md:px-7 md:py-3"
             >
               <Mail size={18} className="shrink-0 transition-transform group-hover:translate-x-0.5" />
               <span className="text-[13px] font-semibold sm:text-sm">Contact Me</span>
@@ -160,7 +161,7 @@ const HeroSection: React.FC = () => {
                 href={social.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-white/25 hover:text-white active:scale-95 md:h-9 md:w-9 md:border-transparent md:bg-transparent md:text-slate-400"
+                className="inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-all hover:border-white/25 hover:text-white active:scale-95 md:h-9 md:w-9 md:border-transparent md:bg-transparent md:text-slate-400 md:hover:-rotate-12"
                 aria-label={social.label}
               >
                 {social.icon}

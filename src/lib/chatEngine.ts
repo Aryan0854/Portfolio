@@ -288,10 +288,15 @@ function findCerts(tokens: string[]): Certificate[] {
   return scored.slice(0, 5).map((x) => x.cert);
 }
 
+function codeNote(project: Project): string {
+  if (project.codePrivate) return 'The repository is private and is company property, so the code is not public.';
+  return project.githubLink ? `Code: ${project.githubLink}` : 'Code is not public.';
+}
+
 function formatProject(project: Project): string {
-  const live = project.liveLink !== '#' ? `\nLive: ${project.liveLink}` : '\nNo public live demo — code is on GitHub.';
+  const live = project.liveLink !== '#' ? `\nLive: ${project.liveLink}` : '\nNo public live demo.';
   const pub = project.publicationLink ? `\nPaper: ${project.publicationLink}` : '';
-  return `${project.title}\n\n${project.description}\n\nStack: ${project.technologies.join(', ')}${live}\nCode: ${project.githubLink}${pub}`;
+  return `${project.title}\n\n${project.description}\n\nStack: ${project.technologies.join(', ')}${live}\n${codeNote(project)}${pub}`;
 }
 
 function formatExperience(exp: Experience): string {
@@ -399,12 +404,15 @@ export function reply(userText: string, _history: ChatTurn[], memory: ChatMemory
     if (project) {
       if (/live|demo/.test(qNorm)) {
         const text = project.liveLink !== '#'
-          ? `Live demo for ${project.title}: ${project.liveLink}`
-          : `${project.title} is not hosted publicly. Code is here: ${project.githubLink}`;
-        return { text, suggestions: ['GitHub link', 'Other projects'], memory: next };
+          ? `Live site for ${project.title}: ${project.liveLink}`
+          : `${project.title} is not hosted publicly. ${codeNote(project)}`;
+        return { text, suggestions: ['Source code', 'Other projects'], memory: next };
       }
       if (/github|code|repo/.test(qNorm)) {
-        return { text: `GitHub for ${project.title}: ${project.githubLink}`, suggestions: ['Live demo', 'Other projects'], memory: next };
+        const text = project.codePrivate
+          ? `The code for ${project.title} stays private. The repository is company property and is not shared publicly.`
+          : `GitHub for ${project.title}: ${project.githubLink}`;
+        return { text, suggestions: ['Live demo', 'Other projects'], memory: next };
       }
       if (/paper|publication/.test(qNorm)) {
         return {

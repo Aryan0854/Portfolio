@@ -38,8 +38,8 @@ const ExperienceSection: React.FC = () => {
                       <span>{experience.period}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-slate-400 font-medium">{experience.company}</p>
-                  <p className="text-sm text-slate-300 leading-relaxed font-light">{experience.description}</p>
+                  <p className="text-sm font-medium text-slate-300">{experience.company}</p>
+                  <p className="text-sm leading-relaxed text-slate-200">{experience.description}</p>
                 </div>
               </div>
             ))}
@@ -68,8 +68,8 @@ const ExperienceSection: React.FC = () => {
                       <span>{edu.period}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-slate-400 font-medium">{edu.institution}</p>
-                  <p className="text-sm text-slate-300 leading-relaxed font-light">{edu.description}</p>
+                  <p className="text-sm font-medium text-slate-300">{edu.institution}</p>
+                  <p className="text-sm leading-relaxed text-slate-200">{edu.description}</p>
                 </div>
               </div>
             ))}

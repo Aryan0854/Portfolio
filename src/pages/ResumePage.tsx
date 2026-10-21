@@ -48,7 +48,7 @@ const ResumePage: React.FC = () => {
           <div className="space-y-2 text-left">
             <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-indigo-300/80">Profile</span>
             <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Aryan Mishra <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">Resume</span></h1>
-            <p className="text-sm text-slate-400 font-light">AI &amp; ML full-stack developer CV, publications, internships, and credentials</p>
+            <p className="text-sm text-slate-300">AI &amp; ML full-stack developer CV, publications, internships, and credentials</p>
           </div>
           
           <button
@@ -60,7 +60,7 @@ const ResumePage: React.FC = () => {
         </div>
         
         {/* Dynamic Glass Resume Panel */}
-        <div className="bg-white/[0.03] backdrop-blur-md rounded-3xl border border-white/[0.07] shadow-2xl p-6 sm:p-10 space-y-10">
+        <div className="space-y-10 rounded-3xl border border-white/10 bg-[#11151f] p-6 shadow-2xl sm:p-10">
           
           {/* Header Card Details */}
           <div className="border-b border-white/5 pb-8 flex flex-col md:flex-row gap-6 md:items-start justify-between">

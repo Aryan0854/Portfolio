@@ -91,10 +91,10 @@ const Enhanced3DBackground = () => {
         const material = new THREE.MeshPhongMaterial({
           color,
           transparent: true,
-          opacity: 0.55,
+          opacity: 0.32,
           shininess: 80,
-          emissive: color.clone().multiplyScalar(0.18),
-          emissiveIntensity: 0.35,
+          emissive: color.clone().multiplyScalar(0.12),
+          emissiveIntensity: 0.22,
         });
         const geometry =
           accent.kind === 'sphere'
@@ -108,29 +108,30 @@ const Enhanced3DBackground = () => {
       });
     }
 
-    if (!narrow) for (let i = 0; i < 6; i++) {
-      const geometry = new THREE.BoxGeometry(
-        0.5 + Math.random() * 0.6,
-        0.5 + Math.random() * 0.6,
-        0.5 + Math.random() * 0.6
-      );
-      const material = new THREE.MeshPhongMaterial({
-        color: new THREE.Color().setHSL(0.7 + Math.random() * 0.1, 0.75, 0.62),
-        transparent: true,
-        opacity: 0.75,
-        specular: 0xffffff,
-        shininess: 120,
-        emissive: new THREE.Color().setHSL(0.72, 0.5, 0.15),
-        emissiveIntensity: 0.35,
+    // Cubes stay in far corners only — never behind the portrait or name.
+    if (!narrow) {
+      const cubeCorners: Array<[number, number, number]> = [
+        [-5.2, 3.6, -3.2],
+        [-4.8, -3.8, -2.6],
+        [5.4, 3.9, -4.0],
+        [5.1, -4.2, -3.4],
+      ];
+      cubeCorners.forEach(([x, y, z], i) => {
+        const size = 0.32 + (i % 2) * 0.12;
+        const geometry = new THREE.BoxGeometry(size, size, size);
+        const material = new THREE.MeshPhongMaterial({
+          color: new THREE.Color().setHSL(0.7 + i * 0.02, 0.7, 0.58),
+          transparent: true,
+          opacity: 0.22,
+          specular: 0xffffff,
+          shininess: 100,
+          emissive: new THREE.Color().setHSL(0.72, 0.45, 0.1),
+          emissiveIntensity: 0.15,
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(x, y, z);
+        pushMesh(cube, 0.35 + i * 0.1);
       });
-
-      const cube = new THREE.Mesh(geometry, material);
-      cube.position.set(
-        placeAwayFromText((Math.random() - 0.5) * 12),
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10
-      );
-      pushMesh(cube, 0.5 + Math.random() * 1.5);
     }
 
     if (!narrow) for (let i = 0; i < 8; i++) {
@@ -138,9 +139,9 @@ const Enhanced3DBackground = () => {
       const material = new THREE.MeshPhongMaterial({
         color: new THREE.Color().setHSL(0.68 + Math.random() * 0.12, 0.85, 0.68),
         transparent: true,
-        opacity: 0.8,
-        emissive: new THREE.Color().setHSL(0.7, 0.6, 0.22),
-        emissiveIntensity: 0.45,
+        opacity: 0.4,
+        emissive: new THREE.Color().setHSL(0.7, 0.6, 0.16),
+        emissiveIntensity: 0.28,
         specular: 0xffffff,
         shininess: 120,
       });
@@ -164,12 +165,12 @@ const Enhanced3DBackground = () => {
       const material = new THREE.MeshPhongMaterial({
         color: new THREE.Color().setHSL(0.7 + Math.random() * 0.08, 0.75, 0.6),
         transparent: true,
-        opacity: 0.65,
+        opacity: 0.32,
         wireframe: i === 0,
         specular: 0xffffff,
         shininess: 120,
-        emissive: new THREE.Color().setHSL(0.72, 0.5, 0.12),
-        emissiveIntensity: 0.3,
+        emissive: new THREE.Color().setHSL(0.72, 0.5, 0.1),
+        emissiveIntensity: 0.2,
       });
 
       const torus = new THREE.Mesh(geometry, material);
@@ -210,7 +211,7 @@ const Enhanced3DBackground = () => {
         size: 0.06,
         vertexColors: true,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.45,
         blending: THREE.AdditiveBlending,
       })
     );

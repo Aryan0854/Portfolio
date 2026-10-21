@@ -70,4 +70,5 @@ export interface Project {
   liveLink: string;
   githubLink: string;
   publicationLink?: string;
+  codePrivate?: boolean;
 }
